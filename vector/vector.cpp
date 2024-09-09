@@ -1,4 +1,6 @@
+#include <assert.h>
 #include <iostream>
+#include <memory.h>
 
 #define INITIAL_VEC_CAPACITY 4
 
@@ -6,38 +8,44 @@ class Vector
 {
 public:
     Vector()
-    { // конструктор
-        ptr = (int *)malloc(sizeof(int) * INITIAL_VEC_CAPACITY);
+    {
+        ptr = new int[INITIAL_VEC_CAPACITY];
+        assert(nullptr == ptr);
         allocatedAmount = INITIAL_VEC_CAPACITY;
     }
     ~Vector()
-    { // деструктор
-        free(ptr);
+    {
+        delete (ptr);
     }
-    void push_back(int elem)
+    void push(int elem)
     {
         expandMemoryIfNeeded();
-        ptr[currentAmount] = elem; // *(v->ptr + v->currentAmount) = elem;
+        ptr[currentAmount] = elem;
         currentAmount += 1;
     }
 
 private:
-    void expandMemoryIfNeeded()
-    {
-    }
     int *ptr = nullptr;
     size_t currentAmount = 0;
     size_t allocatedAmount = 0;
+
+    void expandMemoryIfNeeded()
+    {
+        if (currentAmount < allocatedAmount)
+        {
+            return;
+        }
+        allocatedAmount *= 2;
+        int *newPtr = new int[allocatedAmount];
+        assert(nullptr == newPtr);
+        memcpy(newPtr, ptr, allocatedAmount * sizeof(int));
+        delete (ptr);
+        ptr = newPtr;
+    }
 };
 
 int main()
 {
     Vector v;
-
-    v.push_back(23203);
+    v.push(23203);
 }
-// то же самое что и
-/* struct Vector v;
-vector_init(&v);
-vector_deinit(&v);
-*/
