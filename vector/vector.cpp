@@ -1,7 +1,7 @@
 #include <iostream>
 #include <memory.h>
 
-#define INITIAL_VEC_CAPACITY 4
+// #define INITIAL_VEC_CAPACITY 4
 
 class Vector
 {
@@ -97,6 +97,7 @@ public:
     }
 
 private:
+    static constexpr int INITIAL_VEC_CAPACITY = 4;
     int *ptr = nullptr;
     size_t currentAmount = 0;
     size_t allocatedAmount = 0;
@@ -115,7 +116,7 @@ private:
     }
 };
 
-int main() //const expr считает или инициализирует что-то на этапе компиляции
+int main() // const expr считает или инициализирует что-то на этапе компиляции
 {
     Vector v;
     v.push(23203);
