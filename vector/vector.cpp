@@ -16,7 +16,7 @@ public:
         allocatedAmount = copied.allocatedAmount;
         currentAmount = copied.currentAmount;
         ptr = new int[allocatedAmount];
-        memcpy(ptr, copied.ptr, currentAmount * sizeof(int));
+        memcpy(ptr, copied.ptr, currentAmount * sizeof(int)); // std:: copy (copied.ptr, other.ptr + currentAmount, ...)
     }
     Vector(Vector &&moved) // конструктор перемещения
     {
@@ -44,7 +44,7 @@ public:
         return ptr[index];
     }
 
-    Vector &operator=(Vector &v) // операция присваивания
+    Vector &operator=(Vector &v) // операция присваивания //возвращаем ссылку чтобы лишний раз не бежать по памяти и не копировать объект
     {
         if (this == &v)
         {
@@ -54,7 +54,7 @@ public:
         currentAmount = v.currentAmount;
         ptr = new int[allocatedAmount];
         memcpy(ptr, v.ptr, currentAmount * sizeof(int));
-        return *this;
+        return *this; // разыменование указателя
     }
 
     Vector &operator=(Vector &&v) // операция перемещения
@@ -77,7 +77,7 @@ public:
         return ptr[currentAmount - 1];
     }
 
-    size_t vector_size()
+    size_t vector_size() const // CONST!
     {
         return currentAmount;
     }
@@ -115,9 +115,12 @@ private:
     }
 };
 
-int main()
+int main() //const expr считает или инициализирует что-то на этапе компиляции
 {
     Vector v;
     v.push(23203);
     std ::cout << v[0] << "\n";
+    Vector v1 = v;            // конструктор копирования
+    Vector v2 = std::move(v); // конструктор перемещения
+    v1 = v2;                  // оператор копирования //не присваивать функции к ссылкам!!!! или с const
 }
