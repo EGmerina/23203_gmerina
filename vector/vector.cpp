@@ -26,7 +26,6 @@ public:
         moved.ptr = nullptr;
         moved.allocatedAmount = INITIAL_VEC_CAPACITY;
         moved.currentAmount = 0;
-        // or delete(moved);   ?????
     }
     ~Vector()
     {
@@ -73,6 +72,30 @@ public:
         return *this;
     }
 
+    int vector_back()
+    {
+        return ptr[currentAmount - 1];
+    }
+
+    size_t vector_size()
+    {
+        return currentAmount;
+    }
+
+    size_t vector_capacity()
+    {
+        return allocatedAmount;
+    }
+
+    void print_vector()
+    {
+        for (size_t i = 0; i < currentAmount; ++i)
+        {
+            printf("%d ", ptr[i]);
+        }
+        printf("\n");
+    }
+
 private:
     int *ptr = nullptr;
     size_t currentAmount = 0;
@@ -96,7 +119,5 @@ int main()
 {
     Vector v;
     v.push(23203);
-    std ::cout << v[0]; //??????? что распечатается?
-    v[0] = 23203 + 1;
-    std ::cout << v[0];
+    std ::cout << v[0] << "\n";
 }
