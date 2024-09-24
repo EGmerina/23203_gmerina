@@ -39,7 +39,9 @@ struct Value
 class FlatMap
 {
 public:
-    FlatMap();
+    FlatMap()
+    {
+    }
     ~FlatMap()
     {
         delete &flatmap;
