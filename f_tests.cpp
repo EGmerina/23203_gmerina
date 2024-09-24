@@ -7,6 +7,7 @@ TEST(MyTests, test_1)
     FlatMap f;
     f.insert("Vasya", Value(20, 70));
     ASSERT_EQ(f.at("Vasya").age, 20);
+    std::cout << "insert is successful" << std::endl;
 }
 
 int main(int argc, char **argv)

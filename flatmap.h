@@ -44,7 +44,6 @@ public:
     }
     ~FlatMap()
     {
-        delete &flatmap;
     }
     FlatMap(const FlatMap &b)
     {
@@ -178,7 +177,7 @@ private:
     {
         unsigned beg = 0;
         unsigned end = flatmap.size();
-        unsigned mid;
+        int mid = -1;
         for (unsigned char i = 0; i < log(flatmap.size()); ++i)
         {
             mid = (end + beg) / 2;
@@ -197,6 +196,6 @@ private:
                 return mid;
             }
         }
-        return mid + 1;
+        return (unsigned)(mid + 1);
     }
 };
