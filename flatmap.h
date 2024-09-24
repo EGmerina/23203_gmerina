@@ -1,3 +1,4 @@
+#pragma once
 #include <string>
 #include <vector>
 #include <utility>
@@ -25,13 +26,13 @@ struct Value
         this->age = v.age;
         this->weight = v.weight;
     }
-    bool operator==(const Value &a)
+    bool operator!=(const Value &a) const
     {
         if (this->age == a.age && this->weight == a.weight)
         {
-            return true;
+            return false;
         }
-        return false;
+        return true;
     }
 };
 
@@ -117,9 +118,8 @@ public:
         {
             return flatmap.at(k_pos).second;
         }
-        Value new_value = value;
-        insert(k, new_value);
-        return new_value;
+        insert(k, value);
+        return value;
     }
 
     // Возвращает значение по ключу. Бросает исключение при неудаче.
@@ -157,7 +157,7 @@ public:
         }
         for (unsigned i = 0; i < a.flatmap.size(); ++i)
         {
-            if (a.flatmap[i] != b.flatmap[i])
+            if ((a.flatmap[i].first != b.flatmap[i].first) || (a.flatmap[i].second != b.flatmap[i].second))
             {
                 return false;
             }
