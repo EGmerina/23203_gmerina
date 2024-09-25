@@ -16,12 +16,12 @@ struct Value
         this->age = age;
         this->weight = weight;
     }
-    Value()
+    Value() // использовать список инициализации!!!
     {
         this->age = 0;
         this->weight = 0;
     }
-    Value(const Value &v)
+    Value(const Value &v) // std:: copy      <algorithm>
     {
         this->age = v.age;
         this->weight = v.weight;
@@ -42,14 +42,11 @@ public:
     FlatMap()
     {
     }
-    ~FlatMap()
-    {
-    }
     FlatMap(const FlatMap &b)
     {
         flatmap = b.flatmap;
     }
-    FlatMap(FlatMap &&b)
+    FlatMap(FlatMap &&b) // можно просто swap
     {
         flatmap.assign(b.flatmap.begin(), b.flatmap.end());
     }
@@ -60,7 +57,7 @@ public:
         flatmap.swap(b.flatmap);
     }
 
-    FlatMap &operator=(const FlatMap &b)
+    FlatMap &operator=(const FlatMap &b) // проверка на присваивание самому себе
     {
         flatmap = b.flatmap;
         return *this;
@@ -99,7 +96,7 @@ public:
         return true;
     }
 
-    // Проверка наличия значения по заданному ключу.
+    // Проверка наличия значения по заданному ключу.  //std:: ranges :: binary search
     bool contains(const Key &k) const
     {
         if (flatmap.at(position(k)).first == k)
@@ -120,7 +117,7 @@ public:
             return flatmap.at(k_pos).second;
         }
         insert(k, value);
-        return value;
+        return value; // вернуть insert!!!
     }
 
     // Возвращает значение по ключу. Бросает исключение при неудаче.
@@ -131,6 +128,7 @@ public:
             return flatmap.at(position(k)).second;
         }
         throw "Key doesn't exist";
+        throw std ::runtime_error("key" + k + "doesn't exxist");
     }
     const Value &at(const Key &k) const
     {
@@ -138,7 +136,7 @@ public:
         {
             return flatmap.at(position(k)).second;
         }
-        throw "const Key doesn't exist";
+        throw std ::string("const Key doesn't exist");
     }
 
     unsigned int size() const
