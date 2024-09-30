@@ -39,6 +39,8 @@ struct Value
 class FlatMap
 {
 public:
+    FlatMap();
+
     FlatMap(const FlatMap &b);
 
     FlatMap(FlatMap &&b);

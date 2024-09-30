@@ -1,6 +1,6 @@
-#include <iostream>
 #include "flatmap.h"
 #include "gtest/gtest.h"
+#include <iostream>
 
 TEST(MyTests, test_1)
 {
