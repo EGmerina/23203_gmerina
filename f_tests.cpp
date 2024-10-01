@@ -2,7 +2,7 @@
 #include "gtest/gtest.h"
 #include <iostream>
 
-TEST(MyTests, test_1)
+TEST(MyTests, test_1) // flag -lgtest !!!!!!
 {
     FlatMap f;
     f.insert("Vasya", Value(20, 70));

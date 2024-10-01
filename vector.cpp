@@ -4,15 +4,15 @@
 
 Vector::Vector()
 {
-    ptr = new int[INITIAL_VEC_CAPACITY];
+    ptr = new T[INITIAL_VEC_CAPACITY];
     allocatedAmount = INITIAL_VEC_CAPACITY;
 }
 Vector ::Vector(const Vector &copied)
 {
     allocatedAmount = copied.allocatedAmount;
     currentAmount = copied.currentAmount;
-    ptr = new int[allocatedAmount];
-    memcpy(ptr, copied.ptr, currentAmount * sizeof(int));
+    ptr = new T[allocatedAmount];
+    memcpy(ptr, copied.ptr, currentAmount * sizeof(T));
 }
 Vector ::Vector(Vector &&moved)
 {
@@ -28,14 +28,14 @@ Vector ::~Vector()
     delete (ptr);
 }
 
-void Vector ::push(int elem)
+void Vector ::push(T elem)
 {
     expandMemoryIfNeeded();
     ptr[currentAmount] = elem;
     currentAmount += 1;
 }
 
-int &Vector ::operator[](int index)
+T &Vector ::operator[](int index)
 {
     return ptr[index];
 }
@@ -48,8 +48,8 @@ Vector &Vector ::operator=(Vector &v)
     }
     allocatedAmount = v.allocatedAmount;
     currentAmount = v.currentAmount;
-    ptr = new int[allocatedAmount];
-    memcpy(ptr, v.ptr, currentAmount * sizeof(int));
+    ptr = new T[allocatedAmount];
+    memcpy(ptr, v.ptr, currentAmount * sizeof(T));
     return *this;
 }
 
@@ -68,7 +68,7 @@ Vector &Vector ::operator=(Vector &&v)
     return *this;
 }
 
-int Vector ::vector_back()
+T Vector ::vector_back()
 {
     return ptr[currentAmount - 1];
 }
@@ -99,8 +99,13 @@ void Vector ::expandMemoryIfNeeded()
         return;
     }
     allocatedAmount *= 2;
-    int *newPtr = new int[allocatedAmount];
-    memcpy(newPtr, ptr, allocatedAmount * sizeof(int));
+    T *newPtr = new T[allocatedAmount];
+    memcpy(newPtr, ptr, allocatedAmount * sizeof(T));
     delete (ptr);
     ptr = newPtr;
+}
+
+int main()
+{
+    return 0;
 }

@@ -1,6 +1,8 @@
+#pragma once
 #include <iostream>
 #include <memory.h>
 
+template <typename T>
 class Vector
 {
 public:
@@ -9,15 +11,15 @@ public:
     Vector(Vector &&moved);
     ~Vector();
 
-    void push(int elem);
+    void push(T elem);
 
-    int &operator[](int index);
+    T &operator[](int index);
 
     Vector &operator=(Vector &v);
 
     Vector &operator=(Vector &&v);
 
-    int vector_back();
+    T vector_back();
 
     std ::size_t vector_size() const;
 
@@ -27,7 +29,7 @@ public:
 
 private:
     static constexpr int INITIAL_VEC_CAPACITY = 4;
-    int *ptr = nullptr;
+    T *ptr = nullptr;
     std::size_t currentAmount = 0;
     std::size_t allocatedAmount = 0;
 
