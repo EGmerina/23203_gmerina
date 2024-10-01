@@ -2,19 +2,24 @@
 #include <iostream>
 #include <memory.h>
 
-Vector::Vector()
+template <typename T>
+Vector<T>::Vector()
 {
     ptr = new T[INITIAL_VEC_CAPACITY];
     allocatedAmount = INITIAL_VEC_CAPACITY;
 }
-Vector ::Vector(const Vector &copied)
+
+template <typename T>
+Vector<T>::Vector(const Vector &copied)
 {
     allocatedAmount = copied.allocatedAmount;
     currentAmount = copied.currentAmount;
     ptr = new T[allocatedAmount];
     memcpy(ptr, copied.ptr, currentAmount * sizeof(T));
 }
-Vector ::Vector(Vector &&moved)
+
+template <typename T>
+Vector<T>::Vector(Vector &&moved)
 {
     ptr = moved.ptr;
     allocatedAmount = moved.allocatedAmount;
@@ -23,24 +28,29 @@ Vector ::Vector(Vector &&moved)
     moved.allocatedAmount = INITIAL_VEC_CAPACITY;
     moved.currentAmount = 0;
 }
-Vector ::~Vector()
+
+template <typename T>
+Vector<T>::~Vector()
 {
     delete (ptr);
 }
 
-void Vector ::push(T elem)
+template <typename T>
+void Vector<T>::push(T elem)
 {
     expandMemoryIfNeeded();
     ptr[currentAmount] = elem;
     currentAmount += 1;
 }
 
-T &Vector ::operator[](int index)
+template <typename T>
+T &Vector<T>::operator[](int index)
 {
     return ptr[index];
 }
 
-Vector &Vector ::operator=(Vector &v)
+template <typename T>
+Vector<T> &Vector<T>::operator=(Vector &v)
 {
     if (this == &v)
     {
@@ -53,7 +63,8 @@ Vector &Vector ::operator=(Vector &v)
     return *this;
 }
 
-Vector &Vector ::operator=(Vector &&v)
+template <typename T>
+Vector<T> &Vector<T>::operator=(Vector &&v)
 {
     if (this == &v)
     {
@@ -68,22 +79,26 @@ Vector &Vector ::operator=(Vector &&v)
     return *this;
 }
 
-T Vector ::vector_back()
+template <typename T>
+T Vector<T>::vector_back()
 {
     return ptr[currentAmount - 1];
 }
 
-std ::size_t Vector ::vector_size() const
+template <typename T>
+std ::size_t Vector<T>::vector_size() const
 {
     return currentAmount;
 }
 
-std ::size_t Vector ::vector_capacity()
+template <typename T>
+std ::size_t Vector<T>::vector_capacity()
 {
     return allocatedAmount;
 }
 
-void Vector ::print_vector()
+template <typename T>
+void Vector<T>::print_vector()
 {
     for (std ::size_t i = 0; i < currentAmount; ++i)
     {
@@ -92,7 +107,8 @@ void Vector ::print_vector()
     printf("\n");
 }
 
-void Vector ::expandMemoryIfNeeded()
+template <typename T>
+void Vector<T>::expandMemoryIfNeeded()
 {
     if (currentAmount < allocatedAmount)
     {
@@ -105,7 +121,3 @@ void Vector ::expandMemoryIfNeeded()
     ptr = newPtr;
 }
 
-int main()
-{
-    return 0;
-}
