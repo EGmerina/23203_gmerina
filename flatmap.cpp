@@ -1,6 +1,5 @@
 #include "flatmap.h"
 #include <string>
-#include <vector>
 #include <cmath>
 
 FlatMap::FlatMap()
@@ -8,27 +7,35 @@ FlatMap::FlatMap()
 }
 FlatMap::FlatMap(const FlatMap &b)
 {
-    flatmap = b.flatmap;
+    Vector<std ::pair<Key, Value>> flatmap(b.flatmap);
 }
-FlatMap::FlatMap(FlatMap &&b) // можно просто swap
+FlatMap::FlatMap(FlatMap &&b)
 {
-    flatmap.assign(b.flatmap.begin(), b.flatmap.end());
+    Vector<std ::pair<Key, Value>> flatmap(std ::move(b.flatmap));
 }
 
 // Обменивает значения двух флетмап.
 void FlatMap::swap(FlatMap &b)
 {
-    flatmap.swap(b.flatmap);
+    flatmap.swap(b.flatmap); // я тут разве не копирую?
 }
 
-FlatMap &FlatMap::operator=(const FlatMap &b) // проверка на присваивание самому себе
+FlatMap &FlatMap::operator=(const FlatMap &b)
 {
+    if (this == &b)
+    {
+        return *this;
+    }
     flatmap = b.flatmap;
     return *this;
 }
 FlatMap &FlatMap ::operator=(FlatMap &&b)
 {
-    flatmap.assign(b.flatmap.begin(), b.flatmap.end());
+    if (this == &b)
+    {
+        return *this;
+    }
+    flatmap = std ::move(b.flatmap);
     return *this;
 }
 
@@ -40,10 +47,9 @@ void FlatMap::clear()
 // Удаляет элемент по заданному ключу.
 bool FlatMap::erase(const Key &k)
 {
-    unsigned int prev_size = flatmap.size();
-    flatmap.erase(flatmap.begin() + position(k));
-    if (prev_size == flatmap.size() - 1)
+    if (contains(k))
     {
+        flatmap.erase(position(k));
         return true;
     }
     return false;
@@ -56,14 +62,14 @@ bool FlatMap::insert(const Key &k, const Value &v)
         return false;
     }
     std ::pair<Key, Value> new_pair(k, v);
-    flatmap.insert(flatmap.begin() + position(k), new_pair);
+    flatmap.insert(position(k), new_pair);
     return true;
 }
 
 // Проверка наличия значения по заданному ключу.  //std:: ranges :: binary search
 bool FlatMap::contains(const Key &k) const
 {
-    if (flatmap.at(position(k)).first == k)
+    if (flatmap[position(k)].first == k)
     {
         return true;
     }
@@ -78,7 +84,7 @@ Value &FlatMap::operator[](const Key &k)
     unsigned int k_pos = position(k);
     if (contains(k))
     {
-        return flatmap.at(k_pos).second;
+        return flatmap[k_pos].second;
     }
     insert(k, value);
     return value; // вернуть insert!!!
@@ -89,16 +95,15 @@ Value &FlatMap::at(const Key &k)
 {
     if (contains(k))
     {
-        return flatmap.at(position(k)).second;
+        return flatmap[position(k)].second;
     }
-    throw "Key doesn't exist";
-    throw std ::string("Key doesn't exist"); // throw std ::runtime_error("key" + k + "doesn't exxist");
+    throw std ::string("Key doesn't exist");
 }
 const Value &FlatMap::at(const Key &k) const
 {
     if (contains(k))
     {
-        return flatmap.at(position(k)).second;
+        return flatmap[position(k)].second;
     }
     throw std ::string("const Key doesn't exist");
 }
@@ -132,7 +137,7 @@ bool operator!=(const FlatMap &a, const FlatMap &b)
     return !(a == b);
 }
 
-unsigned int FlatMap::position(const Key &k) const
+std ::size_t FlatMap::position(const Key &k) const
 {
     unsigned beg = 0;
     unsigned end = flatmap.size();
@@ -140,22 +145,20 @@ unsigned int FlatMap::position(const Key &k) const
     for (unsigned char i = 0; i < log(flatmap.size()); ++i)
     {
         mid = (end + beg) / 2;
-        if (flatmap.at(mid).first < k)
+        if (flatmap[mid].first < k)
         {
             beg = mid;
             continue;
         }
-        if (flatmap.at(mid).first > k)
+        if (flatmap[mid].first > k)
         {
             end = mid;
             continue;
         }
-        if (flatmap.at(mid).first == k)
+        if (flatmap[mid].first == k)
         {
             return mid;
         }
     }
     return (unsigned)(mid + 1);
 }
-
-

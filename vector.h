@@ -11,21 +11,33 @@ public:
     Vector(Vector &&moved);
     ~Vector();
 
-    void push(T elem);
+    void push(const T elem);
 
-    T &operator[](int index);
+    T &operator[](const int index);
 
-    Vector &operator=(Vector &v);
+    T &Vector<T>::operator[](const int index) const;
+
+    Vector &operator=(const Vector &v);
 
     Vector &operator=(Vector &&v);
 
-    T vector_back();
+    T &back();
 
-    std ::size_t vector_size() const;
+    std ::size_t size() const;
 
-    std::size_t vector_capacity();
+    std::size_t capacity();
 
-    void print_vector();
+    void print();
+
+    void Vector<T>::swap(Vector<T> &b);
+
+    void Vector<T>::clear();
+
+    void Vector<T>::erase(const std ::size_t pos);
+
+    void Vector<T>::insert(const std ::size_t pos, const T elem);
+
+    bool Vector<T>::empty() const;
 
 private:
     static constexpr int INITIAL_VEC_CAPACITY = 4;

@@ -36,7 +36,7 @@ Vector<T>::~Vector()
 }
 
 template <typename T>
-void Vector<T>::push(T elem)
+void Vector<T>::push(const T elem)
 {
     expandMemoryIfNeeded();
     ptr[currentAmount] = elem;
@@ -44,13 +44,19 @@ void Vector<T>::push(T elem)
 }
 
 template <typename T>
-T &Vector<T>::operator[](int index)
+T &Vector<T>::operator[](const int index)
 {
     return ptr[index];
 }
 
 template <typename T>
-Vector<T> &Vector<T>::operator=(Vector &v)
+T &Vector<T>::operator[](const int index) const
+{
+    return ptr[index];
+}
+
+template <typename T>
+Vector<T> &Vector<T>::operator=(const Vector &v)
 {
     if (this == &v)
     {
@@ -58,6 +64,7 @@ Vector<T> &Vector<T>::operator=(Vector &v)
     }
     allocatedAmount = v.allocatedAmount;
     currentAmount = v.currentAmount;
+    delete (ptr);
     ptr = new T[allocatedAmount];
     memcpy(ptr, v.ptr, currentAmount * sizeof(T));
     return *this;
@@ -80,25 +87,76 @@ Vector<T> &Vector<T>::operator=(Vector &&v)
 }
 
 template <typename T>
-T Vector<T>::vector_back()
+T &Vector<T>::back()
 {
     return ptr[currentAmount - 1];
 }
 
 template <typename T>
-std ::size_t Vector<T>::vector_size() const
+std ::size_t Vector<T>::size() const
 {
     return currentAmount;
 }
 
 template <typename T>
-std ::size_t Vector<T>::vector_capacity()
+std ::size_t Vector<T>::capacity()
 {
     return allocatedAmount;
 }
 
 template <typename T>
-void Vector<T>::print_vector()
+void Vector<T>::swap(Vector<T> &b)
+{
+    Vector<T> buf = b;
+    b = *this;
+    *this = buf;
+}
+
+template <typename T>
+void Vector<T>::clear()
+{
+    delete (ptr);
+    allocatedAmount = INITIAL_VEC_CAPACITY;
+    currentAmount = 0;
+    ptr = new T[allocatedAmount];
+}
+
+template <typename T>
+void Vector<T>::erase(const std ::size_t pos)
+{
+    for (size_t i = pos; i < currentAmount - 2; ++i)
+    {
+        ptr[i] = ptr[i + 1];
+    }
+    currentAmount -= 1;
+}
+
+template <typename T>
+void Vector<T>::insert(const std ::size_t pos, const T elem)
+{
+    expandMemoryIfNeeded();
+    T buf = ptr[pos];
+    prt[pos] = elem;
+    for (size_t i = currentAmount; i > pos + 1; --i)
+    {
+        ptr[i] = ptr[i - 1];
+    }
+    ptr[pos + 1] = buf;
+    currentAmount += 1;
+}
+
+template <typename T>
+bool Vector<T>::empty() const
+{
+    if (currentAmount == 0)
+    {
+        return true;
+    }
+    return false;
+}
+
+template <typename T>
+void Vector<T>::print()
 {
     for (std ::size_t i = 0; i < currentAmount; ++i)
     {
@@ -120,4 +178,3 @@ void Vector<T>::expandMemoryIfNeeded()
     delete (ptr);
     ptr = newPtr;
 }
-

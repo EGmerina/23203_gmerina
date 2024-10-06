@@ -1,6 +1,6 @@
 #pragma once
+#include "vector.h"
 #include <string>
-#include <vector>
 #include <cmath>
 
 typedef std::string Key;
@@ -73,8 +73,8 @@ public:
     friend bool operator!=(const FlatMap &a, const FlatMap &b);
 
 private:
-    std::vector<std ::pair<Key, Value>> flatmap;
+    Vector<std ::pair<Key, Value>> flatmap;
     Value value;
 
-    unsigned int position(const Key &k) const;
+    std ::size_t position(const Key &k) const;
 };
