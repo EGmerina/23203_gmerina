@@ -1,6 +1,5 @@
 #pragma once
 #include <iostream>
-#include <memory.h>
 
 template <typename T>
 class Vector
@@ -15,7 +14,7 @@ public:
 
     T &operator[](const int index);
 
-    T &Vector<T>::operator[](const int index) const;
+    T &operator[](const int index) const;
 
     Vector &operator=(const Vector &v);
 
@@ -29,15 +28,15 @@ public:
 
     void print();
 
-    void Vector<T>::swap(Vector<T> &b);
+    void swap(Vector<T> &b);
 
-    void Vector<T>::clear();
+    void clear();
 
-    void Vector<T>::erase(const std ::size_t pos);
+    void erase(const std ::size_t pos);
 
-    void Vector<T>::insert(const std ::size_t pos, const T elem);
+    void insert(const std ::size_t pos, const T elem);
 
-    bool Vector<T>::empty() const;
+    bool empty() const;
 
 private:
     static constexpr int INITIAL_VEC_CAPACITY = 4;
@@ -47,3 +46,5 @@ private:
 
     void expandMemoryIfNeeded();
 };
+
+#include "vector.tpp"

@@ -1,7 +1,6 @@
 #pragma once
 #include "vector.h"
 #include <string>
-#include <cmath>
 
 typedef std::string Key;
 

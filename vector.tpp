@@ -1,6 +1,6 @@
-#include "vector.h"
 #include <iostream>
 #include <memory.h>
+#include "vector.h"
 
 template <typename T>
 Vector<T>::Vector()
@@ -32,7 +32,7 @@ Vector<T>::Vector(Vector &&moved)
 template <typename T>
 Vector<T>::~Vector()
 {
-    delete (ptr);
+    delete[] ptr;
 }
 
 template <typename T>
@@ -64,7 +64,7 @@ Vector<T> &Vector<T>::operator=(const Vector &v)
     }
     allocatedAmount = v.allocatedAmount;
     currentAmount = v.currentAmount;
-    delete (ptr);
+    delete[] ptr;
     ptr = new T[allocatedAmount];
     memcpy(ptr, v.ptr, currentAmount * sizeof(T));
     return *this;
@@ -115,7 +115,7 @@ void Vector<T>::swap(Vector<T> &b)
 template <typename T>
 void Vector<T>::clear()
 {
-    delete (ptr);
+    delete[] ptr;
     allocatedAmount = INITIAL_VEC_CAPACITY;
     currentAmount = 0;
     ptr = new T[allocatedAmount];
@@ -136,7 +136,7 @@ void Vector<T>::insert(const std ::size_t pos, const T elem)
 {
     expandMemoryIfNeeded();
     T buf = ptr[pos];
-    prt[pos] = elem;
+    ptr[pos] = elem;
     for (size_t i = currentAmount; i > pos + 1; --i)
     {
         ptr[i] = ptr[i - 1];
@@ -175,6 +175,6 @@ void Vector<T>::expandMemoryIfNeeded()
     allocatedAmount *= 2;
     T *newPtr = new T[allocatedAmount];
     memcpy(newPtr, ptr, allocatedAmount * sizeof(T));
-    delete (ptr);
+    delete[] ptr;
     ptr = newPtr;
 }
