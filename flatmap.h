@@ -16,7 +16,10 @@ struct Value
     }
     Value()
     {
+        this->weight = 0;
+        this->age = 0;
     }
+    ~Value() {}
     Value(const Value &v)
     {
         this->age = v.age;
@@ -30,6 +33,20 @@ struct Value
         }
         return true;
     }
+};
+
+struct Pair
+{
+    Key first;
+    Value second;
+
+    Pair() {}
+    Pair(const Key k, const Value v)
+    {
+        first = k;
+        second = v;
+    }
+    ~Pair() {}
 };
 
 class FlatMap
@@ -70,7 +87,7 @@ public:
     friend bool operator!=(const FlatMap &a, const FlatMap &b);
 
 private:
-    Vector<std ::pair<Key, Value>> flatmap;
+    Vector<Pair> flatmap;
     Value value;
 
     std ::size_t position(const Key &k) const;

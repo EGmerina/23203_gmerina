@@ -11,7 +11,7 @@ FlatMap::FlatMap(const FlatMap &b)
 }
 FlatMap::FlatMap(FlatMap &&b)
 {
-    flatmap = b.flatmap;
+    flatmap = std:: move(b.flatmap);
 }
 
 // Обменивает значения двух флетмап.
@@ -61,7 +61,7 @@ bool FlatMap::insert(const Key &k, const Value &v)
     {
         return false;
     }
-    std ::pair<Key, Value> new_pair(k, v);
+    Pair new_pair(k, v);
     flatmap.insert(position(k), new_pair);
     return true;
 }

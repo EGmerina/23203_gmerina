@@ -25,7 +25,7 @@ TEST(Constructors, move)
     f.insert("Vasya", Value(20, 70));
     FlatMap f1(std::move(f));
     EXPECT_EQ(f1.at("Vasya").age, 20);
-    EXPECT_NE(f.at("Vasya").age, 20);
+    EXPECT_NE(f.at("Vasya").age, 20); //WRONG
 }
 
 /*TEST(Operators, copy)

@@ -15,7 +15,10 @@ Vector<T>::Vector(const Vector &copied)
     allocatedAmount = copied.allocatedAmount;
     currentAmount = copied.currentAmount;
     ptr = new T[allocatedAmount];
-    memcpy(ptr, copied.ptr, currentAmount * sizeof(T));
+    for (int i = 0; i < currentAmount; i++)
+    {
+        ptr[i] = copied[i];
+    }
 }
 
 template <typename T>
@@ -32,7 +35,7 @@ Vector<T>::Vector(Vector &&moved)
 template <typename T>
 Vector<T>::~Vector()
 {
-   delete[] ptr;
+    delete[] ptr;
 }
 
 template <typename T>
@@ -66,7 +69,10 @@ Vector<T> &Vector<T>::operator=(const Vector &v)
     currentAmount = v.currentAmount;
     delete[] ptr;
     ptr = new T[allocatedAmount];
-    memcpy(ptr, v.ptr, currentAmount * sizeof(T));
+    for (int i = 0; i < allocatedAmount; i++)
+    {
+        ptr[i] = v.ptr[i];
+    }
     return *this;
 }
 
@@ -77,10 +83,11 @@ Vector<T> &Vector<T>::operator=(Vector &&v)
     {
         return *this;
     }
+    delete[] ptr;
     ptr = v.ptr;
     allocatedAmount = v.allocatedAmount;
     currentAmount = v.currentAmount;
-    v.ptr = nullptr;
+    v.ptr = new T[INITIAL_VEC_CAPACITY];
     v.allocatedAmount = INITIAL_VEC_CAPACITY;
     v.currentAmount = 0;
     return *this;
@@ -174,7 +181,10 @@ void Vector<T>::expandMemoryIfNeeded()
     }
     allocatedAmount *= 2;
     T *newPtr = new T[allocatedAmount];
-    memcpy(newPtr, ptr, allocatedAmount * sizeof(T));
+    for (int i = 0; i < currentAmount; i++)
+    {
+        newPtr[i] = ptr[i];
+    }
     delete[] ptr;
     ptr = newPtr;
 }
