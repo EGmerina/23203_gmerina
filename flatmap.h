@@ -16,8 +16,6 @@ struct Value
     }
     Value()
     {
-        this->age = 0;
-        this->weight = 0;
     }
     Value(const Value &v)
     {

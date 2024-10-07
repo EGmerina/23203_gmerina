@@ -32,7 +32,7 @@ Vector<T>::Vector(Vector &&moved)
 template <typename T>
 Vector<T>::~Vector()
 {
-    delete[] ptr;
+   delete[] ptr;
 }
 
 template <typename T>

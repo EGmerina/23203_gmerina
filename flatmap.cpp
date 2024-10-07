@@ -7,11 +7,11 @@ FlatMap::FlatMap()
 }
 FlatMap::FlatMap(const FlatMap &b)
 {
-    Vector<std ::pair<Key, Value>> flatmap(b.flatmap);
+    flatmap = b.flatmap;
 }
 FlatMap::FlatMap(FlatMap &&b)
 {
-    Vector<std ::pair<Key, Value>> flatmap(std ::move(b.flatmap));
+    flatmap = b.flatmap;
 }
 
 // Обменивает значения двух флетмап.
