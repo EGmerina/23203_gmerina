@@ -11,7 +11,7 @@ FlatMap::FlatMap(const FlatMap &b)
 }
 FlatMap::FlatMap(FlatMap &&b)
 {
-    flatmap = std:: move(b.flatmap);
+    flatmap = std::move(b.flatmap);
 }
 
 // Обменивает значения двух флетмап.
@@ -139,12 +139,20 @@ bool operator!=(const FlatMap &a, const FlatMap &b)
 
 std ::size_t FlatMap::position(const Key &k) const
 {
+    if (flatmap.size() == 0)
+    {
+        return 0;
+    }
     unsigned beg = 0;
     unsigned end = flatmap.size();
-    int mid = -1;
-    for (unsigned char i = 0; i < log(flatmap.size()); ++i)
+    unsigned int mid;
+    for (unsigned char i = 0; i < log(flatmap.size()) + 1; ++i)
     {
         mid = (end + beg) / 2;
+        if (flatmap[mid].first == k)
+        {
+            return mid;
+        }
         if (flatmap[mid].first < k)
         {
             beg = mid;
@@ -153,12 +161,7 @@ std ::size_t FlatMap::position(const Key &k) const
         if (flatmap[mid].first > k)
         {
             end = mid;
-            continue;
-        }
-        if (flatmap[mid].first == k)
-        {
-            return mid;
         }
     }
-    return (unsigned)(mid + 1);
+    return mid;
 }
