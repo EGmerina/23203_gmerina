@@ -17,7 +17,7 @@ FlatMap::FlatMap(FlatMap &&b)
 // Обменивает значения двух флетмап.
 void FlatMap::swap(FlatMap &b)
 {
-    flatmap.swap(b.flatmap); // я тут разве не копирую?
+    flatmap.swap(b.flatmap);
 }
 
 FlatMap &FlatMap::operator=(const FlatMap &b)
@@ -57,7 +57,7 @@ bool FlatMap::erase(const Key &k)
 // Вставка в контейнер. Возвращаемое значение - успешность вставки.
 bool FlatMap::insert(const Key &k, const Value &v)
 {
-    if (v.age > 100 || v.age < 10 || v.weight > 300 || v.weight < 20 || k.empty())
+    if (v.age > 300 || v.age < 1 || v.weight > 500 || v.weight < 5 || k.empty())
     {
         return false;
     }
