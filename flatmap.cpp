@@ -57,7 +57,7 @@ bool FlatMap::erase(const Key &k)
 // Вставка в контейнер. Возвращаемое значение - успешность вставки.
 bool FlatMap::insert(const Key &k, const Value &v)
 {
-    if (v.age > 300 || v.age < 1 || v.weight > 500 || v.weight < 5 || k.empty())
+    if (contains(k))
     {
         return false;
     }
@@ -87,7 +87,7 @@ Value &FlatMap::operator[](const Key &k)
         return flatmap[k_pos].second;
     }
     insert(k, value);
-    return value; // вернуть insert!!!
+    return flatmap[k_pos].second;
 }
 
 // Возвращает значение по ключу. Бросает исключение при неудаче.
