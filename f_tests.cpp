@@ -160,15 +160,15 @@ TEST(Functions, erase)
     }
 }
 
-TEST(Functions, insert) // position не работает
+TEST(Functions, insert) 
 
 {
     FlatMap f;
-    for (std::size_t i = 1; i < 4; i++)
+    for (std::size_t i = 1; i < 50; i++)
     {
         f.insert("Vasya" + std::to_string(i), Value(10 + i, 50 + i));
     }
-    for (std::size_t i = 0; i < 4; i++)
+    for (std::size_t i = 1; i < 50; i++)
     {
         EXPECT_EQ(f.at("Vasya" + std::to_string(i)).age, 10 + i);
         EXPECT_EQ(f.at("Vasya" + std::to_string(i)).weight, 50 + i);

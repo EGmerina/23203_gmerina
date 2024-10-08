@@ -146,22 +146,21 @@ std ::size_t FlatMap::position(const Key &k) const
     unsigned beg = 0;
     unsigned end = flatmap.size();
     unsigned int mid;
-    for (unsigned char i = 0; i < log(flatmap.size()) + 1; ++i)
+    while (beg < end)
     {
         mid = (end + beg) / 2;
         if (flatmap[mid].first == k)
         {
             return mid;
         }
-        if (flatmap[mid].first < k)
+        else if (flatmap[mid].first < k)
         {
-            beg = mid;
-            continue;
+            beg = mid + 1;
         }
-        if (flatmap[mid].first > k)
+        else if (flatmap[mid].first > k)
         {
             end = mid;
         }
     }
-    return mid;
+    return beg;
 }

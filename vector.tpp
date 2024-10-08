@@ -144,6 +144,11 @@ void Vector<T>::insert(const std ::size_t pos, const T elem)
     expandMemoryIfNeeded();
     T buf = ptr[pos];
     ptr[pos] = elem;
+    if (pos == allocatedAmount - 1)
+    {
+        currentAmount += 1;
+        return;
+    }
     for (size_t i = currentAmount; i > pos + 1; --i)
     {
         ptr[i] = ptr[i - 1];
