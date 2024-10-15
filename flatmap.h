@@ -1,52 +1,25 @@
 #pragma once
-#include "vector.h"
+
 #include <string>
+
+#include "vector.h"
+
+// std::copy, std::fill, std::equal  <algorithm>
+// clang-tidy     -Wall
 
 typedef std::string Key;
 
 struct Value
 {
-    unsigned age;
-    unsigned weight;
+    unsigned age = 0;
+    unsigned weight = 0;
 
-    Value(unsigned age, unsigned weight)
+    Value(unsigned agee, unsigned weeight) : age(agee), weight(weeight) {}
+    Value() = default;
+    bool operator==(const Value &a) const
     {
-        this->age = age;
-        this->weight = weight;
+        return age == a.age && weight == a.weight;
     }
-    Value()
-    {
-        this->weight = 0;
-        this->age = 0;
-    }
-    ~Value() {}
-    Value(const Value &v)
-    {
-        this->age = v.age;
-        this->weight = v.weight;
-    }
-    bool operator!=(const Value &a) const
-    {
-        if (this->age == a.age && this->weight == a.weight)
-        {
-            return false;
-        }
-        return true;
-    }
-};
-
-struct Pair
-{
-    Key first;
-    Value second;
-
-    Pair() {}
-    Pair(const Key k, const Value v)
-    {
-        first = k;
-        second = v;
-    }
-    ~Pair() {}
 };
 
 class FlatMap
@@ -94,7 +67,7 @@ public:
     const Value &at(const Key &k) const;
 
     // returns the number of elements in the container
-    unsigned int size() const;
+    std::size_t size() const;
 
     // checks if the container is empty
     bool empty() const;
@@ -106,6 +79,17 @@ public:
     friend bool operator!=(const FlatMap &a, const FlatMap &b);
 
 private:
+    struct Pair
+    {
+        Key first;
+        Value second;
+    };
+    /*
+    bool pred = [](const Pair *a1, const Pair *a2)
+    {
+        return (a1->first == a2->first) && (a1->second == a2->second);
+    };*/
+
     Vector<Pair> flatmap;
     Value value;
 

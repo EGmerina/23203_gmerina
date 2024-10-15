@@ -1,5 +1,4 @@
 #pragma once
-#include <iostream>
 
 template <typename T>
 class Vector
@@ -22,7 +21,7 @@ public:
 
     T &back();
 
-    std ::size_t size() const;
+    std::size_t size() const;
 
     std::size_t capacity();
 

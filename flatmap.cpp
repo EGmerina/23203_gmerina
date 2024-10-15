@@ -1,18 +1,11 @@
 #include "flatmap.h"
-#include <string>
-#include <cmath>
 
-FlatMap::FlatMap()
-{
-}
-FlatMap::FlatMap(const FlatMap &b)
-{
-    flatmap = b.flatmap;
-}
-FlatMap::FlatMap(FlatMap &&b)
-{
-    flatmap = std::move(b.flatmap);
-}
+#include <algorithm>
+#include <string>
+
+FlatMap::FlatMap() = default;
+FlatMap::FlatMap(const FlatMap &b) : flatmap(b.flatmap) {}
+FlatMap::FlatMap(FlatMap &&b) : flatmap(std::move(b.flatmap)) {}
 
 // Обменивает значения двух флетмап.
 void FlatMap::swap(FlatMap &b)
@@ -61,19 +54,15 @@ bool FlatMap::insert(const Key &k, const Value &v)
     {
         return false;
     }
-    Pair new_pair(k, v);
+    Pair new_pair{k, v};
     flatmap.insert(position(k), new_pair);
     return true;
 }
 
-// Проверка наличия значения по заданному ключу.  //std:: ranges :: binary search
+// Проверка наличия значения по заданному ключу.
 bool FlatMap::contains(const Key &k) const
 {
-    if (flatmap[position(k)].first == k)
-    {
-        return true;
-    }
-    return false;
+    return flatmap[position(k)].first == k;
 }
 
 // Возвращает значение по ключу. Небезопасный метод.
@@ -97,18 +86,14 @@ Value &FlatMap::at(const Key &k)
     {
         return flatmap[position(k)].second;
     }
-    throw std ::string("Key doesn't exist");
+    throw std ::runtime_error("key " + k + " doesn't exxist");
 }
 const Value &FlatMap::at(const Key &k) const
 {
-    if (contains(k))
-    {
-        return flatmap[position(k)].second;
-    }
-    throw std ::string("const Key doesn't exist");
+    return (*this).at(const_cast<Key &>(k));
 }
 
-unsigned int FlatMap::size() const
+std::size_t FlatMap::size() const
 {
     return flatmap.size();
 }
@@ -119,18 +104,7 @@ bool FlatMap::empty() const
 
 bool operator==(const FlatMap &a, const FlatMap &b)
 {
-    if (a.flatmap.size() != b.flatmap.size())
-    {
-        return false;
-    }
-    for (unsigned i = 0; i < a.flatmap.size(); ++i)
-    {
-        if ((a.flatmap[i].first != b.flatmap[i].first) || (a.flatmap[i].second != b.flatmap[i].second))
-        {
-            return false;
-        }
-    }
-    return true;
+    //return std::equal(&a.flatmap, &a.flatmap + a.flatmap.size(), &b.flatmap, &b.flatmap + b.flatmap.size(), pred); ?????????
 }
 bool operator!=(const FlatMap &a, const FlatMap &b)
 {
@@ -143,23 +117,24 @@ std ::size_t FlatMap::position(const Key &k) const
     {
         return 0;
     }
-    unsigned beg = 0;
-    unsigned end = flatmap.size();
-    unsigned int mid;
+
+    std::size_t beg = 0;
+    std::size_t end = flatmap.size();
+    std::size_t mid;
     while (beg < end)
     {
-        mid = (end + beg) / 2;
-        if (flatmap[mid].first == k)
+        mid = (end - beg) / 2;
+        if (flatmap[beg + mid].first == k)
         {
-            return mid;
+            return beg + mid;
         }
-        else if (flatmap[mid].first < k)
+        else if (flatmap[beg + mid].first < k)
         {
-            beg = mid + 1;
+            beg = beg + mid + 1;
         }
-        else if (flatmap[mid].first > k)
+        else if (flatmap[beg + mid].first > k)
         {
-            end = mid;
+            end = beg + mid;
         }
     }
     return beg;

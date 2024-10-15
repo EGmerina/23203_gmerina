@@ -1,35 +1,26 @@
-#include <iostream>
-#include <memory.h>
 #include "vector.h"
 
+#include <algorithm>
+#include <cassert>
+#include <iostream>
+
 template <typename T>
-Vector<T>::Vector()
+Vector<T>::Vector() : allocatedAmount(INITIAL_VEC_CAPACITY)
 {
     ptr = new T[INITIAL_VEC_CAPACITY];
-    allocatedAmount = INITIAL_VEC_CAPACITY;
 }
 
 template <typename T>
-Vector<T>::Vector(const Vector &copied)
+Vector<T>::Vector(const Vector &copied) : allocatedAmount(copied.allocatedAmount), currentAmount(copied.currentAmount)
 {
-    allocatedAmount = copied.allocatedAmount;
-    currentAmount = copied.currentAmount;
     ptr = new T[allocatedAmount];
-    for (int i = 0; i < currentAmount; i++)
-    {
-        ptr[i] = copied[i];
-    }
+    std::copy(copied.ptr, copied.ptr + copied.currentAmount, ptr);
 }
 
 template <typename T>
 Vector<T>::Vector(Vector &&moved)
 {
-    ptr = moved.ptr;
-    allocatedAmount = moved.allocatedAmount;
-    currentAmount = moved.currentAmount;
-    moved.ptr = nullptr;
-    moved.allocatedAmount = INITIAL_VEC_CAPACITY;
-    moved.currentAmount = 0;
+    (*this).swap(moved);
 }
 
 template <typename T>
@@ -69,10 +60,7 @@ Vector<T> &Vector<T>::operator=(const Vector &v)
     currentAmount = v.currentAmount;
     delete[] ptr;
     ptr = new T[allocatedAmount];
-    for (int i = 0; i < allocatedAmount; i++)
-    {
-        ptr[i] = v.ptr[i];
-    }
+    std::copy(v.ptr, v.ptr + v.currentAmount, ptr);
     return *this;
 }
 
@@ -84,18 +72,17 @@ Vector<T> &Vector<T>::operator=(Vector &&v)
         return *this;
     }
     delete[] ptr;
-    ptr = v.ptr;
-    allocatedAmount = v.allocatedAmount;
-    currentAmount = v.currentAmount;
+    allocatedAmount = INITIAL_VEC_CAPACITY;
+    currentAmount = 0;
     v.ptr = new T[INITIAL_VEC_CAPACITY];
-    v.allocatedAmount = INITIAL_VEC_CAPACITY;
-    v.currentAmount = 0;
+    (*this).swap(v);
     return *this;
 }
 
 template <typename T>
 T &Vector<T>::back()
 {
+    assert((void("no elements in flatmap"), currentAmount > 0));
     return ptr[currentAmount - 1];
 }
 
@@ -114,9 +101,9 @@ std ::size_t Vector<T>::capacity()
 template <typename T>
 void Vector<T>::swap(Vector<T> &b)
 {
-    Vector<T> buf = b;
-    b = *this;
-    *this = buf;
+    std::swap(b.ptr, this->ptr);
+    std::swap(b.allocatedAmount, this->allocatedAmount);
+    std::swap(b.currentAmount, this->currentAmount);
 }
 
 template <typename T>
