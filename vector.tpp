@@ -18,8 +18,9 @@ Vector<T>::Vector(const Vector &copied) : allocatedAmount(copied.allocatedAmount
 }
 
 template <typename T>
-Vector<T>::Vector(Vector &&moved)
+Vector<T>::Vector(Vector &&moved) : allocatedAmount(INITIAL_VEC_CAPACITY)
 {
+    ptr = new T[INITIAL_VEC_CAPACITY];
     (*this).swap(moved);
 }
 
@@ -74,7 +75,7 @@ Vector<T> &Vector<T>::operator=(Vector &&v)
     delete[] ptr;
     allocatedAmount = INITIAL_VEC_CAPACITY;
     currentAmount = 0;
-    v.ptr = new T[INITIAL_VEC_CAPACITY];
+    ptr = new T[INITIAL_VEC_CAPACITY];
     (*this).swap(v);
     return *this;
 }

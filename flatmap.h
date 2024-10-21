@@ -20,6 +20,10 @@ struct Value
     {
         return age == a.age && weight == a.weight;
     }
+    bool operator!=(const Value &a) const
+    {
+        return !(*this == a);
+    }
 };
 
 class FlatMap
@@ -84,14 +88,11 @@ private:
         Key first;
         Value second;
     };
-    /*
-    bool pred = [](const Pair *a1, const Pair *a2)
-    {
-        return (a1->first == a2->first) && (a1->second == a2->second);
-    };*/
 
     Vector<Pair> flatmap;
     Value value;
 
     std ::size_t position(const Key &k) const;
+
+    // static bool pred(const Pair *a1, const Pair *a2);
 };

@@ -62,7 +62,12 @@ bool FlatMap::insert(const Key &k, const Value &v)
 // Проверка наличия значения по заданному ключу.
 bool FlatMap::contains(const Key &k) const
 {
-    return flatmap[position(k)].first == k;
+    std::size_t pos = position(k);
+    if (pos < flatmap.size())
+    {
+        return flatmap[pos].first == k;
+    }
+    return false;
 }
 
 // Возвращает значение по ключу. Небезопасный метод.
@@ -86,11 +91,11 @@ Value &FlatMap::at(const Key &k)
     {
         return flatmap[position(k)].second;
     }
-    throw std ::runtime_error("key " + k + " doesn't exxist");
+    throw std ::runtime_error("key " + k + " doesn't exist");
 }
 const Value &FlatMap::at(const Key &k) const
 {
-    return (*this).at(const_cast<Key &>(k));
+    return const_cast<FlatMap &>(*this).at((k));
 }
 
 std::size_t FlatMap::size() const
@@ -102,9 +107,27 @@ bool FlatMap::empty() const
     return flatmap.empty();
 }
 
+/*
+static bool pred(const Pair *a1, const Pair *a2)
+{
+    return (a1->first == a2->first) && (a1->second == a2->second);
+}*/
+
 bool operator==(const FlatMap &a, const FlatMap &b)
 {
-    //return std::equal(&a.flatmap, &a.flatmap + a.flatmap.size(), &b.flatmap, &b.flatmap + b.flatmap.size(), pred); ?????????
+    if (a.flatmap.size() != b.flatmap.size())
+    {
+        return false;
+    }
+    for (std::size_t i = 0; i < a.flatmap.size(); ++i)
+    {
+        if ((a.flatmap[i].first != b.flatmap[i].first) || (a.flatmap[i].second != b.flatmap[i].second))
+        {
+            return false;
+        }
+    }
+    return true;
+    // return std::equal(&a.flatmap, &a.flatmap + a.flatmap.size(), &b.flatmap, &b.flatmap + b.flatmap.size(), pred);
 }
 bool operator!=(const FlatMap &a, const FlatMap &b)
 {

@@ -27,11 +27,11 @@ TEST(Constructors, move)
     EXPECT_EQ(f1.at("Vasya").age, 20);
     try
     {
-        EXPECT_NE(f.at("Vasya").age, 20);
+        f.at("Vasya");
     }
-    catch (std ::string const &e)
+    catch (std ::runtime_error const &e)
     {
-        EXPECT_EQ(e, "Key doesn't exist");
+        EXPECT_EQ(e.what(), std::string("key Vasya doesn't exist"));
     }
 }
 
@@ -55,11 +55,11 @@ TEST(Operators, move)
     EXPECT_EQ(f1.at("Vasya").age, 20);
     try
     {
-        EXPECT_NE(f.at("Vasya").age, 20);
+        f.at("Vasya");
     }
-    catch (std ::string const &e)
+    catch (std ::runtime_error const &e)
     {
-        EXPECT_EQ(e, "Key doesn't exist");
+        EXPECT_EQ(e.what(), std::string("key Vasya doesn't exist"));
     }
     f1 = std::move(f1);
     EXPECT_EQ(f1.at("Vasya").age, 20);
@@ -123,19 +123,19 @@ TEST(Functions, clear)
     f.clear();
     try
     {
-        EXPECT_NE(f.at("Lena").age, 30);
+        f.at("Lena");
     }
-    catch (std ::string const &e)
+    catch (std ::runtime_error const &e)
     {
-        EXPECT_EQ(e, "Key doesn't exist");
+        EXPECT_EQ(e.what(), std::string("key Lena doesn't exist"));
     }
     try
     {
-        EXPECT_NE(f.at("Vasya").age, 20);
+        f.at("Vasya");
     }
-    catch (std ::string const &e)
+    catch (std ::runtime_error const &e)
     {
-        EXPECT_EQ(e, "Key doesn't exist");
+        EXPECT_EQ(e.what(), std::string("key Vasya doesn't exist"));
     }
     EXPECT_EQ(f.size(), 0);
 }
@@ -152,11 +152,11 @@ TEST(Functions, erase)
     EXPECT_EQ(f.at("Vasya").weight, 70);
     try
     {
-        EXPECT_NE(f.at("Lena").age, 30);
+        f.at("Lena");
     }
-    catch (std ::string const &e)
+    catch (std ::runtime_error const &e)
     {
-        EXPECT_EQ(e, "Key doesn't exist");
+        EXPECT_EQ(e.what(), std::string("key Lena doesn't exist"));
     }
 }
 
@@ -190,21 +190,21 @@ TEST(Functions, at)
     EXPECT_EQ(f.at("Vasya").age, 20);
     try
     {
-        EXPECT_NE(f.at("Lena").age, 30);
+        f.at("Lena");
     }
-    catch (std ::string const &e)
+    catch (std ::runtime_error const &e)
     {
-        EXPECT_EQ(e, "Key doesn't exist");
+        EXPECT_EQ(e.what(), std::string("key Lena doesn't exist"));
     }
     const FlatMap f1(f);
     EXPECT_EQ(f1.at("Vasya").age, 20);
     try
     {
-        EXPECT_NE(f1.at("Lena").age, 30);
+        f1.at("Lena");
     }
-    catch (std ::string const &e)
+    catch (std ::runtime_error const &e)
     {
-        EXPECT_EQ(e, "const Key doesn't exist");
+        EXPECT_EQ(e.what(), std::string("key Lena doesn't exist"));
     }
 }
 
