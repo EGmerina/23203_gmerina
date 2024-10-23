@@ -4,8 +4,7 @@
 
 #include "vector.h"
 
-// std::copy, std::fill, std::equal  <algorithm>
-// clang-tidy     -Wall
+// clang-tidy
 
 typedef std::string Key;
 

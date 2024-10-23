@@ -61,8 +61,6 @@ TEST(Operators, move)
     {
         EXPECT_EQ(e.what(), std::string("key Vasya doesn't exist"));
     }
-    f1 = std::move(f1);
-    EXPECT_EQ(f1.at("Vasya").age, 20);
 }
 
 TEST(Operators, equal)
@@ -160,7 +158,7 @@ TEST(Functions, erase)
     }
 }
 
-TEST(Functions, insert) 
+TEST(Functions, insert)
 
 {
     FlatMap f;

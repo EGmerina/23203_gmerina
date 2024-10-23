@@ -186,7 +186,7 @@ void Vector<T>::expandMemoryIfNeeded()
     }
     allocatedAmount *= 2;
     T *newPtr = new T[allocatedAmount];
-    for (int i = 0; i < currentAmount; i++)
+    for (std::size_t i = 0; i < currentAmount; i++)
     {
         newPtr[i] = ptr[i];
     }
