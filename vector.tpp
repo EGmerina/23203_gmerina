@@ -166,6 +166,18 @@ void Vector<T>::print()
 }
 
 template <typename T>
+T *Vector<T>::begin() const
+{
+    return ptr;
+}
+
+template <typename T>
+T *Vector<T>::end() const
+{
+    return ptr + size();
+}
+
+template <typename T>
 void Vector<T>::expandMemoryIfNeeded()
 {
     if (currentAmount < allocatedAmount)

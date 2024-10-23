@@ -3,6 +3,7 @@
 #include <algorithm>
 #include <string>
 
+// operator <=>
 FlatMap::FlatMap() = default;
 FlatMap::FlatMap(const FlatMap &b) : flatmap(b.flatmap) {}
 FlatMap::FlatMap(FlatMap &&b) : flatmap(std::move(b.flatmap)) {}
@@ -107,27 +108,9 @@ bool FlatMap::empty() const
     return flatmap.empty();
 }
 
-/*
-static bool pred(const Pair *a1, const Pair *a2)
-{
-    return (a1->first == a2->first) && (a1->second == a2->second);
-}*/
-
 bool operator==(const FlatMap &a, const FlatMap &b)
 {
-    if (a.flatmap.size() != b.flatmap.size())
-    {
-        return false;
-    }
-    for (std::size_t i = 0; i < a.flatmap.size(); ++i)
-    {
-        if ((a.flatmap[i].first != b.flatmap[i].first) || (a.flatmap[i].second != b.flatmap[i].second))
-        {
-            return false;
-        }
-    }
-    return true;
-    // return std::equal(&a.flatmap, &a.flatmap + a.flatmap.size(), &b.flatmap, &b.flatmap + b.flatmap.size(), pred);
+    return std::equal(a.flatmap.begin(), a.flatmap.end(), b.flatmap.begin(), b.flatmap.end());
 }
 bool operator!=(const FlatMap &a, const FlatMap &b)
 {

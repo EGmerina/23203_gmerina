@@ -37,6 +37,10 @@ public:
 
     bool empty() const;
 
+    T *begin() const;
+
+    T *end() const;
+
 private:
     static constexpr int INITIAL_VEC_CAPACITY = 4;
     T *ptr = nullptr;

@@ -87,12 +87,18 @@ private:
     {
         Key first;
         Value second;
+        bool operator==(const Pair &a) const
+        {
+            return first == a.first && second == a.second;
+        }
+        bool operator!=(const Pair &a) const
+        {
+            return !(*this == a);
+        }
     };
 
     Vector<Pair> flatmap;
     Value value;
 
     std ::size_t position(const Key &k) const;
-
-    // static bool pred(const Pair *a1, const Pair *a2);
 };
