@@ -119,10 +119,8 @@ void Vector<T>::clear()
 template <typename T>
 void Vector<T>::erase(const std ::size_t pos)
 {
-    for (size_t i = pos; i < currentAmount - 1; ++i)
-    {
-        ptr[i] = ptr[i + 1];
-    }
+
+    std::copy(ptr + pos + 1, this->end(), ptr + pos);
     currentAmount -= 1;
 }
 
