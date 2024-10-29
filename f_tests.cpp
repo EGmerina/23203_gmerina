@@ -25,14 +25,7 @@ TEST(Constructors, move)
     f.insert("Vasya", Value(20, 70));
     FlatMap f1(std::move(f));
     EXPECT_EQ(f1.at("Vasya").age, 20);
-    try
-    {
-        f.at("Vasya");
-    }
-    catch (std ::runtime_error const &e)
-    {
-        EXPECT_EQ(e.what(), std::string("key Vasya doesn't exist"));
-    }
+    EXPECT_THROW(f.at("Vasya"), std ::runtime_error);
 }
 
 TEST(Operators, copy)
@@ -53,14 +46,7 @@ TEST(Operators, move)
     FlatMap f1;
     f1 = std::move(f);
     EXPECT_EQ(f1.at("Vasya").age, 20);
-    try
-    {
-        f.at("Vasya");
-    }
-    catch (std ::runtime_error const &e)
-    {
-        EXPECT_EQ(e.what(), std::string("key Vasya doesn't exist"));
-    }
+    EXPECT_THROW(f.at("Vasya"), std ::runtime_error);
 }
 
 TEST(Operators, equal)
@@ -73,6 +59,20 @@ TEST(Operators, equal)
     FlatMap f2;
     f2.insert("Lena", Value(30, 60));
     EXPECT_EQ(f2 == f, false);
+
+    f.clear();
+    f1.clear();
+    EXPECT_EQ(f1 == f, true);
+
+    for (std::size_t i = 1; i < 45; i++)
+    {
+        f.insert("Vasya" + std::to_string(i), Value(10 + i, 50 + i));
+        f1.insert("Vasya" + std::to_string(i), Value(10 + i, 50 + i));
+    }
+    f1.insert("Lena", Value(60, 23));
+    EXPECT_EQ(f1 == f, false);
+    f.insert("Lena", Value(60, 23));
+    EXPECT_EQ(f1 == f, true);
 }
 
 TEST(Operators, not_equal)
@@ -119,22 +119,8 @@ TEST(Functions, clear)
     f.insert("Vasya", Value(20, 70));
     f.insert("Lena", Value(30, 60));
     f.clear();
-    try
-    {
-        f.at("Lena");
-    }
-    catch (std ::runtime_error const &e)
-    {
-        EXPECT_EQ(e.what(), std::string("key Lena doesn't exist"));
-    }
-    try
-    {
-        f.at("Vasya");
-    }
-    catch (std ::runtime_error const &e)
-    {
-        EXPECT_EQ(e.what(), std::string("key Vasya doesn't exist"));
-    }
+    EXPECT_THROW(f.at("Lena"), std ::runtime_error);
+    EXPECT_THROW(f.at("Vasya"), std ::runtime_error);
     EXPECT_EQ(f.size(), 0);
 }
 
@@ -144,29 +130,23 @@ TEST(Functions, erase)
     f.insert("Vasya", Value(20, 70));
     f.insert("Lena", Value(30, 60));
     EXPECT_EQ(f.size(), 2);
+    EXPECT_EQ(f.erase("Jenya"), false);
     f.erase("Lena");
     EXPECT_EQ(f.size(), 1);
     EXPECT_EQ(f.at("Vasya").age, 20);
     EXPECT_EQ(f.at("Vasya").weight, 70);
-    try
-    {
-        f.at("Lena");
-    }
-    catch (std ::runtime_error const &e)
-    {
-        EXPECT_EQ(e.what(), std::string("key Lena doesn't exist"));
-    }
+    EXPECT_THROW(f.at("Lena"), std ::runtime_error);
 }
 
 TEST(Functions, insert)
 
 {
     FlatMap f;
-    for (std::size_t i = 1; i < 50; i++)
+    for (std::size_t i = 1; i < 66; i++)
     {
         f.insert("Vasya" + std::to_string(i), Value(10 + i, 50 + i));
     }
-    for (std::size_t i = 1; i < 50; i++)
+    for (std::size_t i = 1; i < 66; i++)
     {
         EXPECT_EQ(f.at("Vasya" + std::to_string(i)).age, 10 + i);
         EXPECT_EQ(f.at("Vasya" + std::to_string(i)).weight, 50 + i);
@@ -186,24 +166,10 @@ TEST(Functions, at)
     FlatMap f;
     f.insert("Vasya", Value(20, 70));
     EXPECT_EQ(f.at("Vasya").age, 20);
-    try
-    {
-        f.at("Lena");
-    }
-    catch (std ::runtime_error const &e)
-    {
-        EXPECT_EQ(e.what(), std::string("key Lena doesn't exist"));
-    }
+    EXPECT_THROW(f.at("Lena"), std ::runtime_error);
     const FlatMap f1(f);
     EXPECT_EQ(f1.at("Vasya").age, 20);
-    try
-    {
-        f1.at("Lena");
-    }
-    catch (std ::runtime_error const &e)
-    {
-        EXPECT_EQ(e.what(), std::string("key Lena doesn't exist"));
-    }
+    EXPECT_THROW(f1.at("Lena"), std ::runtime_error);
 }
 
 TEST(Functions, size)
@@ -212,6 +178,14 @@ TEST(Functions, size)
     EXPECT_EQ(f.size(), 0);
     f.insert("Vasya", Value(20, 70));
     EXPECT_EQ(f.size(), 1);
+
+    for (std::size_t i = 1; i < 100; i++)
+    {
+        f.insert("Vasya" + std::to_string(i), Value(10 + i, 50 + i));
+    }
+    EXPECT_EQ(f.size(), 100);
+    f.clear();
+    EXPECT_EQ(f.size(), 0);
 }
 
 TEST(Functions, empty)
@@ -220,6 +194,18 @@ TEST(Functions, empty)
     EXPECT_EQ(f.empty(), true);
     f.insert("Vasya", Value(20, 70));
     EXPECT_EQ(f.empty(), false);
+
+    for (std::size_t i = 1; i < 100; i++)
+    {
+        f.insert("Vasya" + std::to_string(i), Value(10 + i, 50 + i));
+    }
+    for (std::size_t i = 1; i < 100; i++)
+    {
+        f.erase("Vasya" + std::to_string(i));
+    }
+    EXPECT_EQ(f.empty(), false);
+    f.erase("Vasya");
+    EXPECT_EQ(f.empty(), true);
 }
 
 int main(int argc, char **argv)

@@ -3,12 +3,10 @@
 #include <algorithm>
 #include <string>
 
-// operator <=>
 FlatMap::FlatMap() = default;
 FlatMap::FlatMap(const FlatMap &b) : flatmap(b.flatmap) {}
 FlatMap::FlatMap(FlatMap &&b) : flatmap(std::move(b.flatmap)) {}
 
-// Обменивает значения двух флетмап.
 void FlatMap::swap(FlatMap &b)
 {
     flatmap.swap(b.flatmap);
@@ -33,12 +31,11 @@ FlatMap &FlatMap ::operator=(FlatMap &&b)
     return *this;
 }
 
-// Очищает контейнер.
 void FlatMap::clear()
 {
     flatmap.clear();
 }
-// Удаляет элемент по заданному ключу.
+
 bool FlatMap::erase(const Key &k)
 {
     if (contains(k))
@@ -48,7 +45,7 @@ bool FlatMap::erase(const Key &k)
     }
     return false;
 }
-// Вставка в контейнер. Возвращаемое значение - успешность вставки.
+
 bool FlatMap::insert(const Key &k, const Value &v)
 {
     if (contains(k))
@@ -60,10 +57,9 @@ bool FlatMap::insert(const Key &k, const Value &v)
     return true;
 }
 
-// Проверка наличия значения по заданному ключу.
 bool FlatMap::contains(const Key &k) const
 {
-    std::size_t pos = position(k);
+    const std::size_t pos = position(k);
     if (pos < flatmap.size())
     {
         return flatmap[pos].first == k;
@@ -71,12 +67,9 @@ bool FlatMap::contains(const Key &k) const
     return false;
 }
 
-// Возвращает значение по ключу. Небезопасный метод.
-// В случае отсутствия ключа в контейнере, следует вставить в контейнер
-// значение, созданное конструктором по умолчанию и вернуть ссылку на него.
 Value &FlatMap::operator[](const Key &k)
 {
-    unsigned int k_pos = position(k);
+    const std::size_t k_pos = position(k);
     if (contains(k))
     {
         return flatmap[k_pos].second;
@@ -85,7 +78,6 @@ Value &FlatMap::operator[](const Key &k)
     return flatmap[k_pos].second;
 }
 
-// Возвращает значение по ключу. Бросает исключение при неудаче.
 Value &FlatMap::at(const Key &k)
 {
     if (contains(k))

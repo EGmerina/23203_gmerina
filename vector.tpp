@@ -4,6 +4,8 @@
 #include <cassert>
 #include <iostream>
 
+// download memory //clang-tidy
+
 template <typename T>
 Vector<T>::Vector() : allocatedAmount(INITIAL_VEC_CAPACITY)
 {
@@ -11,7 +13,7 @@ Vector<T>::Vector() : allocatedAmount(INITIAL_VEC_CAPACITY)
 }
 
 template <typename T>
-Vector<T>::Vector(const Vector &copied) : allocatedAmount(copied.allocatedAmount), currentAmount(copied.currentAmount)
+Vector<T>::Vector(const Vector &copied) : currentAmount(copied.currentAmount), allocatedAmount(copied.allocatedAmount)
 {
     ptr = new T[allocatedAmount];
     std::copy(copied.ptr, copied.ptr + copied.currentAmount, ptr);
@@ -135,10 +137,7 @@ void Vector<T>::insert(const std ::size_t pos, const T elem)
         currentAmount += 1;
         return;
     }
-    for (size_t i = currentAmount; i > pos + 1; --i)
-    {
-        ptr[i] = ptr[i - 1];
-    }
+    std::copy_backward(ptr + pos + 1, ptr + currentAmount, ptr + currentAmount + 1);
     ptr[pos + 1] = buf;
     currentAmount += 1;
 }
@@ -146,11 +145,7 @@ void Vector<T>::insert(const std ::size_t pos, const T elem)
 template <typename T>
 bool Vector<T>::empty() const
 {
-    if (currentAmount == 0)
-    {
-        return true;
-    }
-    return false;
+    return currentAmount == 0;
 }
 
 template <typename T>
@@ -178,16 +173,14 @@ T *Vector<T>::end() const
 template <typename T>
 void Vector<T>::expandMemoryIfNeeded()
 {
+    constexpr int EXPANSION_FACTOR = 2;
     if (currentAmount < allocatedAmount)
     {
         return;
     }
-    allocatedAmount *= 2;
+    allocatedAmount *= EXPANSION_FACTOR;
     T *newPtr = new T[allocatedAmount];
-    for (std::size_t i = 0; i < currentAmount; i++)
-    {
-        newPtr[i] = ptr[i];
-    }
+    std::copy(ptr, ptr + currentAmount, newPtr);
     delete[] ptr;
     ptr = newPtr;
 }
