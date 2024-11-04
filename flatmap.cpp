@@ -5,9 +5,9 @@
 
 FlatMap::FlatMap() = default;
 FlatMap::FlatMap(const FlatMap &b) : flatmap(b.flatmap) {}
-FlatMap::FlatMap(FlatMap &&b) : flatmap(std::move(b.flatmap)) {}
+FlatMap::FlatMap(FlatMap &&b) noexcept : flatmap(std::move(b.flatmap)) {}
 
-void FlatMap::swap(FlatMap &b)
+void FlatMap::swap(FlatMap &b) noexcept
 {
     flatmap.swap(b.flatmap);
 }
@@ -21,7 +21,7 @@ FlatMap &FlatMap::operator=(const FlatMap &b)
     flatmap = b.flatmap;
     return *this;
 }
-FlatMap &FlatMap ::operator=(FlatMap &&b)
+FlatMap &FlatMap ::operator=(FlatMap &&b) noexcept
 {
     if (this == &b)
     {
@@ -118,7 +118,7 @@ std ::size_t FlatMap::position(const Key &k) const
 
     std::size_t beg = 0;
     std::size_t end = flatmap.size();
-    std::size_t mid;
+    std::size_t mid = 0;
     while (beg < end)
     {
         mid = (end - beg) / 2;

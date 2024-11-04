@@ -41,13 +41,13 @@ void Vector<T>::push(const T elem)
 }
 
 template <typename T>
-T &Vector<T>::operator[](const int index)
+T &Vector<T>::operator[](const std::size_t index)
 {
     return ptr[index];
 }
 
 template <typename T>
-T &Vector<T>::operator[](const int index) const
+T &Vector<T>::operator[](const std::size_t index) const
 {
     return ptr[index];
 }

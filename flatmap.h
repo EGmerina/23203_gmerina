@@ -4,8 +4,6 @@
 
 #include "vector.h"
 
-// clang-tidy
-
 typedef std::string Key;
 
 struct Value
@@ -35,16 +33,16 @@ public:
     FlatMap(const FlatMap &b);
 
     // move constructor
-    FlatMap(FlatMap &&b);
+    FlatMap(FlatMap &&b) noexcept;
 
     // swaps objects of class Flatmap
-    void swap(FlatMap &b);
+    void swap(FlatMap &b) noexcept;
 
     // copy operator
     FlatMap &operator=(const FlatMap &b);
 
     // move operator
-    FlatMap &operator=(FlatMap &&b);
+    FlatMap &operator=(FlatMap &&b) noexcept;
 
     // cleans the container
     void clear();

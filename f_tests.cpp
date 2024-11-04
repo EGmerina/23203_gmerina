@@ -37,6 +37,9 @@ TEST(Operators, copy)
     EXPECT_EQ(f1.at("Vasya").age, 20);
     f1 = f1;
     EXPECT_EQ(f1.at("Vasya").age, 20);
+    f.clear();
+    f1 = f;
+    EXPECT_THROW(f.at("Vasya"), std ::runtime_error);
 }
 
 TEST(Operators, move)
@@ -116,12 +119,21 @@ TEST(Functions, swap)
 TEST(Functions, clear)
 {
     FlatMap f;
-    f.insert("Vasya", Value(20, 70));
-    f.insert("Lena", Value(30, 60));
+    for (std::size_t i = 1; i < 6; i++)
+    {
+        f.insert("Vasya" + std::to_string(i), Value(10 + i, 50 + i));
+    }
     f.clear();
-    EXPECT_THROW(f.at("Lena"), std ::runtime_error);
-    EXPECT_THROW(f.at("Vasya"), std ::runtime_error);
+    for (std::size_t i = 1; i < 6; i++)
+    {
+        EXPECT_THROW(f.at("Vasya" + std::to_string(i)), std ::runtime_error);
+    }
     EXPECT_EQ(f.size(), 0);
+    for (std::size_t i = 1; i < 7; i++)
+    {
+        f.insert("Vasya" + std::to_string(i), Value(10 + i, 50 + i));
+    }
+    EXPECT_EQ(f.size(), 6);
 }
 
 TEST(Functions, erase)
@@ -151,6 +163,7 @@ TEST(Functions, insert)
         EXPECT_EQ(f.at("Vasya" + std::to_string(i)).age, 10 + i);
         EXPECT_EQ(f.at("Vasya" + std::to_string(i)).weight, 50 + i);
     }
+    EXPECT_EQ(f.insert("Vasya1", Value(11, 51)), false);
 }
 
 TEST(Functions, contains)

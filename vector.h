@@ -11,9 +11,9 @@ public:
 
     void push(const T elem);
 
-    T &operator[](const int index);
+    T &operator[](const std::size_t index);
 
-    T &operator[](const int index) const;
+    T &operator[](const std::size_t index) const;
 
     Vector &operator=(const Vector &v);
 
