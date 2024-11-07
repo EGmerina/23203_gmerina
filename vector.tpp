@@ -18,7 +18,7 @@ Vector<T>::Vector(const Vector &copied) : currentAmount(copied.currentAmount), a
 }
 
 template <typename T>
-Vector<T>::Vector(Vector &&moved) noexcept : allocatedAmount(INITIAL_VEC_CAPACITY)
+Vector<T>::Vector(Vector &&moved) : allocatedAmount(INITIAL_VEC_CAPACITY)
 {
     ptr = new T[INITIAL_VEC_CAPACITY];
     (*this).swap(moved);
@@ -66,7 +66,7 @@ Vector<T> &Vector<T>::operator=(const Vector &v)
 }
 
 template <typename T>
-Vector<T> &Vector<T>::operator=(Vector &&v) noexcept
+Vector<T> &Vector<T>::operator=(Vector &&v)
 {
     if (this == &v)
     {
