@@ -2,8 +2,8 @@
 #include "gtest/gtest.h"
 #include <iostream>
 // flag -lgtest !!!!!!
-//g++ f_tests.cpp flatmap.cpp -lgtest --coverage -Wall -fsanitize=address
-//clang-tidy flatmap.cpp  -checks=cppcoreguidelines-*
+// g++ f_tests.cpp flatmap.cpp -lgtest --coverage -Wall -fsanitize=address
+// clang-tidy flatmap.cpp  -checks=cppcoreguidelines-*
 
 TEST(Constructors, init)
 {
