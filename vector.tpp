@@ -5,10 +5,7 @@
 #include <iostream>
 
 template <typename T>
-Vector<T>::Vector() : allocatedAmount(INITIAL_VEC_CAPACITY)
-{
-    ptr = new T[INITIAL_VEC_CAPACITY];
-}
+Vector<T>::Vector() : ptr(new T[INITIAL_VEC_CAPACITY]), allocatedAmount(INITIAL_VEC_CAPACITY) {}
 
 template <typename T>
 Vector<T>::Vector(const Vector &copied) : currentAmount(copied.currentAmount), allocatedAmount(copied.allocatedAmount)
@@ -18,9 +15,8 @@ Vector<T>::Vector(const Vector &copied) : currentAmount(copied.currentAmount), a
 }
 
 template <typename T>
-Vector<T>::Vector(Vector &&moved) : allocatedAmount(INITIAL_VEC_CAPACITY)
+Vector<T>::Vector(Vector &&moved) : ptr(new T[INITIAL_VEC_CAPACITY]), allocatedAmount(INITIAL_VEC_CAPACITY)
 {
-    ptr = new T[INITIAL_VEC_CAPACITY];
     (*this).swap(moved);
 }
 

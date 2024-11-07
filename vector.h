@@ -21,7 +21,7 @@ public:
 
     T &back();
 
-    std::size_t size() const;
+    [[nodiscard]] std::size_t size() const;
 
     std::size_t capacity();
 
@@ -35,7 +35,7 @@ public:
 
     void insert(const std ::size_t pos, const T elem);
 
-    bool empty() const;
+    [[nodiscard]] bool empty() const;
 
     T *begin() const;
 

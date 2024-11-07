@@ -35,6 +35,8 @@ public:
     // move constructor
     FlatMap(FlatMap &&b) noexcept;
 
+    ~FlatMap() = default;
+
     // swaps objects of class Flatmap
     void swap(FlatMap &b) noexcept;
 
@@ -54,7 +56,7 @@ public:
     bool insert(const Key &k, const Value &v);
 
     // checks by key whether the element is contained in the container
-    bool contains(const Key &k) const;
+    [[nodiscard]] bool contains(const Key &k) const;
 
     // Returns the value by key.
     // If the key is missing in the container, it is inserted into the container
@@ -65,13 +67,13 @@ public:
     Value &at(const Key &k);
 
     // Returns the value by key. Throws an exception on failure.
-    const Value &at(const Key &k) const;
+    [[nodiscard]] const Value &at(const Key &k) const;
 
     // returns the number of elements in the container
-    std::size_t size() const;
+    [[nodiscard]] std::size_t size() const;
 
     // checks if the container is empty
-    bool empty() const;
+    [[nodiscard]] bool empty() const;
 
     // checking for equality of two containers
     friend bool operator==(const FlatMap &a, const FlatMap &b);
@@ -97,5 +99,5 @@ private:
     Vector<Pair> flatmap;
     Value value;
 
-    std ::size_t position(const Key &k) const;
+    [[nodiscard]] std ::size_t position(const Key &k) const;
 };

@@ -1,7 +1,6 @@
 #include "flatmap.h"
 
 #include <algorithm>
-#include <iostream>
 
 FlatMap::FlatMap() = default;
 FlatMap::FlatMap(const FlatMap &b) : flatmap(b.flatmap) {}
@@ -111,7 +110,7 @@ bool operator!=(const FlatMap &a, const FlatMap &b)
 
 std ::size_t FlatMap::position(const Key &k) const
 {
-    if (flatmap.size() == 0)
+    if (flatmap.empty())
     {
         return 0;
     }
