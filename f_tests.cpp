@@ -2,6 +2,8 @@
 #include "gtest/gtest.h"
 #include <iostream>
 // flag -lgtest !!!!!!
+//g++ f_tests.cpp flatmap.cpp -lgtest --coverage -Wall -fsanitize=address
+//clang-tidy flatmap.cpp  -checks=cppcoreguidelines-*
 
 TEST(Constructors, init)
 {
@@ -50,6 +52,8 @@ TEST(Operators, move)
     f1 = std::move(f);
     EXPECT_EQ(f1.at("Vasya").age, 20);
     EXPECT_THROW(f.at("Vasya"), std ::runtime_error);
+    f1 = std::move(f1);
+    EXPECT_EQ(f1.at("Vasya").age, 20);
 }
 
 TEST(Operators, equal)

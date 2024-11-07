@@ -4,7 +4,7 @@
 
 #include "vector.h"
 
-typedef std::string Key;
+using Key = std::string;
 
 struct Value
 {

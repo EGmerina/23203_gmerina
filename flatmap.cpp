@@ -1,7 +1,7 @@
 #include "flatmap.h"
 
 #include <algorithm>
-#include <string>
+#include <iostream>
 
 FlatMap::FlatMap() = default;
 FlatMap::FlatMap(const FlatMap &b) : flatmap(b.flatmap) {}
@@ -52,7 +52,7 @@ bool FlatMap::insert(const Key &k, const Value &v)
     {
         return false;
     }
-    Pair new_pair{k, v};
+    const Pair new_pair{k, v};
     flatmap.insert(position(k), new_pair);
     return true;
 }

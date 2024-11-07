@@ -4,8 +4,6 @@
 #include <cassert>
 #include <iostream>
 
-// download memory //clang-tidy
-
 template <typename T>
 Vector<T>::Vector() : allocatedAmount(INITIAL_VEC_CAPACITY)
 {
@@ -20,7 +18,7 @@ Vector<T>::Vector(const Vector &copied) : currentAmount(copied.currentAmount), a
 }
 
 template <typename T>
-Vector<T>::Vector(Vector &&moved) : allocatedAmount(INITIAL_VEC_CAPACITY)
+Vector<T>::Vector(Vector &&moved) noexcept : allocatedAmount(INITIAL_VEC_CAPACITY)
 {
     ptr = new T[INITIAL_VEC_CAPACITY];
     (*this).swap(moved);
@@ -68,7 +66,7 @@ Vector<T> &Vector<T>::operator=(const Vector &v)
 }
 
 template <typename T>
-Vector<T> &Vector<T>::operator=(Vector &&v)
+Vector<T> &Vector<T>::operator=(Vector &&v) noexcept
 {
     if (this == &v)
     {
@@ -102,7 +100,7 @@ std ::size_t Vector<T>::capacity()
 }
 
 template <typename T>
-void Vector<T>::swap(Vector<T> &b)
+void Vector<T>::swap(Vector<T> &b) noexcept
 {
     std::swap(b.ptr, this->ptr);
     std::swap(b.allocatedAmount, this->allocatedAmount);

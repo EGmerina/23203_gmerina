@@ -6,7 +6,7 @@ class Vector
 public:
     Vector();
     Vector(const Vector &copied);
-    Vector(Vector &&moved);
+    Vector(Vector &&moved) noexcept;
     ~Vector();
 
     void push(const T elem);
@@ -17,7 +17,7 @@ public:
 
     Vector &operator=(const Vector &v);
 
-    Vector &operator=(Vector &&v);
+    Vector &operator=(Vector &&v) noexcept;
 
     T &back();
 
@@ -27,7 +27,7 @@ public:
 
     void print();
 
-    void swap(Vector<T> &b);
+    void swap(Vector<T> &b) noexcept;
 
     void clear();
 
