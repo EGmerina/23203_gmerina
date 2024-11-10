@@ -1,0 +1,232 @@
+#include "flatmap.h"
+#include "gtest/gtest.h"
+#include <iostream>
+// flag -lgtest !!!!!!
+// g++ f_tests.cpp flatmap.cpp -lgtest --coverage -Wall -fsanitize=address
+// clang-tidy flatmap.cpp  -checks=cppcoreguidelines-*
+
+TEST(Constructors, init)
+{
+    FlatMap f;
+    f.insert("Vasya", Value(20, 70));
+    EXPECT_EQ(f.at("Vasya").age, 20);
+}
+
+TEST(Constructors, copy)
+{
+    FlatMap f;
+    f.insert("Vasya", Value(20, 70));
+    EXPECT_EQ(f.at("Vasya").age, 20);
+    FlatMap f1(f);
+    EXPECT_EQ(f1.at("Vasya").age, 20);
+}
+
+TEST(Constructors, move)
+{
+    FlatMap f;
+    f.insert("Vasya", Value(20, 70));
+    FlatMap f1(std::move(f));
+    EXPECT_EQ(f1.at("Vasya").age, 20);
+    EXPECT_THROW(f.at("Vasya"), std ::runtime_error);
+}
+
+TEST(Operators, copy)
+{
+    FlatMap f;
+    f.insert("Vasya", Value(20, 70));
+    FlatMap f1;
+    f1 = f;
+    EXPECT_EQ(f1.at("Vasya").age, 20);
+    f1 = f1;
+    EXPECT_EQ(f1.at("Vasya").age, 20);
+    f.clear();
+    f1 = f;
+    EXPECT_THROW(f.at("Vasya"), std ::runtime_error);
+}
+
+TEST(Operators, move)
+{
+    FlatMap f;
+    f.insert("Vasya", Value(20, 70));
+    FlatMap f1;
+    f1 = std::move(f);
+    EXPECT_EQ(f1.at("Vasya").age, 20);
+    EXPECT_THROW(f.at("Vasya"), std ::runtime_error);
+    f1 = std::move(f1);
+    EXPECT_EQ(f1.at("Vasya").age, 20);
+}
+
+TEST(Operators, equal)
+{
+    FlatMap f;
+    f.insert("Vasya", Value(20, 70));
+    FlatMap f1;
+    f1.insert("Vasya", Value(20, 70));
+    EXPECT_EQ(f1 == f, true);
+    FlatMap f2;
+    f2.insert("Lena", Value(30, 60));
+    EXPECT_EQ(f2 == f, false);
+
+    f.clear();
+    f1.clear();
+    EXPECT_EQ(f1 == f, true);
+
+    for (std::size_t i = 1; i < 45; i++)
+    {
+        f.insert("Vasya" + std::to_string(i), Value(10 + i, 50 + i));
+        f1.insert("Vasya" + std::to_string(i), Value(10 + i, 50 + i));
+    }
+    f1.insert("Lena", Value(60, 23));
+    EXPECT_EQ(f1 == f, false);
+    f.insert("Lena", Value(60, 23));
+    EXPECT_EQ(f1 == f, true);
+}
+
+TEST(Operators, not_equal)
+{
+    FlatMap f;
+    f.insert("Vasya", Value(20, 70));
+    FlatMap f1;
+    f1.insert("Vasya", Value(20, 70));
+    EXPECT_EQ(f1 != f, false);
+    FlatMap f2;
+    f2.insert("Lena", Value(30, 60));
+    EXPECT_EQ(f2 != f, true);
+}
+
+TEST(Operators, get_elem)
+{
+    FlatMap f;
+    f.insert("Vasya", Value(20, 70));
+    f.insert("Lena", Value(30, 60));
+    EXPECT_EQ(f["Vasya"].age, 20);
+    EXPECT_EQ(f["Vasya"].weight, 70);
+    EXPECT_EQ(f["Lena"].age, 30);
+    EXPECT_EQ(f["Lena"].weight, 60);
+    EXPECT_EQ(f["Yana"].age, 0);
+    EXPECT_EQ(f["Yana"].weight, 0);
+}
+
+TEST(Functions, swap)
+{
+    FlatMap f;
+    f.insert("Vasya", Value(20, 70));
+    FlatMap f1;
+    f1.insert("Ilya", Value(40, 80));
+    f.swap(f1);
+    EXPECT_EQ(f1["Vasya"].age, 20);
+    EXPECT_EQ(f1["Vasya"].weight, 70);
+    EXPECT_EQ(f["Ilya"].age, 40);
+    EXPECT_EQ(f["Ilya"].weight, 80);
+}
+
+TEST(Functions, clear)
+{
+    FlatMap f;
+    for (std::size_t i = 1; i < 6; i++)
+    {
+        f.insert("Vasya" + std::to_string(i), Value(10 + i, 50 + i));
+    }
+    f.clear();
+    for (std::size_t i = 1; i < 6; i++)
+    {
+        EXPECT_THROW(f.at("Vasya" + std::to_string(i)), std ::runtime_error);
+    }
+    EXPECT_EQ(f.size(), 0);
+    for (std::size_t i = 1; i < 7; i++)
+    {
+        f.insert("Vasya" + std::to_string(i), Value(10 + i, 50 + i));
+    }
+    EXPECT_EQ(f.size(), 6);
+}
+
+TEST(Functions, erase)
+{
+    FlatMap f;
+    f.insert("Vasya", Value(20, 70));
+    f.insert("Lena", Value(30, 60));
+    EXPECT_EQ(f.size(), 2);
+    EXPECT_EQ(f.erase("Jenya"), false);
+    f.erase("Lena");
+    EXPECT_EQ(f.size(), 1);
+    EXPECT_EQ(f.at("Vasya").age, 20);
+    EXPECT_EQ(f.at("Vasya").weight, 70);
+    EXPECT_THROW(f.at("Lena"), std ::runtime_error);
+}
+
+TEST(Functions, insert)
+
+{
+    FlatMap f;
+    for (std::size_t i = 1; i < 66; i++)
+    {
+        f.insert("Vasya" + std::to_string(i), Value(10 + i, 50 + i));
+    }
+    for (std::size_t i = 1; i < 66; i++)
+    {
+        EXPECT_EQ(f.at("Vasya" + std::to_string(i)).age, 10 + i);
+        EXPECT_EQ(f.at("Vasya" + std::to_string(i)).weight, 50 + i);
+    }
+    EXPECT_EQ(f.insert("Vasya1", Value(11, 51)), false);
+}
+
+TEST(Functions, contains)
+{
+    FlatMap f;
+    f.insert("Vasya", Value(20, 70));
+    EXPECT_EQ(f.contains("Vasya"), true);
+    EXPECT_EQ(f.contains("Lena"), false);
+}
+
+TEST(Functions, at)
+{
+    FlatMap f;
+    f.insert("Vasya", Value(20, 70));
+    EXPECT_EQ(f.at("Vasya").age, 20);
+    EXPECT_THROW(f.at("Lena"), std ::runtime_error);
+    const FlatMap f1(f);
+    EXPECT_EQ(f1.at("Vasya").age, 20);
+    EXPECT_THROW(f1.at("Lena"), std ::runtime_error);
+}
+
+TEST(Functions, size)
+{
+    FlatMap f;
+    EXPECT_EQ(f.size(), 0);
+    f.insert("Vasya", Value(20, 70));
+    EXPECT_EQ(f.size(), 1);
+
+    for (std::size_t i = 1; i < 100; i++)
+    {
+        f.insert("Vasya" + std::to_string(i), Value(10 + i, 50 + i));
+    }
+    EXPECT_EQ(f.size(), 100);
+    f.clear();
+    EXPECT_EQ(f.size(), 0);
+}
+
+TEST(Functions, empty)
+{
+    FlatMap f;
+    EXPECT_EQ(f.empty(), true);
+    f.insert("Vasya", Value(20, 70));
+    EXPECT_EQ(f.empty(), false);
+
+    for (std::size_t i = 1; i < 100; i++)
+    {
+        f.insert("Vasya" + std::to_string(i), Value(10 + i, 50 + i));
+    }
+    for (std::size_t i = 1; i < 100; i++)
+    {
+        f.erase("Vasya" + std::to_string(i));
+    }
+    EXPECT_EQ(f.empty(), false);
+    f.erase("Vasya");
+    EXPECT_EQ(f.empty(), true);
+}
+
+int main(int argc, char **argv)
+{
+    testing::InitGoogleTest(&argc, argv);
+    return RUN_ALL_TESTS();
+}
