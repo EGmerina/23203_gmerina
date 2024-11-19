@@ -6,5 +6,5 @@ class Masha : public Player
 {
     virtual void hit() override;
     virtual void stand() override;
-    virtual void play() override;
+    virtual void play(Card opponents_card) override;
 };

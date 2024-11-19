@@ -10,10 +10,15 @@ public:
     {
         return hand[0];
     }
-
     void add_card(const Card new_card)
     {
         hand.push_back(new_card);
+        points += new_card;
+    }
+
+    unsigned char get_points()
+    {
+        return points;
     }
 
 private:
