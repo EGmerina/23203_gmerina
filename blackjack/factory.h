@@ -18,12 +18,12 @@ public:
         return std::move(p);
     }
 
-    bool registerCreator(const Key &name, Unit *(*creator)())
+    bool registerCreator(const Key &name, Product *(*creator)())
     {
         creators_[name] = creator;
         return true;
     }
 
 private:
-    std::map<Key, Unit *(*)()> creators_;
+    std::map<Key, Product *(*)()> creators_;
 };
