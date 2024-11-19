@@ -12,7 +12,7 @@ void Masha::hit()
 void Masha::stand()
 {
     printf("stand\n");
-    printf("current number of points : %d\n", get_points());
+    printf("current number of points : %d\n", get_points()); // это вообще задача user interface
 }
 void Masha::play(Card opponents_card)
 {

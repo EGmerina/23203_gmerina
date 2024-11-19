@@ -3,11 +3,28 @@
 #include <utility>
 #include "player.h"
 
-// написать функцию которая выводит имя игрока
+// движок должен запоминать карты
+//  написать функцию которая выводит имя игрока
+// не хранить очки в player. хранить здесь. вообще можно было сделать protected наследование
+// игроки берут карты по порядку
+// написать class user interface, в котором будут взаимодействия с пользователем и вызывать эти функции
+// в тесте подавать фейковый интерфейс, который будет содержать expects. использовать gmock!!!
+
+static void generate_opponents(std::vector<std::pair<Player, Player>> pairs, std::vector<std::unique_ptr<Player>> players)
+{
+    for (size_t first = 0; first < players.size() - 1; first++)
+    {
+        for (size_t second = first; second < players.size(); second++)
+        {
+            std::pair<Player, Player> new_pair(players[first], players[second]);
+            pairs.push_back(new_pair);
+        }
+    }
+}
 
 void play_game(std::vector<std::unique_ptr<Player>> players)
 {
-    for (auto &u : players) // что это такое???? но работает...наверное
+    for (auto &u : players) // auto &
     {
         u->get_new_card();
         // распечатать лицевую карту

@@ -1,4 +1,6 @@
 #pragma once
+#include <map>
+#include <memory>
 
 template <class Key, class Product>
 
@@ -14,7 +16,7 @@ public:
     std::unique_ptr<Product> createUnitByName(Key name)
     {
         auto *creator = creators_.at(name);
-        std::unique_ptr<Unit> p(creator());
+        std::unique_ptr<Product> p(creator());
         return std::move(p);
     }
 
