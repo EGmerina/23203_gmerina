@@ -2,7 +2,7 @@
 
 #include "player.h"
 
-class Masha : public Player
+class Dealer : public Player
 {
 public:
     virtual bool make_move(Card opponents_card, Hand &its_hand) override;

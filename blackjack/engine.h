@@ -1,3 +1,4 @@
+/*
 #pragma once
 #include <vector>
 #include <utility>
@@ -50,3 +51,4 @@ void play_game(std::vector<std::shared_ptr<Player>> players, std::unique_ptr<Mod
         play_tour(u.first, u.second);
     }
 }
+*/

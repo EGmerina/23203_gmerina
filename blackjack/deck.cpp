@@ -2,11 +2,18 @@
 #include "factory.h"
 #include <string>
 
+static unsigned char get_random_num(const unsigned char beg, const unsigned char end)
+{
+    srand(time(0));
+    return rand() % (end - beg + 1) + beg;
+}
+
 class SimpleDeck : public Deck
 {
 public:
     virtual Card get_new_card() override
     {
+        return get_random_num(1, 10);
     }
 };
 

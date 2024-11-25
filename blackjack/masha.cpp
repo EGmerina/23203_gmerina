@@ -3,7 +3,7 @@
 
 #include <string>
 
-void Masha::hit()
+/*void Masha::hit()
 {
     printf("hit\n");
     printf("new card : %d\n", get_new_card());
@@ -23,6 +23,15 @@ void Masha::play(Card opponents_card, Hand its_hand)
         hit();
     }
     stand();
+}*/
+
+bool Masha ::make_move(Card opponents_card, Hand &its_hand)
+{
+    
+}
+
+std::string Masha ::get_name()
+{
 }
 
 Player *createMasha()

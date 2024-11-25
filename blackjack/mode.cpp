@@ -24,6 +24,29 @@ static std::shared_ptr<Player> get_winner(std::shared_ptr<Player> player1, Hand 
     return player2;
 }
 
+static void generate_opponents(std::vector<std::pair<std::shared_ptr<Player>, std::shared_ptr<Player>>> pairs, std::vector<std::shared_ptr<Player>> players)
+{
+    for (size_t first = 0; first < players.size() - 1; first++)
+    {
+        for (size_t second = first; second < players.size(); second++)
+        {
+            std::pair<std::shared_ptr<Player>, std::shared_ptr<Player>> new_pair{players[first], players[second]};
+            pairs.push_back(new_pair);
+        }
+    }
+}
+
+static void play_tour(std::shared_ptr<Player> player1, std::shared_ptr<Player> player2)
+{
+    // дописать
+    unsigned char stand_cnt = 0;
+    while (stand_cnt < 2)
+    {
+        Hand p1;
+        Hand p2;
+    }
+}
+
 class DetailedMode : public Mode
 {
 public:
@@ -62,12 +85,13 @@ public:
             }
         }
 
-        output_points(player1, p1_hand);
-        output_points(player2, p2_hand);
+        ConsoleInterface interface;
+        interface.output_points(player1, p1_hand);
+        interface.output_points(player2, p2_hand);
 
         std::shared_ptr<Player> winner = get_winner(player1, p1_hand, player2, p2_hand);
 
-        announce_winner(winner);
+        interface.announce_winner(winner);
     }
 };
 
@@ -76,6 +100,12 @@ class TournamentMode : public Mode
 public:
     virtual void play_game(std::vector<std::shared_ptr<Player>> players, std::shared_ptr<Deck> deck) override
     {
+        std::vector<std::pair<std::shared_ptr<Player>, std::shared_ptr<Player>>> pairs;
+        generate_opponents(pairs, players);
+        for (auto &u : pairs)
+        {
+            play_tour(u.first, u.second); // дописать
+        }
     }
 };
 
