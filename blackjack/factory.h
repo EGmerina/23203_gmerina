@@ -13,10 +13,10 @@ public:
         return &f;
     }
 
-    std::unique_ptr<Product> createUnitByName(Key name)
+    std::shared_ptr<Product> createUnitByName(Key name)
     {
         auto *creator = creators_.at(name);
-        std::unique_ptr<Product> p(creator());
+        std::shared_ptr<Product> p(creator());
         return std::move(p);
     }
 

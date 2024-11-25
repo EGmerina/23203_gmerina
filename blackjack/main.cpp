@@ -3,9 +3,11 @@
 #include <vector>
 #include <memory>
 
-#include "engine.h"
+// #include "engine.h"
 #include "factory.h"
 #include "player.h"
+#include "mode.h"
+#include "deck.h"
 
 // getopt
 // boost:: program_options
@@ -13,23 +15,30 @@
 // TCLAP
 
 // нужно фабрику на режим игры и на выдачу карт . итого 3 фабрики
+
 // написать фейковую колоду, которая всегда выдает одни и те же карты. для тестов
 // написать фальшивые стратегии для тестирования движка - знаем кто выиграет
 
 int main(int argc, char **argv)
 {
-    //перенаправить поток вывода из консоли в файл //stdout reopen...
-    if (argc < 2)
+    // перенаправить поток вывода из консоли в файл //stdout reopen...
+    if (argc < 4)
     {
         std::cerr << "gimme players" << std::endl;
         return -1;
     }
 
-    std::vector<std::unique_ptr<Player>> players;
-    for (int i = 0; i < argc; i++)
+    // пока что сделаю попроще и буду считать что первый аргумент - это всегда режим , а второй - вариант колоды
+
+    auto mode = Factory<std::string, Mode>::getInstance()->createUnitByName(argv[0]);
+
+    auto deck = Factory<std::string, Deck>::getInstance()->createUnitByName(argv[1]);
+
+    std::vector<std::shared_ptr<Player>> players;
+    for (int i = 2; i < argc; i++)
     {
-        auto u = Factory<std::string, Player>::getInstance()->createUnitByName(argv[i]);
+        auto u = Factory<std::string, Player>::getInstance()->createUnitByName(argv[i]); // написать деструктор для объектов
         players.push_back(std::move(u));
     }
-    play_game(std::move(players));
+    mode->play_game(players, deck);
 }

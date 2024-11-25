@@ -14,7 +14,7 @@ void Masha::stand()
     printf("stand\n");
     printf("current number of points : %d\n", get_points()); // это вообще задача user interface
 }
-void Masha::play(Card opponents_card)
+void Masha::play(Card opponents_card, Hand its_hand)
 {
     printf("masha's turn\n");
     printf("current number of points : %d\n", get_points());
