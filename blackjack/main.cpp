@@ -3,11 +3,13 @@
 #include <vector>
 #include <memory>
 
-// #include "engine.h"
 #include "factory.h"
 #include "player.h"
 #include "mode.h"
 #include "deck.h"
+
+//./play mode=fast deck=simple masha dealer
+//g++ main.cpp dealer.cpp deck.cpp mode.cpp masha.cpp 
 
 // getopt
 // boost:: program_options
@@ -24,7 +26,7 @@
 int main(int argc, char **argv)
 {
     // перенаправить поток вывода из консоли в файл //stdout reopen...
-    if (argc < 4)
+    if (argc < 3)
     {
         std::cerr << "gimme players" << std::endl;
         return -1;

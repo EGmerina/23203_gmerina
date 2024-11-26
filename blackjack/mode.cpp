@@ -5,8 +5,6 @@
 #include "console_interface.h"
 #include <string>
 
-#define INITIAL_CARDS_NUMBER 2
-
 static std::shared_ptr<Player> get_winner(std::shared_ptr<Player> player1, Hand &p1_hand, std::shared_ptr<Player> player2, Hand &p2_hand)
 {
     if (p1_hand.get_points() > 21)
@@ -64,11 +62,9 @@ public:
         std::shared_ptr<Player> player2 = players[1];
         Hand p1_hand;
         Hand p2_hand;
-        for (size_t i = 0; i < INITIAL_CARDS_NUMBER; i++)
-        {
-            p1_hand.add_card(deck->get_new_card());
-            p2_hand.add_card(deck->get_new_card());
-        }
+
+        p1_hand.add_card(deck->get_new_card());
+        p2_hand.add_card(deck->get_new_card());
 
         bool p1_play = true;
         bool p2_play = true;
@@ -77,10 +73,12 @@ public:
         {
             if (p1_play)
             {
+                p1_hand.add_card(deck->get_new_card());
                 p1_play = player1->make_move(p2_hand.get_face_card(), p1_hand);
             }
             if (p2_play)
             {
+                p2_hand.add_card(deck->get_new_card());
                 p2_play = player2->make_move(p1_hand.get_face_card(), p2_hand);
             }
         }

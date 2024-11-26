@@ -1,12 +1,11 @@
 #include "factory.h"
 #include "dealer.h"
-//#include "deck.h"
 
 #include <string>
 
-static bool hit(Hand &its_hand)
+static bool hit()
 {
-    return true; //??? где получить карту??
+    return true;
 }
 
 static bool stand()
@@ -18,13 +17,15 @@ bool Dealer ::make_move(Card opponents_card, Hand &its_hand)
 {
     if (its_hand.get_points() < 17)
     {
-        return hit(its_hand);
+        return hit();
     }
     return stand();
 }
 
 std::string Dealer ::get_name()
 {
+    std::string name = "dealer";
+    return name;
 }
 
 Player *createDealer()

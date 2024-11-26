@@ -3,35 +3,33 @@
 
 #include <string>
 
-/*void Masha::hit()
+static bool hit()
 {
-    printf("hit\n");
-    printf("new card : %d\n", get_new_card());
-    printf("current number of points : %d\n", get_points());
+    return true;
 }
-void Masha::stand()
+
+static bool stand()
 {
-    printf("stand\n");
-    printf("current number of points : %d\n", get_points()); // это вообще задача user interface
+    return false;
 }
-void Masha::play(Card opponents_card, Hand its_hand)
-{
-    printf("masha's turn\n");
-    printf("current number of points : %d\n", get_points());
-    while (get_points() < 17)
-    {
-        hit();
-    }
-    stand();
-}*/
 
 bool Masha ::make_move(Card opponents_card, Hand &its_hand)
 {
-    
+    if (its_hand.get_points() <= 13)
+    {
+        return hit();
+    }
+    if (opponents_card == 10)
+    {
+        return hit();
+    }
+    return stand();
 }
 
 std::string Masha ::get_name()
 {
+    std::string name = "masha";
+    return name;
 }
 
 Player *createMasha()
