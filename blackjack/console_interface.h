@@ -9,7 +9,7 @@ class ConsoleInterface
 public:
     void output_points(std::shared_ptr<Player> player1, Hand &p1_hand)
     {
-        std::cout << "points of " << player1->get_name() << " : " << p1_hand.get_points() << std::endl;
+        std::cout << "points of " << player1->get_name() << " : " << std::to_string(p1_hand.get_points()) << std::endl;
     }
     void announce_winner(std::shared_ptr<Player> winner)
     {

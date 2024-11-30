@@ -1,6 +1,7 @@
 #pragma once
 #include <map>
 #include <memory>
+#include <iostream>
 
 template <class Key, class Product>
 
@@ -15,6 +16,8 @@ public:
 
     std::shared_ptr<Product> createUnitByName(Key name)
     {
+        //std::cout << name << std::endl;
+
         auto *creator = creators_.at(name);
         std::shared_ptr<Product> p(creator());
         return std::move(p);
