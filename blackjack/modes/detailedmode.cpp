@@ -1,15 +1,11 @@
 #include "detailedmode.h"
-#include "factory.h"
+#include "../register_creator.h"
 
 void DetailedMode::play_game(std::vector<std::shared_ptr<Player>> players, std::shared_ptr<Deck> deck)
 {
-}
-
-Mode *createDetailedMode()
-{
-    return new DetailedMode();
+    // TODO write play_game detailed
 }
 namespace
 {
-    bool a = Factory<std::string, Mode>::getInstance()->registerCreator("mode=detailed", createDetailedMode);
+    RegisterCreator<Mode, DetailedMode> b("mode=detailed");
 }

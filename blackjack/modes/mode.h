@@ -1,8 +1,8 @@
 #pragma once
 #include <vector>
 #include <memory>
-#include "player.h"
-#include "deck.h"
+#include "../players/player.h"
+#include "../deckes/deck.h"
 
 class Mode
 {

@@ -1,5 +1,5 @@
 #pragma once
-#include "hand.h"
+#include "../hand.h"
 #include <string>
 
 class Player

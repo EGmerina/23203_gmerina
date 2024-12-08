@@ -1,22 +1,13 @@
 #include "simpledeck.h"
 #include "deck.cpp"
+#include "../register_creator.h"
 
-class SimpleDeck : public Deck
+Card SimpleDeck::get_new_card()
 {
-public:
-    virtual Card get_new_card() override
-    {
-        return get_random_num(1, 10);
-    }
-};
-
-Deck *createSimpleDeck()
-{
-    return new SimpleDeck();
+    return get_random_num(1, 10);
 }
 
 namespace
 {
-    bool f = Factory<std::string, Deck>::getInstance()->registerCreator("deck=simple", createSimpleDeck);
-
+    RegisterCreator<Deck, SimpleDeck> b("deck=simple");
 }

@@ -1,6 +1,6 @@
-#include "deck.h"
 #include <iostream>
 #include <time.h>
+#include "../hand.h"
 
 #define Jack 10
 #define Queen 10

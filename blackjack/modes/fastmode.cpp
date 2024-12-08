@@ -2,25 +2,9 @@
 
 #include <string>
 
-#include "console_interface.h"
-#include "mode.h"
-
-static std::shared_ptr<Player> get_winner(std::shared_ptr<Player> player1, Hand &p1_hand, std::shared_ptr<Player> player2, Hand &p2_hand)
-{
-    if (p1_hand.get_points() > 21)
-    {
-        return player2;
-    }
-    if (p2_hand.get_points() > 21)
-    {
-        return player1;
-    }
-    if (p1_hand.get_points() >= p2_hand.get_points()) // дописать нормально, с ничьей и проверкой карт на блэкджек
-    {
-        return player1;
-    }
-    return player2;
-}
+#include "../console_interface.h"
+#include "../register_creator.h"
+#include "mode.cpp"
 
 void FastMode::play_game(std::vector<std::shared_ptr<Player>> players, std::shared_ptr<Deck> deck)
 {
@@ -58,14 +42,7 @@ void FastMode::play_game(std::vector<std::shared_ptr<Player>> players, std::shar
     interface.announce_winner(winner);
 }
 
-Mode *createFastMode()
-{
-    return new FastMode();
-}
-
-// сделать класс который будет инициализировать bool
-
 namespace
 {
-    bool b = Factory<std::string, Mode>::getInstance()->registerCreator("mode=fast", createFastMode);
+    RegisterCreator<Mode, FastMode> b("mode=fast");
 }

@@ -4,13 +4,12 @@
 #include <memory>
 
 #include "factory.h"
-#include "player.h"
-#include "mode.h"
-#include "deck.h"
+#include "players/player.h"
+#include "modes/mode.h"
+#include "deckes/deck.h"
 
 //./play mode=fast deck=simple masha dealer
-// g++ main.cpp dealer.cpp deck.cpp mode.cpp masha.cpp
-
+// clang main.cpp masha.cpp dealer.cpp mode.cpp deck.cpp ndeck.cpp simpledeck.cpp detailedmode.cpp fastmode.cpp tournamentmode.cpp
 // getopt
 // boost:: program_options
 // CATPZ

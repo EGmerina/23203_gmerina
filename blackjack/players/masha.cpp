@@ -1,7 +1,7 @@
-#include "factory.h"
 #include "masha.h"
 
 #include <string>
+#include "../register_creator.h"
 
 static bool hit()
 {
@@ -32,11 +32,7 @@ std::string Masha ::get_name()
     return name;
 }
 
-Player *createMasha()
-{
-    return new Masha();
-}
 namespace
 {
-    bool b = Factory<std::string, Player>::getInstance()->registerCreator("masha", createMasha);
+    RegisterCreator<Player, Masha> b("masha");
 }

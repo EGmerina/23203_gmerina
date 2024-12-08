@@ -3,9 +3,9 @@
 #include <assert.h>
 
 #include "deck.cpp"
-#include "register_creator.h"
+#include "../register_creator.h"
 
-NDeck::NDeck(unsigned char N = 1) : N(N)
+NDeck::NDeck(unsigned char N ) : N(N)
 {
     for (size_t i = 0; i < N; i++)
     {
@@ -26,15 +26,7 @@ Card NDeck::get_new_card()
     return deck[random_index];
 }
 
-static RegisterCreator<Deck, NDeck> a("deck=N");
-
-/*
-Deck *createNDeck()
-{
-    return new NDeck();
-}
-
 namespace
 {
-    bool k = Factory<std::string, Deck>::getInstance()->registerCreator("deck=N", createNDeck); // как вместо N поставить любую цифру?
-}*/
+    RegisterCreator<Deck, NDeck> a("deck=N");
+}

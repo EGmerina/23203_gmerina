@@ -1,6 +1,6 @@
 #pragma once
 
-#include "hand.h"
+#include "../hand.h"
 
 class Deck
 {

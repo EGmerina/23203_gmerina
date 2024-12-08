@@ -1,7 +1,8 @@
-#include "factory.h"
+
 #include "dealer.h"
 
 #include <string>
+#include "../register_creator.h"
 
 static bool hit()
 {
@@ -28,11 +29,7 @@ std::string Dealer ::get_name()
     return name;
 }
 
-Player *createDealer()
-{
-    return new Dealer();
-}
 namespace
 {
-    bool b = Factory<std::string, Player>::getInstance()->registerCreator("dealer", createDealer);
+    RegisterCreator<Player, Dealer> b("dealer");
 }
