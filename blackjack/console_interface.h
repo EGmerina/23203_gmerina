@@ -24,8 +24,17 @@ public:
         }
         std::cout << "winner is " << winner->get_name() << std::endl;
     }
-    void announce_players(std::shared_ptr<Player> player1, std::shared_ptr<Player> player2)
+    void announce_new_round(std::shared_ptr<Player> player1, std::shared_ptr<Player> player2)
     {
+        std::cout << "######### NEW ROUND ##########" << std::endl;
         std::cout << "players are " << player1->get_name() << " and " << player2->get_name() << std::endl;
     }
+    void announce_total_protocol()
+    {
+        std::cout << "######### TOTAL PROTOCOL ##########" << std::endl;
+    }
+   /*  void announce_total_protocol()
+    {
+        std::cout << "######### TOTAL PROTOCOL ##########" << std::endl;
+    } */
 };

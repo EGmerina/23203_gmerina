@@ -11,11 +11,11 @@
 //./play mode=fast deck=simple masha dealer
 // clang main.cpp masha.cpp dealer.cpp mode.cpp deck.cpp ndeck.cpp simpledeck.cpp detailedmode.cpp fastmode.cpp tournamentmode.cpp
 // getopt
-// boost:: program_options
+// TODO boost:: program_options
 // CATPZ
 // TCLAP
 
-// нужно фабрику на режим игры и на выдачу карт . итого 3 фабрики
+// TODO написать больше стратегий
 
 // нужно написать дефолтные режимы игры!!!!!
 

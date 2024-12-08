@@ -6,7 +6,7 @@
 #include "../register_creator.h"
 #include "mode.cpp"
 
-void FastMode::play_game(std::vector<std::shared_ptr<Player>> players, std::shared_ptr<Deck> deck)
+void FastMode::play_game(std::vector<std::shared_ptr<Player>> &players, std::shared_ptr<Deck> deck)
 {
     std::shared_ptr<Player> player1 = players[0];
     std::shared_ptr<Player> player2 = players[1];
