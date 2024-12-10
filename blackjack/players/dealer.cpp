@@ -14,7 +14,7 @@ static bool stand()
     return false;
 }
 
-bool Dealer ::make_move(Card opponents_card, Hand &its_hand)
+bool Dealer ::make_move(const Card opponents_card, const Hand &its_hand)
 {
     if (its_hand.get_points() < 17)
     {

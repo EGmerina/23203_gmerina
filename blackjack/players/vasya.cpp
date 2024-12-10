@@ -13,7 +13,7 @@ static bool stand()
     return false;
 }
 
-bool Vasya ::make_move(Card opponents_card, Hand &its_hand)
+bool Vasya ::make_move(const Card opponents_card, const Hand &its_hand)
 {
     if (opponents_card < 7 && its_hand.get_points() <= 15)
     {

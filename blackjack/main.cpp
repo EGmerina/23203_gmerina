@@ -44,3 +44,24 @@ int main(int argc, char **argv)
     }
     mode->play_game(players, deck);
 }
+
+/*
+скачать qt и qtcreator
+открыть простой пример qtcanvas 
+посмотреть как рисуется paintevent  и кнопки
+сделать программу qmainwindow + wdidget
+научиться рисовать на виджете при  paintEvent и qPainter
+
+class Game Field : public QwidgetEvent(Qpaint){
+QPaint p;
+p.setPen();
+p.drawline(0, 0, 100);
+}
+}
+
+
+class Model{
+//количетсво клетокб не держать  состояние в рисовалке
+}
+
+*/

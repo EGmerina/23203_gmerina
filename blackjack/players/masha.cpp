@@ -13,13 +13,9 @@ static bool stand()
     return false;
 }
 
-bool Masha ::make_move(Card opponents_card, Hand &its_hand)
+bool Masha ::make_move(const Card opponents_card, const Hand &its_hand)
 {
-    if (its_hand.get_points() <= 13)
-    {
-        return hit();
-    }
-    if (opponents_card == 10)
+    if (its_hand.get_points() <= 13 && opponents_card == 10)
     {
         return hit();
     }
