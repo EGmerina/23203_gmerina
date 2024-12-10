@@ -31,16 +31,15 @@ int main(int argc, char **argv)
         return -1;
     }
 
-    // пока что сделаю попроще и буду считать что первый аргумент - это всегда режим , а второй - вариант колоды
 
-    auto mode = Factory<std::string, Mode>::getInstance()->createUnitByName(argv[1]); // тут argv[1] !!!!!!!!!!!!!!!!!!!!
+    auto mode = Factory<std::string, Mode>::getInstance()->createUnitByName(argv[1]); 
 
     auto deck = Factory<std::string, Deck>::getInstance()->createUnitByName(argv[2]);
 
     std::vector<std::shared_ptr<Player>> players;
     for (int i = 3; i < argc; i++)
     {
-        auto u = Factory<std::string, Player>::getInstance()->createUnitByName(argv[i]); // написать деструктор для объектов?
+        auto u = Factory<std::string, Player>::getInstance()->createUnitByName(argv[i]);
         players.push_back(std::move(u));
     }
     mode->play_game(players, deck);

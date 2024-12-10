@@ -7,6 +7,16 @@
 
 #define INITIAL_NUMBER_OF_CARDS 2
 
+static bool stop_game(std::istream &cin, std::string &str)
+{
+    std::getline(cin, str);
+    if (str == "quit")
+    {
+        return true;
+    }
+    return false;
+}
+
 void DetailedMode::play_game(std::vector<std::shared_ptr<Player>> &players, std::shared_ptr<Deck> deck)
 {
     std::string command_str;
@@ -30,29 +40,43 @@ void DetailedMode::play_game(std::vector<std::shared_ptr<Player>> &players, std:
     interface.output_points(player1, p1_hand);
     interface.output_points(player2, p2_hand);
 
-    std::cin >> command_str;
-    if (command_str == "quit")
-        return;
-
     while (p1_play || p2_play)
     {
         if (p1_play)
         {
-
+            if (stop_game(std::cin, command_str))
+                return;
+            interface.announce_whos_turn(player1);
+            if (stop_game(std::cin, command_str))
+                return;
             p1_play = player1->make_move(p2_hand.get_face_card(), p1_hand);
+            interface.announce_move(p1_play);
             if (p1_play)
             {
-                // TODO write play_game detailed
+                if (stop_game(std::cin, command_str))
+                    return;
+                p1_hand.add_card(deck->get_new_card());
+                interface.output_points(player1, p1_hand);
             }
         }
         if (p2_play)
         {
+            if (stop_game(std::cin, command_str))
+                return;
+            interface.announce_whos_turn(player2);
+            if (stop_game(std::cin, command_str))
+                return;
             p2_play = player2->make_move(p1_hand.get_face_card(), p2_hand);
+            interface.announce_move(p2_play);
+            if (p2_play)
+            {
+                if (stop_game(std::cin, command_str))
+                    return;
+                p2_hand.add_card(deck->get_new_card());
+                interface.output_points(player2, p2_hand);
+            }
         }
     }
-
-    interface.output_points(player1, p1_hand);
-    interface.output_points(player2, p2_hand);
 
     std::shared_ptr<Player> winner = get_winner(player1, p1_hand, player2, p2_hand);
 
