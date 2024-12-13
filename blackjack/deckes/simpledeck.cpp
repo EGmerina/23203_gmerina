@@ -11,3 +11,4 @@ namespace
 {
     RegisterCreator<Deck, SimpleDeck> b("deck=simple");
 }
+//TODO написать сравнения для 1 и 11

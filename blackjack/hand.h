@@ -21,6 +21,11 @@ public:
         return hand[hand.size() - 1];
     }
 
+    size_t get_cards_number() const
+    {
+        return hand.size();
+    }
+
     void add_card(const Card new_card)
     {
         hand.push_back(new_card);

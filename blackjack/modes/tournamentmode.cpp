@@ -58,7 +58,7 @@ static void play_tour(std::shared_ptr<Player> player1, std::shared_ptr<Player> p
 
 static std::shared_ptr<Player> get_winner_by_victories(std::vector<std::shared_ptr<Player>> &players, std::map<std::string, size_t> &victories_num)
 {
-    size_t max_vict_num = 0;
+    size_t max_vict_num = 0; //TODO если у всех по 1 победе....
     std::shared_ptr<Player> winner = nullptr;
     for (auto &u : players)
     {
@@ -71,7 +71,7 @@ static std::shared_ptr<Player> get_winner_by_victories(std::vector<std::shared_p
     }
     return winner;
 }
-
+//TODO если оба проиграли?
 void TournamentMode::play_game(std::vector<std::shared_ptr<Player>> &players, std::shared_ptr<Deck> deck)
 {
     std::vector<std::pair<std::shared_ptr<Player>, std::shared_ptr<Player>>> pairs;
@@ -95,3 +95,4 @@ namespace
 {
     RegisterCreator<Mode, TournamentMode> b("mode=tournament");
 }
+//TODO сделать несколько победителей
