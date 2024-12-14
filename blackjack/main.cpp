@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 #include <memory>
+#include <cstdio>
 // #include <boost/program_options.hpp>
 #include "factory.h"
 #include "players/player.h"
@@ -13,7 +14,6 @@
 
 // TODO boost:: program_options
 
-
 // TODO тесты!!! написать фейковую колоду, которая всегда выдает одни и те же карты. для тестов
 // написать фальшивые стратегии для тестирования движка - знаем кто выиграет
 
@@ -23,7 +23,13 @@ int main(int argc, char **argv)
     /* boost::program_options::options_description desc("Allowed options");
     desc.add_options()("help", "produce help message")("compression", po::value<int>(), "set compression level");
  */
-    // перенаправить поток вывода из консоли в файл //stdout reopen...
+
+    if (!freopen("output.txt", "w", stdout))
+    {
+        perror("Unable to reopen stdout");
+        return 1;
+    }
+
     if (argc < 4)
     {
         std::cerr << "gimme players" << std::endl;
