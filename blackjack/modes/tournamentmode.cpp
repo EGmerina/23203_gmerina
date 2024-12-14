@@ -19,7 +19,6 @@ static void generate_opponents(std::vector<std::pair<std::shared_ptr<Player>, st
 
 static void play_tour(std::shared_ptr<Player> player1, std::shared_ptr<Player> player2, std::shared_ptr<Deck> deck, std::map<std::string, size_t> &victories_num)
 {
-    // считать количество побед каждого игрока
     ConsoleInterface interface;
     interface.announce_new_round(player1, player2);
     Hand p1_hand;
@@ -56,22 +55,39 @@ static void play_tour(std::shared_ptr<Player> player1, std::shared_ptr<Player> p
     }
 }
 
-static std::shared_ptr<Player> get_winner_by_victories(std::vector<std::shared_ptr<Player>> &players, std::map<std::string, size_t> &victories_num)
+static void announce_winners_by_victories(std::vector<std::shared_ptr<Player>> &players, std::map<std::string, size_t> &victories_num, ConsoleInterface &interface)
 {
-    size_t max_vict_num = 0; //TODO если у всех по 1 победе....
+    size_t first_vict_num = victories_num[players[0]->get_name()];
+    bool draw_flag = 1;
+    size_t max_vict_num = 0;
     std::shared_ptr<Player> winner = nullptr;
     for (auto &u : players)
     {
         size_t cur_vict_num = victories_num[u->get_name()];
+        if (first_vict_num != cur_vict_num)
+        {
+            draw_flag = 0;
+        }
         if (max_vict_num < cur_vict_num)
         {
             max_vict_num = cur_vict_num;
             winner = u;
         }
     }
-    return winner;
+    if (draw_flag)
+    {
+        interface.announce_winner(nullptr);
+        return;
+    }
+    for (auto &u : players)
+    {
+        if (victories_num[u->get_name()] == max_vict_num)
+        {
+            interface.announce_winner(u);
+        }
+    }
 }
-//TODO если оба проиграли?
+
 void TournamentMode::play_game(std::vector<std::shared_ptr<Player>> &players, std::shared_ptr<Deck> deck)
 {
     std::vector<std::pair<std::shared_ptr<Player>, std::shared_ptr<Player>>> pairs;
@@ -87,12 +103,10 @@ void TournamentMode::play_game(std::vector<std::shared_ptr<Player>> &players, st
     {
         interface.output_vict_num(u, victories_num[u->get_name()]);
     }
-    std::shared_ptr<Player> winner = get_winner_by_victories(players, victories_num);
-    interface.announce_winner(winner);
+    announce_winners_by_victories(players, victories_num, interface);
 }
 
 namespace
 {
     RegisterCreator<Mode, TournamentMode> b("mode=tournament");
 }
-//TODO сделать несколько победителей

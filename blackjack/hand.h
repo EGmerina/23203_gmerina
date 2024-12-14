@@ -30,6 +30,12 @@ public:
     {
         hand.push_back(new_card);
         points += new_card;
+        if (points > 21 && have_card(11))
+        {
+            hand.erase(std::find(hand.begin(), hand.end(), 11));
+            hand.push_back(1);
+            points -= 10;
+        }
     }
 
     unsigned char get_points() const
