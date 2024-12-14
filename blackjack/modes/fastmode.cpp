@@ -2,9 +2,9 @@
 
 #include <string>
 
+#include "mode.cpp"
 #include "../console_interface.h"
 #include "../register_creator.h"
-#include "mode.cpp"
 
 void FastMode::play_game(std::vector<std::shared_ptr<Player>> &players, std::shared_ptr<Deck> deck)
 {

@@ -1,9 +1,11 @@
 #include "detailedmode.h"
-#include <string>
+
 #include <iostream>
+#include <string>
+
+#include "mode.cpp"
 #include "../register_creator.h"
 #include "../console_interface.h"
-#include "mode.cpp"
 
 #define INITIAL_NUMBER_OF_CARDS 2
 

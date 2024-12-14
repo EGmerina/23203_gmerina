@@ -1,9 +1,9 @@
 #include "tournamentmode.h"
 #include <map>
 #include <string>
+#include "mode.cpp"
 #include "../console_interface.h"
 #include "../register_creator.h"
-#include "mode.cpp"
 
 static void generate_opponents(std::vector<std::pair<std::shared_ptr<Player>, std::shared_ptr<Player>>> &pairs, std::vector<std::shared_ptr<Player>> &players)
 {

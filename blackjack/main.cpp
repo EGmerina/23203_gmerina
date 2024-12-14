@@ -1,28 +1,17 @@
-#include <iostream>
-#include <string>
-#include <vector>
-#include <memory>
 #include <cstdio>
+#include <iostream>
+#include <memory>
+#include <vector>
+#include <string>
+
 // #include <boost/program_options.hpp>
-#include "factory.h"
-#include "players/player.h"
-#include "modes/mode.h"
 #include "deckes/deck.h"
-
-//./play mode=fast deck=simple masha dealer
-// clang main.cpp masha.cpp dealer.cpp mode.cpp deck.cpp ndeck.cpp simpledeck.cpp detailedmode.cpp fastmode.cpp tournamentmode.cpp
-
-// TODO boost:: program_options
-
-// TODO тесты!!! написать фейковую колоду, которая всегда выдает одни и те же карты. для тестов
-// написать фальшивые стратегии для тестирования движка - знаем кто выиграет
+#include "factory.h"
+#include "modes/mode.h"
+#include "players/player.h"
 
 int main(int argc, char **argv)
 {
-
-    /* boost::program_options::options_description desc("Allowed options");
-    desc.add_options()("help", "produce help message")("compression", po::value<int>(), "set compression level");
- */
 
     if (!freopen("output.txt", "w", stdout))
     {
@@ -48,3 +37,14 @@ int main(int argc, char **argv)
     }
     mode->play_game(players, deck);
 }
+
+/*    boost::program_options::options_description desc("Allowed options");
+   desc.add_options()("help", "produce help message")("compression", boost::program_options::value<int>(), "set compression level"); */
+
+//./play mode=fast deck=simple masha dealer
+// clang main.cpp masha.cpp dealer.cpp mode.cpp deck.cpp ndeck.cpp simpledeck.cpp detailedmode.cpp fastmode.cpp tournamentmode.cpp
+
+// TODO boost:: program_options
+
+// TODO тесты!!! написать фейковую колоду, которая всегда выдает одни и те же карты. для тестов
+// написать фальшивые стратегии для тестирования движка - знаем кто выиграет

@@ -1,6 +1,6 @@
 #pragma once
-#include "../hand.h"
 #include <string>
+#include "../hand.h"
 
 class Player
 {

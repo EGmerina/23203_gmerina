@@ -1,8 +1,8 @@
 #pragma once
-#include <memory>
 #include <iostream>
-#include "players/player.h"
+#include <memory>
 #include "hand.h"
+#include "players/player.h"
 
 class ConsoleInterface
 {
