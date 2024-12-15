@@ -1,26 +1,10 @@
 #include "tournamentmode.h"
-#include <map>
-#include <string>
 #include "mode.cpp"
-#include "../console_interface.h"
 #include "../register_creator.h"
 
-static void generate_opponents(std::vector<std::pair<std::shared_ptr<Player>, std::shared_ptr<Player>>> &pairs, std::vector<std::shared_ptr<Player>> &players)
+void TournamentMode::play_tour(std::unique_ptr<Player> player1, std::unique_ptr<Player> player2)
 {
-    for (size_t first = 0; first < players.size() - 1; first++)
-    {
-        for (size_t second = first + 1; second < players.size(); second++)
-        {
-            std::pair<std::shared_ptr<Player>, std::shared_ptr<Player>> new_pair{players[first], players[second]};
-            pairs.push_back(new_pair);
-        }
-    }
-}
-
-static void play_tour(std::shared_ptr<Player> player1, std::shared_ptr<Player> player2, std::shared_ptr<Deck> deck, std::map<std::string, size_t> &victories_num)
-{
-    ConsoleInterface interface;
-    interface.announce_new_round(player1, player2);
+    interface.announce_new_round(std::move(player1), std::move(player2));
     Hand p1_hand;
     Hand p2_hand;
 
@@ -44,23 +28,23 @@ static void play_tour(std::shared_ptr<Player> player1, std::shared_ptr<Player> p
         }
     }
 
-    interface.output_points(player1, p1_hand);
-    interface.output_points(player2, p2_hand);
+    interface.output_points(std::move(player1), p1_hand);
+    interface.output_points(std::move(player2), p2_hand);
 
-    std::shared_ptr<Player> winner = get_winner(player1, p1_hand, player2, p2_hand);
-    interface.announce_winner(winner);
+    std::unique_ptr<Player> winner = get_winner(std::move(player1), p1_hand, std::move(player2), p2_hand);
+    interface.announce_winner(std::move(winner));
     if (winner != nullptr)
     {
         victories_num[winner->get_name()] += 1;
     }
 }
 
-static void announce_winners_by_victories(std::vector<std::shared_ptr<Player>> &players, std::map<std::string, size_t> &victories_num, ConsoleInterface &interface)
+void TournamentMode::announce_winners_by_victories()
 {
     size_t first_vict_num = victories_num[players[0]->get_name()];
     bool draw_flag = 1;
     size_t max_vict_num = 0;
-    std::shared_ptr<Player> winner = nullptr;
+    std::unique_ptr<Player> winner = nullptr;
     for (auto &u : players)
     {
         size_t cur_vict_num = victories_num[u->get_name()];
@@ -71,7 +55,7 @@ static void announce_winners_by_victories(std::vector<std::shared_ptr<Player>> &
         if (max_vict_num < cur_vict_num)
         {
             max_vict_num = cur_vict_num;
-            winner = u;
+            winner = std::move(u);
         }
     }
     if (draw_flag)
@@ -83,30 +67,33 @@ static void announce_winners_by_victories(std::vector<std::shared_ptr<Player>> &
     {
         if (victories_num[u->get_name()] == max_vict_num)
         {
-            interface.announce_winner(u);
+            interface.announce_winner(std::move(u));
         }
     }
 }
 
-void TournamentMode::play_game(std::vector<std::shared_ptr<Player>> &players, std::shared_ptr<Deck> deck)
+void TournamentMode::play_game(std::vector<std::unique_ptr<Player>> &&players, std::unique_ptr<Deck> my_deck)
 {
-    std::vector<std::pair<std::shared_ptr<Player>, std::shared_ptr<Player>>> pairs;
-    generate_opponents(pairs, players);
-    std::map<std::string, size_t> victories_num;
-    for (auto &u : pairs)
+    players = std::move(players);
+    deck = std::move(my_deck);
+
+    for (size_t first = 0; first < players.size() - 1; first++)
     {
-        play_tour(u.first, u.second, deck, victories_num);
+        for (size_t second = first + 1; second < players.size(); second++)
+        {
+            play_tour(std::move(players[first]), std::move(players[second]));
+        }
     }
-    ConsoleInterface interface;
+
     interface.announce_total_protocol();
     for (auto &u : players)
     {
-        interface.output_vict_num(u, victories_num[u->get_name()]);
+        interface.output_vict_num(std::move(u), victories_num[u->get_name()]);
     }
-    announce_winners_by_victories(players, victories_num, interface);
+    announce_winners_by_victories();
 }
 
 namespace
 {
-    RegisterCreator<Mode, TournamentMode> b("mode=tournament");
+    RegisterCreator<Mode, TournamentMode> b("mode=tournament"); // TODO распарсить параметры
 }

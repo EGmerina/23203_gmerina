@@ -3,29 +3,18 @@
 #include <string>
 #include "../register_creator.h"
 
-static bool hit()
-{
-    return true;
-}
-
-static bool stand()
-{
-    return false;
-}
-
-bool Masha ::make_move(const Card opponents_card, const Hand &its_hand)
+Move Masha ::make_move(const Card opponents_card, const Hand &its_hand)
 {
     if (its_hand.get_points() <= 13 || (its_hand.get_points() < 19 && opponents_card == 10))
     {
-        return hit();
+        return hit;
     }
-    return stand();
+    return stand;
 }
 
 std::string Masha ::get_name()
 {
-    std::string name = "masha";
-    return name;
+    return "masha";
 }
 
 namespace

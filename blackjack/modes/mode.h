@@ -7,5 +7,8 @@
 class Mode
 {
 public:
-    virtual void play_game(std::vector<std::shared_ptr<Player>> &players, std::shared_ptr<Deck> deck) = 0;
+    Mode &operator=(const Mode &b) = delete;
+    virtual ~Mode() = default;
+
+    virtual void play_game(std::vector<std::unique_ptr<Player>> &&players, std::unique_ptr<Deck> deck) = 0;
 };

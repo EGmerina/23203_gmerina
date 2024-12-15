@@ -6,10 +6,10 @@
 #include "../console_interface.h"
 #include "../register_creator.h"
 
-void FastMode::play_game(std::vector<std::shared_ptr<Player>> &players, std::shared_ptr<Deck> deck)
+void FastMode::play_game(std::vector<std::unique_ptr<Player>> &&players, std::unique_ptr<Deck> deck)
 {
-    std::shared_ptr<Player> player1 = players[0];
-    std::shared_ptr<Player> player2 = players[1];
+    std::unique_ptr<Player> player1 = std::move(players[0]);
+    std::unique_ptr<Player> player2 = std::move(players[1]);
     Hand p1_hand;
     Hand p2_hand;
 
@@ -34,12 +34,12 @@ void FastMode::play_game(std::vector<std::shared_ptr<Player>> &players, std::sha
     }
 
     ConsoleInterface interface;
-    interface.output_points(player1, p1_hand);
-    interface.output_points(player2, p2_hand);
+    interface.output_points(std::move(player1), p1_hand);
+    interface.output_points(std::move(player2), p2_hand);
 
-    std::shared_ptr<Player> winner = get_winner(player1, p1_hand, player2, p2_hand);
+    std::unique_ptr<Player> winner = get_winner(std::move(player1), p1_hand, std::move(player2), p2_hand);
 
-    interface.announce_winner(winner);
+    interface.announce_winner(std::move(winner));
 }
 
 namespace

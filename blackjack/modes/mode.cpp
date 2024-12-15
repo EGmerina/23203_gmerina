@@ -1,6 +1,6 @@
 #include "mode.h"
 
-static std::shared_ptr<Player> get_winner(std::shared_ptr<Player> player1, Hand &p1_hand, std::shared_ptr<Player> player2, Hand &p2_hand)
+static std::unique_ptr<Player> get_winner(std::unique_ptr<Player> player1, Hand &p1_hand, std::unique_ptr<Player> player2, Hand &p2_hand)
 {
     if (p1_hand.get_points() == p2_hand.get_points() || (p1_hand.get_points() > 21 && p2_hand.get_points() > 21))
     {
@@ -8,15 +8,15 @@ static std::shared_ptr<Player> get_winner(std::shared_ptr<Player> player1, Hand 
     }
     if (p1_hand.get_points() > 21)
     {
-        return player2;
+        return std::move(player2);
     }
     if (p2_hand.get_points() > 21)
     {
-        return player1;
+        return std::move(player1);
     }
     else if (p1_hand.get_points() > p2_hand.get_points())
     {
-        return player1;
+        return std::move(player1);
     }
-    return player2;
+    return std::move(player2);
 }

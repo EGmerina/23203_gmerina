@@ -4,29 +4,18 @@
 #include <string>
 #include "../register_creator.h"
 
-static bool hit()
-{
-    return true;
-}
-
-static bool stand()
-{
-    return false;
-}
-
-bool Dealer ::make_move(const Card opponents_card, const Hand &its_hand)
+Move Dealer ::make_move(const Card opponents_card, const Hand &its_hand)
 {
     if (its_hand.get_points() < 17)
     {
-        return hit();
+        return hit;
     }
-    return stand();
+    return stand;
 }
 
 std::string Dealer ::get_name()
 {
-    std::string name = "dealer";
-    return name;
+    return "dealer";
 }
 
 namespace
