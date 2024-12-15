@@ -72,9 +72,9 @@ void TournamentMode::announce_winners_by_victories()
     }
 }
 
-void TournamentMode::play_game(std::vector<std::unique_ptr<Player>> &&players, std::unique_ptr<Deck> my_deck)
+void TournamentMode::play_game(std::vector<std::unique_ptr<Player>> &&players_arr, std::unique_ptr<Deck> my_deck)
 {
-    players = std::move(players);
+    players = std::move(players_arr);
     deck = std::move(my_deck);
 
     for (size_t first = 0; first < players.size() - 1; first++)
@@ -95,5 +95,5 @@ void TournamentMode::play_game(std::vector<std::unique_ptr<Player>> &&players, s
 
 namespace
 {
-    RegisterCreator<Mode, TournamentMode> b("mode=tournament"); // TODO распарсить параметры
+    RegisterCreator<Mode, TournamentMode> b("tournament"); 
 }

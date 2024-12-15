@@ -44,5 +44,5 @@ void FastMode::play_game(std::vector<std::unique_ptr<Player>> &&players, std::un
 
 namespace
 {
-    RegisterCreator<Mode, FastMode> b("mode=fast");
+    RegisterCreator<Mode, FastMode> b("fast");
 }

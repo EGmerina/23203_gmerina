@@ -9,5 +9,5 @@ Card SimpleDeck::get_new_card()
 
 namespace
 {
-    RegisterCreator<Deck, SimpleDeck> b("deck=simple");
+    RegisterCreator<Deck, SimpleDeck> b("simple");
 }

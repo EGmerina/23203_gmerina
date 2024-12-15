@@ -86,5 +86,5 @@ void DetailedMode::play_game(std::vector<std::unique_ptr<Player>> &&players, std
 }
 namespace
 {
-    RegisterCreator<Mode, DetailedMode> b("mode=detailed");
+    RegisterCreator<Mode, DetailedMode> b("detailed");
 }

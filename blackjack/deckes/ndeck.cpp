@@ -28,5 +28,5 @@ Card NDeck::get_new_card()
 
 namespace
 {
-    RegisterCreator<Deck, NDeck> a("deck=N");
+    RegisterCreator<Deck, NDeck> a("N");
 }
