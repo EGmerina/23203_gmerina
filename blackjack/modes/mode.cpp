@@ -4,7 +4,7 @@ static const std::unique_ptr<Player> &get_winner(const std::unique_ptr<Player> &
 {
     if (p1_hand.get_points() == p2_hand.get_points() || (p1_hand.get_points() > 21 && p2_hand.get_points() > 21))
     {
-        const std::unique_ptr<Player> nobody = nullptr; // TODO !!!!!
+        const std::unique_ptr<Player> &nobody = nullptr; // TODO !!!!!
         return nobody;
     }
     if (p1_hand.get_points() > 21)
