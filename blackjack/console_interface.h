@@ -7,22 +7,22 @@
 class ConsoleInterface
 {
 public:
-    void output_points(std::shared_ptr<Player> player1, Hand &p1_hand)
+    void output_points(const std::unique_ptr<Player> &player1, Hand &p1_hand)
     {
         std::cout << "points of " << player1->get_name() << " : " << std::to_string(p1_hand.get_points()) << std::endl;
     }
 
-    void announce_whos_turn(std::shared_ptr<Player> player)
+    void announce_whos_turn(const std::unique_ptr<Player> &player)
     {
         std::cout << "turn of " << player->get_name() << std::endl;
     }
 
-    void output_vict_num(std::shared_ptr<Player> player1, size_t amount_vict)
+    void output_vict_num(const std::unique_ptr<Player> &player1, size_t amount_vict)
     {
         std::cout << "amount victories of " << player1->get_name() << " : " << amount_vict << std::endl;
     }
 
-    void announce_winner(std::shared_ptr<Player> winner)
+    void announce_winner(const std::unique_ptr<Player> &winner)
     {
         if (nullptr == winner)
         {
@@ -32,7 +32,7 @@ public:
         std::cout << "winner is " << winner->get_name() << std::endl;
     }
 
-    void announce_new_round(std::shared_ptr<Player> player1, std::shared_ptr<Player> player2)
+    void announce_new_round(const std::unique_ptr<Player> &player1, const std::unique_ptr<Player> &player2)
     {
         std::cout << "######### NEW ROUND ##########" << std::endl;
         std::cout << "players are " << player1->get_name() << " and " << player2->get_name() << std::endl;

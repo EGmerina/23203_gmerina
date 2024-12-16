@@ -34,12 +34,12 @@ void FastMode::play_game(std::vector<std::unique_ptr<Player>> &&players, std::un
     }
 
     ConsoleInterface interface;
-    interface.output_points(std::move(player1), p1_hand);
-    interface.output_points(std::move(player2), p2_hand);
+    interface.output_points(player1, p1_hand);
+    interface.output_points(player2, p2_hand);
 
-    std::unique_ptr<Player> winner = get_winner(std::move(player1), p1_hand, std::move(player2), p2_hand);
+    const std::unique_ptr<Player> &winner = get_winner(player1, p1_hand, player2, p2_hand);
 
-    interface.announce_winner(std::move(winner));
+    interface.announce_winner(winner);
 }
 
 namespace

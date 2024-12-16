@@ -2,9 +2,9 @@
 #include "mode.cpp"
 #include "../register_creator.h"
 
-void TournamentMode::play_tour(std::unique_ptr<Player> player1, std::unique_ptr<Player> player2)
+void TournamentMode::play_tour(const std::unique_ptr<Player> &player1, const std::unique_ptr<Player> &player2)
 {
-    interface.announce_new_round(std::move(player1), std::move(player2));
+    interface.announce_new_round(player1, player2);
     Hand p1_hand;
     Hand p2_hand;
 
@@ -28,11 +28,11 @@ void TournamentMode::play_tour(std::unique_ptr<Player> player1, std::unique_ptr<
         }
     }
 
-    interface.output_points(std::move(player1), p1_hand);
-    interface.output_points(std::move(player2), p2_hand);
+    interface.output_points(player1, p1_hand);
+    interface.output_points(player2, p2_hand);
 
-    std::unique_ptr<Player> winner = get_winner(std::move(player1), p1_hand, std::move(player2), p2_hand);
-    interface.announce_winner(std::move(winner));
+    const std::unique_ptr<Player> &winner = get_winner(player1, p1_hand, player2, p2_hand);
+    interface.announce_winner(winner);
     if (winner != nullptr)
     {
         victories_num[winner->get_name()] += 1;
@@ -44,7 +44,6 @@ void TournamentMode::announce_winners_by_victories()
     size_t first_vict_num = victories_num[players[0]->get_name()];
     bool draw_flag = 1;
     size_t max_vict_num = 0;
-    std::unique_ptr<Player> winner = nullptr;
     for (auto &u : players)
     {
         size_t cur_vict_num = victories_num[u->get_name()];
@@ -55,19 +54,19 @@ void TournamentMode::announce_winners_by_victories()
         if (max_vict_num < cur_vict_num)
         {
             max_vict_num = cur_vict_num;
-            winner = std::move(u);
         }
     }
     if (draw_flag)
     {
-        interface.announce_winner(nullptr);
+        std::unique_ptr<Player> nobody = nullptr;
+        interface.announce_winner(nobody);
         return;
     }
     for (auto &u : players)
     {
         if (victories_num[u->get_name()] == max_vict_num)
         {
-            interface.announce_winner(std::move(u));
+            interface.announce_winner(u);
         }
     }
 }
@@ -81,19 +80,19 @@ void TournamentMode::play_game(std::vector<std::unique_ptr<Player>> &&players_ar
     {
         for (size_t second = first + 1; second < players.size(); second++)
         {
-            play_tour(std::move(players[first]), std::move(players[second]));
+            play_tour(players[first], players[second]);
         }
     }
 
     interface.announce_total_protocol();
     for (auto &u : players)
     {
-        interface.output_vict_num(std::move(u), victories_num[u->get_name()]);
+        interface.output_vict_num(u, victories_num[u->get_name()]);
     }
     announce_winners_by_victories();
 }
 
 namespace
 {
-    RegisterCreator<Mode, TournamentMode> b("tournament"); 
+    RegisterCreator<Mode, TournamentMode> b("tournament");
 }

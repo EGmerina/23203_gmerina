@@ -28,7 +28,7 @@ void DetailedMode::play_game(std::vector<std::unique_ptr<Player>> &&players, std
     Hand p1_hand;
     Hand p2_hand;
     ConsoleInterface interface;
-    interface.announce_new_round(std::move(player1), std::move(player2));
+    interface.announce_new_round(player1, player2);
 
     for (size_t i = 0; i < INITIAL_NUMBER_OF_CARDS; i++)
     {
@@ -39,8 +39,8 @@ void DetailedMode::play_game(std::vector<std::unique_ptr<Player>> &&players, std
     bool p1_play = true;
     bool p2_play = true;
 
-    interface.output_points(std::move(player1), p1_hand);
-    interface.output_points(std::move(player2), p2_hand);
+    interface.output_points(player1, p1_hand);
+    interface.output_points(player2, p2_hand);
 
     while (p1_play || p2_play)
     {
@@ -48,7 +48,7 @@ void DetailedMode::play_game(std::vector<std::unique_ptr<Player>> &&players, std
         {
             if (stop_game(std::cin, command_str))
                 return;
-            interface.announce_whos_turn(std::move(player1));
+            interface.announce_whos_turn(player1);
             if (stop_game(std::cin, command_str))
                 return;
             p1_play = player1->make_move(p2_hand.get_face_card(), p1_hand);
@@ -58,14 +58,14 @@ void DetailedMode::play_game(std::vector<std::unique_ptr<Player>> &&players, std
                 if (stop_game(std::cin, command_str))
                     return;
                 p1_hand.add_card(deck->get_new_card());
-                interface.output_points(std::move(player1), p1_hand);
+                interface.output_points(player1, p1_hand);
             }
         }
         if (p2_play)
         {
             if (stop_game(std::cin, command_str))
                 return;
-            interface.announce_whos_turn(std::move(player2));
+            interface.announce_whos_turn(player2);
             if (stop_game(std::cin, command_str))
                 return;
             p2_play = player2->make_move(p1_hand.get_face_card(), p2_hand);
@@ -75,14 +75,14 @@ void DetailedMode::play_game(std::vector<std::unique_ptr<Player>> &&players, std
                 if (stop_game(std::cin, command_str))
                     return;
                 p2_hand.add_card(deck->get_new_card());
-                interface.output_points(std::move(player2), p2_hand);
+                interface.output_points(player2, p2_hand);
             }
         }
     }
 
-    std::unique_ptr<Player> winner = get_winner(std::move(player1), p1_hand, std::move(player2), p2_hand);
+    const std::unique_ptr<Player> &winner = get_winner(player1, p1_hand, player2, p2_hand);
 
-    interface.announce_winner(std::move(winner));
+    interface.announce_winner(winner);
 }
 namespace
 {

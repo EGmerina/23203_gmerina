@@ -15,7 +15,6 @@ private:
     std::unique_ptr<Deck> deck = nullptr;
     ConsoleInterface interface;
 
-    void play_tour(std::unique_ptr<Player> player1, std::unique_ptr<Player> player2);
+    void play_tour(const std::unique_ptr<Player> &player1, const std::unique_ptr<Player> &player2);
     void announce_winners_by_victories();
 };
-
