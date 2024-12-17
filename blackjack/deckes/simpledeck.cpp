@@ -1,5 +1,4 @@
 #include "simpledeck.h"
-#include "deck.cpp"
 #include "../register_creator.h"
 
 Card SimpleDeck::get_new_card()
