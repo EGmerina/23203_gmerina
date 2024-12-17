@@ -37,7 +37,7 @@ void FastMode::play_game(std::vector<std::unique_ptr<Player>> &&players, std::un
     interface.output_points(player1, p1_hand);
     interface.output_points(player2, p2_hand);
 
-    const std::unique_ptr<Player> &winner = get_winner(player1, p1_hand, player2, p2_hand);
+    auto winner = get_winner(&player1, p1_hand, &player2, p2_hand);
 
     interface.announce_winner(winner);
 }

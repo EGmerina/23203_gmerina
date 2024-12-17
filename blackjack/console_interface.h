@@ -22,14 +22,14 @@ public:
         std::cout << "amount victories of " << player1->get_name() << " : " << amount_vict << std::endl;
     }
 
-    void announce_winner(const std::unique_ptr<Player> &winner)
+    void announce_winner(const std::unique_ptr<Player> *winner)
     {
         if (nullptr == winner)
         {
             std::cout << "draw!" << std::endl;
             return;
         }
-        std::cout << "winner is " << winner->get_name() << std::endl;
+        std::cout << "winner is " << (*winner)->get_name() << std::endl;
     }
 
     void announce_new_round(const std::unique_ptr<Player> &player1, const std::unique_ptr<Player> &player2)

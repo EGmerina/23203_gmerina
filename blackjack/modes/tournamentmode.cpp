@@ -31,11 +31,11 @@ void TournamentMode::play_tour(const std::unique_ptr<Player> &player1, const std
     interface.output_points(player1, p1_hand);
     interface.output_points(player2, p2_hand);
 
-    const std::unique_ptr<Player> &winner = get_winner(player1, p1_hand, player2, p2_hand);
+    auto winner = get_winner(&player1, p1_hand, &player2, p2_hand);
     interface.announce_winner(winner);
     if (winner != nullptr)
     {
-        victories_num[winner->get_name()] += 1;
+        victories_num[(*winner)->get_name()] += 1;
     }
 }
 
@@ -58,15 +58,14 @@ void TournamentMode::announce_winners_by_victories()
     }
     if (draw_flag)
     {
-        std::unique_ptr<Player> nobody = nullptr;
-        interface.announce_winner(nobody);
+        interface.announce_winner(nullptr);
         return;
     }
     for (auto &u : players)
     {
         if (victories_num[u->get_name()] == max_vict_num)
         {
-            interface.announce_winner(u);
+            interface.announce_winner(&u);
         }
     }
 }
