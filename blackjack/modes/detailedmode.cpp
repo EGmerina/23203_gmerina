@@ -3,7 +3,6 @@
 #include <iostream>
 #include <string>
 
-#include "mode.cpp"
 #include "../register_creator.h"
 #include "../console_interface.h"
 
@@ -12,11 +11,7 @@
 static bool stop_game(std::istream &cin, std::string &str)
 {
     std::getline(cin, str);
-    if (str == "quit")
-    {
-        return true;
-    }
-    return false;
+    return str == "quit";
 }
 
 void DetailedMode::play_game(std::vector<std::unique_ptr<Player>> &&players, std::unique_ptr<Deck> deck)

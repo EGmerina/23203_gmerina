@@ -1,5 +1,4 @@
 #include "tournamentmode.h"
-#include "mode.cpp"
 #include "../register_creator.h"
 
 void TournamentMode::play_tour(const std::unique_ptr<Player> &player1, const std::unique_ptr<Player> &player2)

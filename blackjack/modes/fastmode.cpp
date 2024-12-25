@@ -2,7 +2,6 @@
 
 #include <string>
 
-#include "mode.cpp"
 #include "../console_interface.h"
 #include "../register_creator.h"
 

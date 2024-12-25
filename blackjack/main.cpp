@@ -66,5 +66,6 @@ int main(int argc, char **argv)
 
 //./play --mode=fast --deck=simple  --players nina petya
 
-// TODO тесты!!! написать фейковую колоду, которая всегда выдает одни и те же карты. для тестов
-// написать фальшивые стратегии для тестирования движка - знаем кто выиграет
+//TODO add config file
+//TODO add N to deck
+//TODO const

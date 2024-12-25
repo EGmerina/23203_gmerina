@@ -1,10 +1,10 @@
 #include "mode.h"
 
-static const std::unique_ptr<Player>::pointer get_winner(const std::unique_ptr<Player> &player1, Hand &p1_hand, const std::unique_ptr<Player> &player2, Hand &p2_hand)
+const std::unique_ptr<Player>::pointer Mode ::get_winner(const std::unique_ptr<Player> &player1, Hand &p1_hand, const std::unique_ptr<Player> &player2, Hand &p2_hand)
 {
     if (p1_hand.get_points() == p2_hand.get_points() || (p1_hand.get_points() > 21 && p2_hand.get_points() > 21))
     {
-        const std::unique_ptr<Player> nobody = nullptr; // TODO !!!!!
+        const std::unique_ptr<Player> nobody = nullptr;
         return nobody.get();
     }
     if (p1_hand.get_points() > 21)
