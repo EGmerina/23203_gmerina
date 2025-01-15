@@ -17,10 +17,10 @@ public:
         return &f;
     }
 
-    std::unique_ptr<Product> createUnitByName(Key name)
+    std::unique_ptr<Product> createUnitByName(Key name, int N = void)
     {
         auto *creator = creators_.at(name);
-        std::unique_ptr<Product> p(creator());
+        std::unique_ptr<Product> p(creator(N));
         return std::move(p);
     }
 

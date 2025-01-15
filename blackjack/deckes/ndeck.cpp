@@ -9,7 +9,7 @@
 #define King 10
 constexpr static Card standart_deck[] = {2, 3, 4, 5, 6, 7, 8, 9, 10, Jack, Queen, King, 11};
 
-NDeck::NDeck(unsigned char N) : N(N)
+NDeck::NDeck(int N) : N(N)
 {
     for (size_t i = 0; i < N; i++)
     {

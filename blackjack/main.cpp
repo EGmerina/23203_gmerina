@@ -22,9 +22,10 @@ int main(int argc, char **argv)
 
     std::vector<std::string> players;
     std::string mode;
+    std::string config;
 
     po::options_description desc("Allowed options");
-    desc.add_options()("help", "follow the instractions below")("players", po::value<std::vector<std::string>>(&players)->value_name("dealer masha nina petya vasya yan"), "set strategies")("mode", po::value<std::string>(&mode)->value_name("[detailed|fast|tournament]"), "set gamemode")("deck", po::value<std::string>()->value_name("[simple|N]")->default_value("simple"), "set deckmode")("N", po::value<int>()->value_name("[number of decks]")->default_value(4), "set N");
+    desc.add_options()("help", "follow the instractions below")("players", po::value<std::vector<std::string>>(&players)->value_name("dealer masha nina petya vasya yan"), "set strategies")("mode", po::value<std::string>(&mode)->value_name("[detailed|fast|tournament]"), "set gamemode")("deck", po::value<std::string>()->value_name("[simple|N]")->default_value("simple"), "set deckmode")("N", po::value<int>()->value_name("[number of decks]")->default_value(4), "set N")("config", po::value<std::string>(&config)->value_name("[configure path]"), "set configs");
 
     po::positional_options_description pos;
     pos.add("players", -1);
@@ -53,7 +54,7 @@ int main(int argc, char **argv)
     }
 
     auto gamemode = Factory<std::string, Mode>::getInstance()->createUnitByName(vm.at("mode").as<std::string>());
-    auto deck = Factory<std::string, Deck>::getInstance()->createUnitByName(vm.at("deck").as<std::string>());
+    auto deck = Factory<std::string, Deck>::getInstance()->createUnitByName(vm.at("deck").as<std::string>(), vm.at("N").as<int>());
 
     std::vector<std::unique_ptr<Player>> players_arr;
     for (auto name : players)
@@ -66,6 +67,6 @@ int main(int argc, char **argv)
 
 //./play --mode=fast --deck=simple  --players nina petya
 
-//TODO add config file
-//TODO add N to deck
-//TODO const
+// TODO add config file
+// TODO add N to deck
+// TODO const
