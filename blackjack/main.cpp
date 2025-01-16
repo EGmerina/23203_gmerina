@@ -70,8 +70,5 @@ int main(int argc, char **argv)
     gamemode->play_game(std::move(players_arr), std::move(deck));
 }
 
-//./play --mode=fast --deck=simple  --players nina petya
-
-// TODO add config file
 // TODO add N to deck
 // TODO const
