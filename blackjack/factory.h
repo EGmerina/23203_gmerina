@@ -17,16 +17,33 @@ public:
         return &f;
     }
 
-    std::unique_ptr<Product> createUnitByName(Key name, int N = void)
+    std::unique_ptr<Product> createUnitByName(Key name)
     {
         auto *creator = creators_.at(name);
-        std::unique_ptr<Product> p(creator(N));
+        std::unique_ptr<Product> p(creator());
         return std::move(p);
     }
 
-    bool registerCreator(const Key &name, Product *(*creator)()) // TODO проверить что не отрабатывает 2 раза //проверить на наличие
+    bool registerCreator(const Key &name, Product *(*creator)())
     {
         creators_[name] = creator;
+        return true;
+    }
+
+    bool are_availible_players(std::vector<std::string> &players)
+    {
+        for (auto name : players)
+        {
+            try
+            {
+                auto *creator = creators_.at(name);
+            }
+            catch (const std::exception &e)
+            {
+                std::cout << name << " doesn't want to play" << '\n';
+                return false;
+            }
+        }
         return true;
     }
 

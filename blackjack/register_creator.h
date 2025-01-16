@@ -2,9 +2,9 @@
 #include "factory.h"
 
 template <typename Class, typename Subclass>
-Class *creator(int N = void)
+Class *creator()
 {
-    return new Subclass(N);
+    return new Subclass();
 }
 
 template <typename Class, typename Subclass>
