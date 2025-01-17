@@ -1,6 +1,7 @@
-#pragma once
+#ifndef ENGINE_H
+#define ENGINE_H
 #include "space.h"
-#include <qt5/QtWidgets/QAbstractButton>
+
 
 
 
@@ -31,3 +32,5 @@ void draw_game()
         }
     }
 }
+
+#endif // ENGINE_H

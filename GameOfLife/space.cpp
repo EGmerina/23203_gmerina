@@ -70,3 +70,7 @@ size_t Space::getAmountOfCellsAround(size_t x, size_t y)
     amountOfCells -= space[x + y * size];
     return amountOfCells;
 }
+
+size_t getSize(){
+    return size;
+}
