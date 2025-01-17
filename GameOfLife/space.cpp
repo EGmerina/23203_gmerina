@@ -71,6 +71,10 @@ size_t Space::getAmountOfCellsAround(size_t x, size_t y)
     return amountOfCells;
 }
 
-size_t getSize(){
+size_t Space::getSize(){
     return size;
+}
+
+bool Space::isCellAlive(size_t x, size_t y){
+    return space[x+y*size]>0;
 }

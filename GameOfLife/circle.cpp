@@ -1,12 +1,11 @@
 #include "circle.h"
 
 
-    Circle::Circle(const qreal ax, const qreal ay, const qreal wx, const qreal wy, QGraphicsScene *scene) :
-        QGraphicsEllipseItem(ax, ay, wx, wy)
+    Circle::Circle(const qreal x, const qreal y, const qreal r, QGraphicsScene *scene) :
+        QGraphicsEllipseItem(x, y, r, r)
     {
         setPen( QPen(QBrush(Qt::black), 2, Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin) );
-        setBrush( QBrush(Qt::gray) );
-        setRect(ax, ay, wx, wy);
+        setRect(x, y, r, r);
         setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton);
         scene->addItem(this);
     }

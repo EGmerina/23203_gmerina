@@ -1,20 +1,15 @@
 #ifndef DRAWNSPACE_H
 #define DRAWNSPACE_H
 #include "space.h"
-#include "circle.h"
+#include <QtWidgets/QGraphicsScene>
 
 
 class DrawnSpace
 {
 public:
-    DrawnSpace(Space * space) : space(space){
 
-    }
+  static  void  drawSpace(Space * space, QGraphicsScene* scene);
 
-private:
-    Space* space;
-    Circle * drawnspace;
-    size_t size;
 };
 
 #endif // DRAWNSPACE_H

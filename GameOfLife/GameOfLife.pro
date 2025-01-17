@@ -11,6 +11,7 @@ CONFIG += c++17
 SOURCES += \
     circle.cpp \
     drawnspace.cpp \
+    engine.cpp \
     main.cpp \
     mainwindow.cpp \
     rules.cpp \

@@ -18,14 +18,16 @@ public:
 
     void reload();
 
-    size_t getToroidalCoordinate(int coord);
-
     size_t getAmountOfCellsAround(size_t x, size_t y);
 
     size_t getSize();
 
+    bool isCellAlive(size_t x, size_t y);
+
 private:
     size_t size = 0;
     int *space;
+
+     size_t getToroidalCoordinate(int coord);
 };
 #endif // SPACE_H

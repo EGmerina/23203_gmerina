@@ -3,6 +3,9 @@
 
 #include <QMainWindow>
 #include <QtWidgets/QGraphicsScene>
+#include "space.h"
+#include "engine.h"
+
 
 QT_BEGIN_NAMESPACE
 namespace Ui {
@@ -19,13 +22,17 @@ public:
     ~MainWindow();
 
 private slots:
-    void on_pushButton_3_clicked();
 
-    void on_pushButton_2_clicked();
+    void on_start_clicked();
+
+    void on_stop_clicked();
 
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *scene;
+    Space * space;
+    Engine engine;
+
 };
 
 #endif // MAINWINDOW_H
