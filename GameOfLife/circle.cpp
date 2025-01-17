@@ -13,11 +13,11 @@
 
 
     void Circle::mousePressEvent(QMouseEvent *event) {
-        std::cout <<"***"<<std::endl;
-        this->setBrush( QBrush(Qt::red) );
+        if(event->button()== Qt::MouseButton:: LeftButton){
+            std::cout <<"***"<<std::endl;
+            this->setBrush( QBrush(Qt::red) );
+        }
+
+
     }
 
-    void Circle::mouseReleaseEvent(QMouseEvent *event){
-         std::cout <<"$$$"<<std::endl;
-        this->setBrush( QBrush(Qt::red) );
-    }
