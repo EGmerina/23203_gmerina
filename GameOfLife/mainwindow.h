@@ -31,7 +31,7 @@ private:
     Ui::MainWindow *ui;
     QGraphicsScene *scene;
     Space * space;
-    Engine engine;
+    Engine  engine;
 
 };
 

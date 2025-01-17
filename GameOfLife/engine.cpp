@@ -2,7 +2,10 @@
 #include <QtWidgets/QGraphicsScene>
 #include "space.h"
 #include "drawnspace.h"
-#include <unistd.h>
+#include <QTimer>
+
+
+#define DELAY 1000
 
 
 void Engine:: start(Space * space, QGraphicsScene * scene){
@@ -13,9 +16,8 @@ void Engine:: start(Space * space, QGraphicsScene * scene){
 void Engine:: update(Space * space, QGraphicsScene * scene){
     space->updateSpace();
     DrawnSpace::drawSpace(space, scene);
-    usleep(2000);
-    if(!stopflag){
-         update(space, scene);
+   if(!stopflag){
+        QTimer::singleShot(DELAY,Qt::PreciseTimer,this, [space, scene, this](){Engine :: update(space, scene);});
     }
 }
 
