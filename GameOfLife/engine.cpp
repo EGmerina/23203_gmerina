@@ -17,7 +17,7 @@ void Engine:: update(Space * space, QGraphicsScene * scene){
     space->updateSpace();
     DrawnSpace::drawSpace(space, scene);
    if(!stopflag){
-        QTimer::singleShot(DELAY,Qt::PreciseTimer,this, [space, scene, this](){Engine :: update(space, scene);});
+        QTimer::singleShot(DELAY,Qt::PreciseTimer,this, [space, scene, this](){Engine :: update(space, scene);}); //TODO not singleshot
     }
 }
 
