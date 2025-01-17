@@ -1,4 +1,5 @@
 #include "circle.h"
+#include <iostream>
 
 
     Circle::Circle(const qreal x, const qreal y, const qreal r, QGraphicsScene *scene) :
@@ -12,10 +13,11 @@
 
 
     void Circle::mousePressEvent(QMouseEvent *event) {
-
-        QMessageBox msgBox;
-        QString QResult{ QString::fromLatin1("Circle clicked") };
-        msgBox.setText( QResult );
-        msgBox.exec();
+        std::cout <<"***"<<std::endl;
+        this->setBrush( QBrush(Qt::red) );
     }
 
+    void Circle::mouseReleaseEvent(QMouseEvent *event){
+         std::cout <<"$$$"<<std::endl;
+        this->setBrush( QBrush(Qt::red) );
+    }
