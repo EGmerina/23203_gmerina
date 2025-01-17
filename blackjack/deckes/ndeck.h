@@ -4,7 +4,7 @@
 class NDeck : public Deck
 {
 public:
-    NDeck(int N = 4);
+    NDeck(int N );
     virtual Card get_new_card() override;
 
 private:

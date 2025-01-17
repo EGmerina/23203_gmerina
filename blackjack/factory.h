@@ -17,7 +17,8 @@ public:
         return &f;
     }
 
-    std::unique_ptr<Product> createUnitByName(Key name)
+    template <class... ParamTypes>
+    std::unique_ptr<Product> createUnitByName(Key name, ParamTypes &&...parameters)
     {
         auto *creator = creators_.at(name);
         std::unique_ptr<Product> p(creator());

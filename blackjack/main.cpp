@@ -54,7 +54,7 @@ int main(int argc, char **argv)
     }
 
     auto gamemode = Factory<std::string, Mode>::getInstance()->createUnitByName(vm.at("mode").as<std::string>());
-    auto deck = Factory<std::string, Deck>::getInstance()->createUnitByName(vm.at("deck").as<std::string>()); //, vm.at("N").as<int>());
+    auto deck = Factory<std::string, Deck>::getInstance()->createUnitByName(vm.at("deck").as<std::string>(), vm.at("N").as<int>());
 
     if (!Factory<std::string, Player>::getInstance()->are_availible_players(players))
     {
@@ -70,5 +70,4 @@ int main(int argc, char **argv)
     gamemode->play_game(std::move(players_arr), std::move(deck));
 }
 
-// TODO add N to deck
-// TODO const
+
