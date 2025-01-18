@@ -20,7 +20,6 @@ MainWindow::~MainWindow()
 }
 
 
-
 void MainWindow::on_start_clicked()
 {
     engine.start(space, scene);
@@ -38,4 +37,6 @@ void MainWindow:: showDefaultScene(){
     space->updateSpace();
     DrawnSpace::drawSpace(space, scene);
 }
+
+
 

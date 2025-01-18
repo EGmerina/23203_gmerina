@@ -3,6 +3,7 @@
 #include <algorithm>
 #include "rules.h"
 
+
 #define LOCALITY 3
 
 Space::Space(size_t size) : size(size), space(new int[size * size])
@@ -49,7 +50,7 @@ void Space::updateSpace()
 
 size_t Space::getToroidalCoordinate(int coord)
 {
-    return coord % size;
+    return coord % size; //TODO change %
 }
 
 size_t Space::getAmountOfCellsAround(size_t x, size_t y)
@@ -77,4 +78,8 @@ size_t Space::getSize(){
 
 bool Space::isCellAlive(size_t x, size_t y){
     return space[x+y*size]>0;
+}
+
+void Space:: editCell(size_t x, size_t y){
+    space[x+ y*size] = 1 - space[x+ y*size];
 }

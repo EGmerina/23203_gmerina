@@ -18,6 +18,7 @@ class MainWindow : public QMainWindow
     Q_OBJECT
 
 public:
+
     MainWindow(QWidget *parent = nullptr);
     ~MainWindow();
     void showDefaultScene();
@@ -27,6 +28,7 @@ private slots:
     void on_start_clicked();
 
     void on_stop_clicked();
+
 
 private:
     Ui::MainWindow *ui;

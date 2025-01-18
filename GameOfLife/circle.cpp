@@ -1,9 +1,9 @@
 #include "circle.h"
-#include <iostream>
+
 
 
     Circle::Circle(const qreal x, const qreal y, const qreal r, QGraphicsScene *scene) :
-        QGraphicsEllipseItem(x, y, r, r)
+    QGraphicsEllipseItem(x, y, r, r)
     {
         setPen( QPen(QBrush(Qt::black), 2, Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin) );
         setRect(x, y, r, r);
@@ -11,13 +11,26 @@
         scene->addItem(this);
     }
 
-
-    void Circle::mousePressEvent(QMouseEvent *event) {
-        if(event->button()== Qt::MouseButton:: LeftButton){
-            std::cout <<"***"<<std::endl;
-            this->setBrush( QBrush(Qt::red) );
-        }
-
-
+    void Circle::mousePressEvent(QGraphicsSceneMouseEvent *event) {
+        repaint();
     }
 
+    void  Circle::setPosition(size_t x , size_t y ){
+        this->x = x;
+        this->y = y;
+    }
+
+    void Circle::setSpace(Space * space){
+        this->space = space;
+    }
+
+
+    void Circle:: repaint(){
+        if(space->isCellAlive(x, y)){
+            space->removeCell(x, y);
+            this->setBrush(Qt:: gray);
+        }else{
+            space->addCell(x, y);
+            this->setBrush(Qt:: red);
+        }
+    }
