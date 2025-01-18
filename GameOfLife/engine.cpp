@@ -5,7 +5,7 @@
 #include <QTimer>
 
 
-#define DELAY 1000
+#define DELAY 700
 
 void Engine::show(Space * space, QGraphicsScene * scene){
     space->updateSpace();

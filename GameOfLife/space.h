@@ -26,6 +26,7 @@ public:
     bool isCellAlive(size_t x, size_t y);
 
     void printSpace();
+    bool willCellLive(size_t x, size_t y);
 
 private:
     size_t size = 0;

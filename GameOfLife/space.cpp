@@ -24,6 +24,14 @@ void Space::printSpace(){
     }
 }
 
+bool Space::willCellLive(size_t x, size_t y){
+    return rule.canCellLive(getAmountOfCellsAround(x, y), isCellAlive(x, y));
+}
+
+bool Space::isCellAlive(size_t x, size_t y){
+    return space[x+y*size]>0;
+}
+
 void Space::removeCell(size_t x, size_t y)
 {
     space[y * size + x] = 0;
@@ -41,33 +49,35 @@ void Space::reload()
 
 void Space::updateSpace()
 {
-    printSpace();
+    int * updatedspace = new int[size * size]();
     for (size_t y = 0; y < size; y++)
     {
         for (size_t x = 0; x < size; x++)
         {
-            if (rule.canCellLive(getAmountOfCellsAround(x, y), space[x + y * size] > 0))
+            if (rule.canCellLive(getAmountOfCellsAround(x, y), isCellAlive(x, y)))
             {
-                space[x + y * size] = 1;
+                updatedspace[x + y * size] = 1;
             }
             else
             {
-                space[x + y * size] = 0;
+                updatedspace[x + y * size] = 0;
             }
         }
     }
+    delete [] space;
+    space = updatedspace;
 }
 
 size_t Space::getToroidalCoordinate(int coord)
 {
-    if(coord > size - 1){
+    if(coord > static_cast<int>(size - 1)){
 
         return coord % size;
 
     }else if(coord < 0) {
 
         while(coord < 0){
-            coord+=size;
+            coord+=(static_cast<int>(size));
         }
         return coord;
 
@@ -100,8 +110,6 @@ size_t Space::getSize(){
     return size;
 }
 
-bool Space::isCellAlive(size_t x, size_t y){
-    return space[x+y*size]>0;
-}
+
 
 
