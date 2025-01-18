@@ -9,6 +9,7 @@ public:
     {
         srand(time(0));
     }
+    Deck(const Deck & copy) = delete;
     Deck &operator=(const Deck &b) = delete;
     virtual ~Deck() = default;
     virtual Card get_new_card() = 0;

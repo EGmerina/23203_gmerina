@@ -5,7 +5,7 @@
 #include "../console_interface.h"
 #include "../register_creator.h"
 
-void FastMode::play_game(std::vector<std::unique_ptr<Player>> &&players, std::unique_ptr<Deck> deck)
+void FastMode::play_game(std::vector<std::unique_ptr<Player>> players, std::unique_ptr<Deck> deck)
 {
     std::unique_ptr<Player> player1 = std::move(players[0]);
     std::unique_ptr<Player> player2 = std::move(players[1]);

@@ -14,7 +14,7 @@ static bool stop_game(std::istream &cin, std::string &str)
     return str == "quit";
 }
 
-void DetailedMode::play_game(std::vector<std::unique_ptr<Player>> &&players, std::unique_ptr<Deck> deck)
+void DetailedMode::play_game(std::vector<std::unique_ptr<Player>> players, std::unique_ptr<Deck> deck)
 {
     std::string command_str;
 

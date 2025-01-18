@@ -7,7 +7,7 @@
 class TournamentMode : public Mode
 {
 public:
-    virtual void play_game(std::vector<std::unique_ptr<Player>> &&players_arr, std::unique_ptr<Deck> my_deck) override;
+    virtual void play_game(std::vector<std::unique_ptr<Player>> players_arr, std::unique_ptr<Deck> my_deck) override;
 
 private:
     std::vector<std::unique_ptr<Player>> players;

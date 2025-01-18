@@ -7,6 +7,7 @@
 #define Jack 10
 #define Queen 10
 #define King 10
+
 constexpr static Card standart_deck[] = {2, 3, 4, 5, 6, 7, 8, 9, 10, Jack, Queen, King, 11};
 
 NDeck::NDeck(int N = 4) : N(N)

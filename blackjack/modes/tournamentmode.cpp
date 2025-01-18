@@ -70,7 +70,7 @@ void TournamentMode::announce_winners_by_victories()
     }
 }
 
-void TournamentMode::play_game(std::vector<std::unique_ptr<Player>> &&players_arr, std::unique_ptr<Deck> my_deck)
+void TournamentMode::play_game(std::vector<std::unique_ptr<Player>> players_arr, std::unique_ptr<Deck> my_deck)
 {
     players = std::move(players_arr);
     deck = std::move(my_deck);
