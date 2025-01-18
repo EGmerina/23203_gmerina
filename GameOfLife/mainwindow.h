@@ -4,7 +4,7 @@
 #include <QMainWindow>
 #include <QtWidgets/QGraphicsScene>
 #include "space.h"
-#include "engine.h"
+
 
 
 QT_BEGIN_NAMESPACE
@@ -30,11 +30,12 @@ private slots:
     void on_stop_clicked();
 
 
+    void on_reload_clicked();
+
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *scene;
     Space * space;
-    Engine  engine;
 
 };
 

@@ -1,5 +1,5 @@
 #include "circle.h"
-
+#include "engine.h"
 
 
     Circle::Circle(const qreal x, const qreal y, const qreal r, QGraphicsScene *scene) :
@@ -12,7 +12,9 @@
     }
 
     void Circle::mousePressEvent(QGraphicsSceneMouseEvent *event) {
-        repaint();
+        if(Engine:: getInstance()->isEngineStopped()){
+            repaint();
+        }
     }
 
     void  Circle::setPosition(size_t x , size_t y ){

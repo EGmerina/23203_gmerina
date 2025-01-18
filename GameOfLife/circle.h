@@ -21,6 +21,7 @@ public:
 
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) ;
+
 private:
     size_t x = 0;
     size_t y = 0;

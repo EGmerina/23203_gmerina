@@ -7,11 +7,26 @@
 
 class Engine : public QObject{
 public:
+
+    static Engine* getInstance(){
+        static Engine e;
+        return &e;
+    }
+
     void update(Space * space, QGraphicsScene * scene);
+
     void start(Space * space, QGraphicsScene * scene);
+
     void stop();
+
+    void show(Space * space, QGraphicsScene * scene);
+
+    void reload(Space * space, QGraphicsScene * scene);
+
+    bool isEngineStopped();
+
 private:
-    bool stopflag = false;
+    bool stopflag = true;
 
 };
 
