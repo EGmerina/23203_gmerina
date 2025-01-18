@@ -4,6 +4,7 @@
 #include <QObject>
 
 #include "space.h"
+#include "drawnspace.h"
 
 class Engine : public QObject{
 public:
@@ -13,15 +14,15 @@ public:
         return &e;
     }
 
-    void update(Space * space, QGraphicsScene * scene);
+    void update(Space * space, QGraphicsScene * scene, DrawnSpace * drawnspace);
 
-    void start(Space * space, QGraphicsScene * scene);
+    void start(Space * space, QGraphicsScene * scene, DrawnSpace * drawnspace);
 
     void stop();
 
-    void show(Space * space, QGraphicsScene * scene);
+    void show(Space * space, QGraphicsScene * scene, DrawnSpace * drawnspace);
 
-    void reload(Space * space, QGraphicsScene * scene);
+    void reload(Space * space, QGraphicsScene * scene, DrawnSpace * drawnspace);
 
     bool isEngineStopped();
 

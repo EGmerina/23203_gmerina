@@ -4,6 +4,7 @@
 #include <QMainWindow>
 #include <QtWidgets/QGraphicsScene>
 #include "space.h"
+#include "drawnspace.h"
 
 
 
@@ -32,10 +33,13 @@ private slots:
 
     void on_reload_clicked();
 
+    void on_apply_clicked();
+
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *scene;
     Space * space;
+    DrawnSpace * drawnspace;
 
 };
 
