@@ -31,7 +31,7 @@ void Engine:: stop(){
 
 void Engine:: reload(Space * space, QGraphicsScene * scene){
     space->reload();
-    show(space, scene);
+    DrawnSpace::drawSpace(space, scene);
     stopflag = true;
 }
 

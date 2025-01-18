@@ -3,6 +3,7 @@
 
 #include <stdio.h>
 #include <algorithm>
+#include "rules.h"
 
 class Space
 {
@@ -24,12 +25,14 @@ public:
 
     bool isCellAlive(size_t x, size_t y);
 
-    void editCell(size_t x, size_t y);
+    void printSpace();
 
 private:
     size_t size = 0;
     int *space;
+    Rules rule;
 
-     size_t getToroidalCoordinate(int coord);
+
+    size_t getToroidalCoordinate(int coord);
 };
 #endif // SPACE_H
