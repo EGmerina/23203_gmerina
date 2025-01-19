@@ -1,4 +1,5 @@
 #include "mainwindow.h"
+#include <QMessageBox>
 #include "ui_mainwindow.h"
 #include "circle.h"
 #include "drawnspace.h"
@@ -24,12 +25,16 @@ MainWindow::~MainWindow()
 
 void MainWindow::on_start_clicked()
 {
+    ui->start->setText("started");
+    ui->stop->setText("stop");
     Engine :: getInstance()->start(space, scene, drawnspace);
 }
 
 
 void MainWindow::on_stop_clicked()
 {
+    ui->start->setText("start");
+    ui->stop->setText("stopped");
     Engine :: getInstance()->stop();
 }
 
@@ -41,16 +46,24 @@ void MainWindow:: showDefaultScene(){
 
 void MainWindow::on_reload_clicked()
 {
-   Engine :: getInstance()->reload(space, scene, drawnspace);
+    ui->start->setText("start");
+    ui->stop->setText("stop");
+    Engine :: getInstance()->reload(space, scene, drawnspace);
 }
 
 
 void MainWindow::on_apply_clicked()
 {
-    //TODO написать что надо остановить игру прежде чем менять масштаб!
+    if(!Engine:: getInstance()->isEngineStopped()){
+        ui->label->setText("You should stop the game before rescaling");
+        return;
+    }
+    ui->start->setText("start");
+    ui->stop->setText("stop");
     delete(space);
     this->space = new Space(ui->scale->value());
     Engine :: getInstance()->show(space, scene, drawnspace);
+    ui->label->setText("");
 }
 
 void MainWindow::resizeEvent(QResizeEvent* event)
@@ -58,3 +71,9 @@ void MainWindow::resizeEvent(QResizeEvent* event)
     ui->graphicsView->fitInView(scene->sceneRect());
     drawnspace->drawSpace(space, scene);
 }
+
+void MainWindow::on_rules_clicked()
+{
+   QMessageBox:: information(this, "Rules Of <Game Of Life>", "* in an empty (dead) cell adjacent to three living cells that generate life. \n * if a living cell has two or three living neighbors, then this cell continues to live. \n * otherwise (if fewer than two or more than three neighbors are alive), the cell dies (“from loneliness” or “from overcrowding”).");
+}
+

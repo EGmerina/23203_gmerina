@@ -34,6 +34,8 @@ private slots:
 
     void on_apply_clicked();
 
+    void on_rules_clicked();
+
 protected:
     void resizeEvent(QResizeEvent* event);
 
