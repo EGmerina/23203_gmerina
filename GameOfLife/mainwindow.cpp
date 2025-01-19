@@ -3,14 +3,14 @@
 #include "circle.h"
 #include "drawnspace.h"
 #include "engine.h"
-#include <iostream>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow), space(new Space()), drawnspace(new DrawnSpace())
 {
     ui->setupUi(this);
-
+    scene = new QGraphicsScene(0, 0, ui->graphicsView->width(), ui->graphicsView->height());
+    ui->graphicsView->setScene(scene);
 }
 
 MainWindow::~MainWindow()
@@ -34,9 +34,8 @@ void MainWindow::on_stop_clicked()
 }
 
 void MainWindow:: showDefaultScene(){
-    scene = new QGraphicsScene(0, 0, ui->graphicsView->width(), ui->graphicsView->height());
-    ui->graphicsView->setScene(scene);
-   // ui->graphicsView->fitInView(scene);
+    scene->setSceneRect(0, 0, ui->graphicsView->width(), ui->graphicsView->height());
+    ui->graphicsView->fitInView(scene->sceneRect());
     Engine :: getInstance()->show(space, scene, drawnspace);
 }
 
@@ -54,3 +53,8 @@ void MainWindow::on_apply_clicked()
     Engine :: getInstance()->show(space, scene, drawnspace);
 }
 
+void MainWindow::resizeEvent(QResizeEvent* event)
+{
+    ui->graphicsView->fitInView(scene->sceneRect());
+    drawnspace->drawSpace(space, scene);
+}

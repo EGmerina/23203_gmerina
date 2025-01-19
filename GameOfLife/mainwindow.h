@@ -34,6 +34,9 @@ private slots:
 
     void on_apply_clicked();
 
+protected:
+    void resizeEvent(QResizeEvent* event);
+
 private:
     Ui::MainWindow *ui;
     QGraphicsScene *scene;
