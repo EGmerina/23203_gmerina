@@ -12,6 +12,7 @@
 
 class Circle : public QGraphicsEllipseItem {
 public:
+    Circle()= delete;
     Circle(const qreal x, const qreal y, const qreal r, QGraphicsScene *scene );
     ~Circle()= default;
 

@@ -30,7 +30,6 @@ private slots:
 
     void on_stop_clicked();
 
-
     void on_reload_clicked();
 
     void on_apply_clicked();

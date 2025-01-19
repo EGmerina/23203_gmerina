@@ -3,6 +3,7 @@
 #include "circle.h"
 #include "drawnspace.h"
 #include "engine.h"
+#include <iostream>
 
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -14,10 +15,10 @@ MainWindow::MainWindow(QWidget *parent)
 
 MainWindow::~MainWindow()
 {
+    delete(drawnspace);
     delete ui;
     delete(scene);
     delete(space);
-    delete(drawnspace);
 }
 
 
@@ -35,6 +36,7 @@ void MainWindow::on_stop_clicked()
 void MainWindow:: showDefaultScene(){
     scene = new QGraphicsScene(0, 0, ui->graphicsView->width(), ui->graphicsView->height());
     ui->graphicsView->setScene(scene);
+   // ui->graphicsView->fitInView(scene);
     Engine :: getInstance()->show(space, scene, drawnspace);
 }
 
