@@ -1,10 +1,12 @@
 #ifndef ENGINE_H
 #define ENGINE_H
-#include <QtWidgets/QGraphicsScene>
-#include <QObject>
 
-#include "space.h"
+#include <QObject>
+#include <QtWidgets/QGraphicsScene>
+
 #include "drawnspace.h"
+#include "space.h"
+
 
 class Engine : public QObject{
 public:

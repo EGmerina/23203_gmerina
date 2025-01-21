@@ -1,7 +1,7 @@
 #include "space.h"
-#include <stdio.h>
 #include <algorithm>
 #include <iostream>
+#include <stdio.h>
 
 
 #define LOCALITY 3

@@ -1,13 +1,14 @@
 #ifndef MAINWINDOW_H
 #define MAINWINDOW_H
 
-#include <QMainWindow>
-#include <QtWidgets/QGraphicsScene>
-#include "space.h"
-#include "drawnspace.h"
 #include <QDebug>
 #include <QGraphicsSceneMouseEvent>
-#include <unistd.h>
+#include <QMainWindow>
+#include <QtWidgets/QGraphicsScene>
+
+#include "drawnspace.h"
+#include "space.h"
+
 
 
 QT_BEGIN_NAMESPACE

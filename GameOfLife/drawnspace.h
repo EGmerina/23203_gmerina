@@ -1,10 +1,12 @@
 #ifndef DRAWNSPACE_H
 #define DRAWNSPACE_H
-#include "space.h"
-#include <QtWidgets/QGraphicsScene>
-#include <vector>
+
 #include <memory>
+#include <vector>
+#include <QtWidgets/QGraphicsScene>
+
 #include "circle.h"
+#include "space.h"
 
 
 class DrawnSpace

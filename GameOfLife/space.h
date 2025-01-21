@@ -1,8 +1,8 @@
 #ifndef SPACE_H
 #define SPACE_H
 
-#include <stdio.h>
 #include <algorithm>
+#include <stdio.h>
 #include "rules.h"
 
 class Space

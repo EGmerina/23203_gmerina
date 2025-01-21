@@ -1,9 +1,6 @@
-#include "mainwindow.h"
-
-#include <QGraphicsScene>
-#include <QGraphicsRectItem>
-#include <QGraphicsView>
 #include <QApplication>
+
+#include "mainwindow.h"
 
 
 int main(int argc, char *argv[])

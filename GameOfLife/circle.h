@@ -1,10 +1,10 @@
 #ifndef CIRCLE_H
 #define CIRCLE_H
 
+#include <QMouseEvent>
 #include <QApplication>
 #include <QtWidgets/QGraphicsScene>
 #include <QtWidgets/QGraphicsEllipseItem>
-#include <QMouseEvent>
 #include <QWidget>
 
 #include "space.h"
