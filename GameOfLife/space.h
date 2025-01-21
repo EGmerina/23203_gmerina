@@ -25,14 +25,12 @@ public:
 
     bool isCellAlive(size_t x, size_t y);
 
-    void printSpace();
     bool willCellLive(size_t x, size_t y);
 
 private:
     size_t size = 0;
     int *space;
     Rules rule;
-
 
     size_t getToroidalCoordinate(int coord);
 };

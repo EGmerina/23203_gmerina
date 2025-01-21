@@ -3,7 +3,6 @@
 #include <iostream>
 #include <stdio.h>
 
-
 #define LOCALITY 3
 
 Space::Space(size_t size) : size(size), space(new int[size * size]())
@@ -14,22 +13,14 @@ Space::~Space()
     delete[] space;
 }
 
-void Space::printSpace(){
-    std:: cout << "Space" << std:: endl;
-    for(int y =0 ; y< size; ++y){
-        for(int x=0; x< size; ++x){
-            std:: cout << space[y*size+ x] << " " ;
-        }
-        std:: cout << std:: endl;
-    }
-}
-
-bool Space::willCellLive(size_t x, size_t y){
+bool Space::willCellLive(size_t x, size_t y)
+{
     return rule.canCellLive(getAmountOfCellsAround(x, y), isCellAlive(x, y));
 }
 
-bool Space::isCellAlive(size_t x, size_t y){
-    return space[x+y*size]>0;
+bool Space::isCellAlive(size_t x, size_t y)
+{
+    return space[x + y * size] > 0;
 }
 
 void Space::removeCell(size_t x, size_t y)
@@ -49,7 +40,7 @@ void Space::reload()
 
 void Space::updateSpace()
 {
-    int * updatedspace = new int[size * size]();
+    int *updatedspace = new int[size * size]();
     for (size_t y = 0; y < size; y++)
     {
         for (size_t x = 0; x < size; x++)
@@ -64,24 +55,28 @@ void Space::updateSpace()
             }
         }
     }
-    delete [] space;
+    delete[] space;
     space = updatedspace;
 }
 
 size_t Space::getToroidalCoordinate(int coord)
 {
-    if(coord > static_cast<int>(size - 1)){
+    if (coord > static_cast<int>(size - 1))
+    {
 
         return coord % size;
+    }
+    else if (coord < 0)
+    {
 
-    }else if(coord < 0) {
-
-        while(coord < 0){
-            coord+=(static_cast<int>(size));
+        while (coord < 0)
+        {
+            coord += (static_cast<int>(size));
         }
         return coord;
-
-    }else{
+    }
+    else
+    {
 
         return coord;
     }
@@ -106,10 +101,7 @@ size_t Space::getAmountOfCellsAround(size_t x, size_t y)
     return amountOfCells;
 }
 
-size_t Space::getSize(){
+size_t Space::getSize()
+{
     return size;
 }
-
-
-
-

@@ -10,6 +10,7 @@ CONFIG += c++17
 
 SOURCES += \
     circle.cpp \
+    customgraphicsscene.cpp \
     drawnspace.cpp \
     engine.cpp \
     main.cpp \
@@ -19,6 +20,7 @@ SOURCES += \
 
 HEADERS += \
     circle.h \
+    customgraphicsscene.h \
     drawnspace.h \
     engine.h \
     mainwindow.h \

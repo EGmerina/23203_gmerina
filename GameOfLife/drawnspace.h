@@ -8,17 +8,13 @@
 #include "circle.h"
 #include "space.h"
 
-
 class DrawnSpace
 {
 public:
-
-    void  drawSpace(Space * space, QGraphicsScene* scene);
+    void drawSpace(Space *space, QGraphicsScene *scene);
 
 private:
-
-    std::vector<std:: unique_ptr<Circle>> drawnspace;
-
+    std::vector<std::unique_ptr<Circle>> drawnspace;
 };
 
 #endif // DRAWNSPACE_H
