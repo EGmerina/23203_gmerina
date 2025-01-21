@@ -2,7 +2,6 @@
 #include <QtWidgets/QGraphicsScene>
 #include <QTimer>
 
-#define DELAY 700
 
 void Engine::show(Space *space, QGraphicsScene *scene, DrawnSpace *drawnspace)
 {
@@ -18,25 +17,13 @@ void Engine::start(Space *space, QGraphicsScene *scene, DrawnSpace *drawnspace)
     update(space, scene, drawnspace);
 }
 
-// update = [space, scene, drawnspace, this](){
-//     space->updateSpace();
-//     drawnspace->drawSpace(space, scene);
-// }
-
-// void Engine::update(std::function<void, void> update){
-//     update();
-//     if(!stopflag){
-//         QTimer::singleShot(DELAY,Qt::PreciseTimer,this, [](){Engine :: update(update);}); //TODO not singleshot
-//     }
-// }
-
 void Engine::update(Space *space, QGraphicsScene *scene, DrawnSpace *drawnspace)
 {
     show(space, scene, drawnspace);
     if (!stopflag)
     {
-        QTimer::singleShot(DELAY, Qt::PreciseTimer, this, [space, scene, drawnspace, this]()
-                           { Engine ::update(space, scene, drawnspace); }); // TODO not singleshot
+        QTimer::singleShot(speed, Qt::PreciseTimer, this, [space, scene, drawnspace, this]()
+                           { Engine ::update(space, scene, drawnspace); });
     }
 }
 
@@ -55,4 +42,8 @@ void Engine::reload(Space *space, QGraphicsScene *scene, DrawnSpace *drawnspace)
 bool Engine::isEngineStopped()
 {
     return stopflag;
+}
+
+void Engine::setSpeed(size_t newspeed){
+    this->speed = newspeed;
 }

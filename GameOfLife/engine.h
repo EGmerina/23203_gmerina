@@ -7,6 +7,8 @@
 #include "drawnspace.h"
 #include "space.h"
 
+#define DEFAULT_DELAY 700
+
 class Engine : public QObject
 {
 public:
@@ -28,8 +30,11 @@ public:
 
     bool isEngineStopped();
 
+    void setSpeed(size_t newspeed);
+
 private:
     bool stopflag = true;
+    size_t speed = DEFAULT_DELAY;
 };
 
 #endif // ENGINE_H

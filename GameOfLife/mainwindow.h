@@ -35,6 +35,8 @@ private slots:
 
     void on_rules_clicked();
 
+    void on_speed_valueChanged(int arg1);
+
 protected:
     void resizeEvent(QResizeEvent *event);
 
@@ -43,6 +45,7 @@ private:
     QGraphicsScene *scene;
     Space *space;
     DrawnSpace *drawnspace;
+
 };
 
 #endif // MAINWINDOW_H
