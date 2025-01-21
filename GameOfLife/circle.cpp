@@ -1,11 +1,11 @@
 #include "circle.h"
 #include "engine.h"
-
+#include <iostream>
 
     Circle::Circle(const qreal x, const qreal y, const qreal r, QGraphicsScene *scene) :
     QGraphicsEllipseItem(x, y, r, r)
     {
-        setPen( QPen(QBrush(Qt::black), 2, Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin) );
+        setPen(QPen(QBrush(Qt::black), 2, Qt::SolidLine, Qt::SquareCap, Qt::MiterJoin) );
         setRect(x, y, r, r);
         setAcceptedMouseButtons(Qt::LeftButton | Qt::RightButton);
         scene->addItem(this);
@@ -34,5 +34,20 @@
         }else{
             space->addCell(x, y);
             this->setBrush(Qt:: red);
+        }
+    }
+
+
+    void Circle:: repaintLive(){
+        if(!space->isCellAlive(x, y)){
+            space->addCell(x, y);
+            this->setBrush(Qt:: red);
+        }
+    }
+
+    void Circle::repaintDead(){
+        if(space->isCellAlive(x, y)){
+            space->removeCell(x, y);
+            this->setBrush(Qt:: gray);
         }
     }

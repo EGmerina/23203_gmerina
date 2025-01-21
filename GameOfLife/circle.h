@@ -20,6 +20,10 @@ public:
 
     void setSpace(Space * space);
 
+    void repaintLive();
+
+    void repaintDead();
+
 protected:
     void mousePressEvent(QGraphicsSceneMouseEvent *event) ;
 

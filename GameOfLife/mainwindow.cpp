@@ -10,7 +10,7 @@ MainWindow::MainWindow(QWidget *parent)
     , ui(new Ui::MainWindow), space(new Space()), drawnspace(new DrawnSpace())
 {
     ui->setupUi(this);
-    scene = new QGraphicsScene(0, 0, ui->graphicsView->width(), ui->graphicsView->height());
+    scene = new CustomGraphicsScene(0, 0, ui->graphicsView->width(), ui->graphicsView->height());
     ui->graphicsView->setScene(scene);
 }
 
