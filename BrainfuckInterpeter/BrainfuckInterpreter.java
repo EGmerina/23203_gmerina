@@ -9,15 +9,6 @@ import java.lang.reflect.InvocationTargetException;
 public class BrainfuckInterpreter {
 
     private MyContext context;
-    // private int instructionPointer;
-    // private Vector<Command> commands;
-    // private Stack<Integer> beginningsOfCicles;
-
-    // output and input streams
-
-    // private void getCommandsFromSourseStream(InputStream sourseStream) {
-
-    // }
 
     public BrainfuckInterpreter(InputStream sourceStream, InputStream inputStream, OutputStream outputStream) {
         context = new MyContext(sourceStream, inputStream, outputStream);
@@ -29,7 +20,12 @@ public class BrainfuckInterpreter {
         while (command != -1) {
 
             Command curCommand = Factory.getInstance().createUnitByName(new String(new byte[] { command }));
+            context.add(curCommand);// тут можно будет избавиться от пустых команд
             curCommand.executeCommand(context);
+            while (context.getInstructionPointer() != context.getLastCommandNumber()) {
+                context.getCurrentCommand().executeCommand(context);
+            }
+            command = (byte) context.getSourceStream().read();
         }
     }
 }

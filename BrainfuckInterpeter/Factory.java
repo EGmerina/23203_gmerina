@@ -1,10 +1,12 @@
 
-import commands.Command;
-import commands.DoNothing;
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Properties;
+
+import commands.Command;
+import commands.DoNothing;
 
 public class Factory {
 
