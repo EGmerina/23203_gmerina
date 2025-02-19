@@ -1,40 +1,42 @@
 
-import java.security.Key;
-import java.util.HashMap;
-
 import commands.Command;
+import commands.DoNothing;
+
+import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Properties;
 
 public class Factory {
 
-    HashMap<String,Function<,Command>>creators;
+    private HashMap<String, Class> classes;
 
-    static Factory f;
+    private static Factory f = new Factory();
 
     public static Factory getInstance() {
 
         return f;
     }
 
-    public Command createUnitByName(String name) {
-        var th =Thread.currentThread().getContextClassLoader().getResourceAsStream("commandsAndNamesOfClasses.config");
-        //var th =ClassLoader.getResourceAsStream("commandsAndNamesOfClasses.config");
-        var creator = creators.at(name);
-
-    Command p(creator());
-        return p;
-    }
-
-    // template<class...ParamTypes>std::unique_ptr<Product> createUnitByName(Key
-    // name, ParamTypes &&...parameters)
-    // {
-    // auto *creator = creators_.at(name);
-    // std::unique_ptr<Product> p(creator());
-    // return std::move(p);
-    // }
-
-    public  boolean  registerCreator(const String name, Product *(*creator)())
-    {
-        creators[name] = creator;
-        return true;
+    public Command createUnitByName(String name) throws ClassNotFoundException, IOException, NoSuchMethodException,
+            InstantiationException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+        Class newClass;
+        if (!classes.containsKey(name)) {
+            var thread = Thread.currentThread().getContextClassLoader()
+                    .getResourceAsStream("commandsAndNamesOfClasses.config");
+            Properties properties = new Properties();
+            properties.load(thread);
+            if (properties.getProperty(name) == null) {
+                Object command = DoNothing.getDeclaredConstructor().newInstance();
+                return (Command) command;
+            } else {
+                newClass = Class.forName(properties.getProperty(name));
+            }
+            thread.close();
+        } else {
+            newClass = classes.get(name);
+        }
+        Object command = newClass.getDeclaredConstructor().newInstance();
+        return (Command) command;
     }
 }

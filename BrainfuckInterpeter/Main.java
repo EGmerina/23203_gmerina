@@ -37,12 +37,7 @@ public class Main {
                 e.printStackTrace();
             }
         }
-        // FileInputStream inputStream = null;
-        // FileOutputStream outputStream = null;
-
-        // var cnf =
-        // Thread.currentThread().getContextClassLoader().getResourceAsStream("commandsAndNamesOfClasses.config");
-
+       
         BrainfuckInterpreter brainfuckInterpreter = new BrainfuckInterpreter(inputStream, outputStream);
         try {
             brainfuckInterpreter.interpret(sourceStream);
