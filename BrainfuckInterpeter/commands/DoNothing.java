@@ -5,6 +5,4 @@ public class DoNothing implements Command {
     public void executeCommand(MyContext context) {
 
     }
-
-
 }

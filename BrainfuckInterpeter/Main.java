@@ -5,10 +5,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.lang.reflect.InvocationTargetException;
 
 public class Main {
 
-    public static void main(String[] args) {
+    public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException, InstantiationException,
+            IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
         InputStream inputStream = null;
         InputStream sourceStream = null;
@@ -37,7 +39,7 @@ public class Main {
                 e.printStackTrace();
             }
         }
-       
+
         BrainfuckInterpreter brainfuckInterpreter = new BrainfuckInterpreter(inputStream, outputStream);
         try {
             brainfuckInterpreter.interpret(sourceStream);

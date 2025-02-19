@@ -1,3 +1,4 @@
+package commands;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -8,14 +9,22 @@ public class MyContext {
     private byte[] memory;
     private int pointer;
 
+    private InputStream srcStream;
     private InputStream inStream;
     private OutputStream outStream;
 
-    public MyContext() {
+    public MyContext(InputStream sourseStream, InputStream inputStream, OutputStream outputStream) {
         memory = new byte[30000];
         pointer = 0;
+        srcStream = sourseStream;
+        inStream = inputStream;
+        outStream = outputStream;
     }
 
+
+
+
+    
     public void incrementCurrentByte() {
         memory[pointer] += 1;
     }
@@ -49,8 +58,8 @@ public class MyContext {
     }
 
     public void loopEnd() {
-        if(memory[pointer]!=0){
-            
+        if (memory[pointer] != 0) {
+
         }
     }
 
@@ -58,5 +67,5 @@ public class MyContext {
 
     }
 
-    // output stream
+
 }

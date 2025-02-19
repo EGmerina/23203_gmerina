@@ -1,7 +1,6 @@
 
 import commands.Command;
 import commands.DoNothing;
-
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
@@ -27,7 +26,7 @@ public class Factory {
             Properties properties = new Properties();
             properties.load(thread);
             if (properties.getProperty(name) == null) {
-                Object command = DoNothing.getDeclaredConstructor().newInstance();
+                DoNothing command = new DoNothing();
                 return (Command) command;
             } else {
                 newClass = Class.forName(properties.getProperty(name));
