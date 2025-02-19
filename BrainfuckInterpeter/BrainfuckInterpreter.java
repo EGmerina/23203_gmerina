@@ -20,12 +20,12 @@ public class BrainfuckInterpreter {
     // }
 
     public BrainfuckInterpreter(InputStream sourceStream, InputStream inputStream, OutputStream outputStream) {
-         context = new MyContext(sourceStream, inputStream, outputStream);
+        context = new MyContext(sourceStream, inputStream, outputStream);
     }
 
     public void interpret() throws IOException, ClassNotFoundException, NoSuchMethodException,
             InstantiationException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
-        byte command = (byte) context.src.read();
+        byte command = (byte) context.getSourceStream().read();
         while (command != -1) {
 
             Command curCommand = Factory.getInstance().createUnitByName(new String(new byte[] { command }));

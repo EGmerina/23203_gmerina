@@ -10,7 +10,7 @@ import java.lang.reflect.InvocationTargetException;
 public class Main {
 
     public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException, InstantiationException,
-            IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+            IllegalArgumentException, IllegalAccessException, InvocationTargetException, IOException {
 
         InputStream inputStream = null;
         InputStream sourceStream = null;
@@ -40,11 +40,14 @@ public class Main {
             }
         }
 
-        BrainfuckInterpreter brainfuckInterpreter = new BrainfuckInterpreter(inputStream, outputStream);
+        BrainfuckInterpreter brainfuckInterpreter = new BrainfuckInterpreter(sourceStream, inputStream, outputStream);
         try {
-            brainfuckInterpreter.interpret(sourceStream);
+            brainfuckInterpreter.interpret();
         } catch (IOException e) {
             e.printStackTrace();
         }
+        inputStream.close();
+        sourceStream.close();
+        outputStream.close();
     }
 }
