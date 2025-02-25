@@ -42,7 +42,6 @@ public class BrainfuckInterpreter {
         parseCommandSymbols(sourceStream, context);
 
         while (context.getInstructionPointer() < context.getNumberOfCommands()) {
-            System.out.println(context.getInstructionPointer());
             context.getCurrentCommand().executeCommand(context);
             context.setInstructionPointer(context.getInstructionPointer() + 1);
         }
