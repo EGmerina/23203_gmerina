@@ -5,27 +5,47 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
+import java.util.HashMap;
+import java.util.Stack;
 
 public class BrainfuckInterpreter {
 
-    private MyContext context;
+    private void parseCommandSymbols(InputStream sourceStream, MyContext context)
+            throws IOException, ClassNotFoundException, NoSuchMethodException, InstantiationException,
+            IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
-    public BrainfuckInterpreter(InputStream sourceStream, InputStream inputStream, OutputStream outputStream) {
-        context = new MyContext(sourceStream, inputStream, outputStream);
+        char newSymbol;
+        Stack<Integer> bordersOfLoops = new Stack<Integer>();
+
+        while ((newSymbol = (char) sourceStream.read()) != -1) {
+            if (newSymbol == '[') {
+                bordersOfLoops.add(context.getNumberOfCommands());
+            }
+            if (newSymbol == ']') {
+                int loopBegin = bordersOfLoops.pop();
+                int loopEnd = context.getNumberOfCommands();
+                context.addPointersToLoops(loopBegin, loopEnd);
+            }
+            Command command = Factory.getInstance().createUnitByName(new String(new char[] { newSymbol }));
+            if (command != null) {
+                context.addToArrayOfCommands(command);
+            }
+        }
+        if (!bordersOfLoops.isEmpty()) {
+            System.err.println("Wrong number of brackets in program!");
+        }
     }
 
-    public void interpret() throws IOException, ClassNotFoundException, NoSuchMethodException,
+    public void interpret(InputStream sourceStream, InputStream inputStream, OutputStream outputStream)
+            throws IOException, ClassNotFoundException, NoSuchMethodException,
             InstantiationException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
-        byte command = (byte) context.getSourceStream().read();
-        while (command != -1) {
 
-            Command curCommand = Factory.getInstance().createUnitByName(new String(new byte[] { command }));
-            context.add(curCommand);// тут можно будет избавиться от пустых команд
-            curCommand.executeCommand(context);
-            while (context.getInstructionPointer() != context.getLastCommandNumber()) {
-                context.getCurrentCommand().executeCommand(context);
-            }
-            command = (byte) context.getSourceStream().read();
+        MyContext context = new MyContext(inputStream, outputStream);
+        parseCommandSymbols(sourceStream, context);
+
+        while (context.getInstructionPointer() < context.getNumberOfCommands()) {
+            context.getCurrentCommand().executeCommand(context);
+            context.setInstructionPointer(context.getInstructionPointer() + 1);
         }
     }
 }

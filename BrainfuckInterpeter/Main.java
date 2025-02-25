@@ -40,9 +40,9 @@ public class Main {
             }
         }
 
-        BrainfuckInterpreter brainfuckInterpreter = new BrainfuckInterpreter(sourceStream, inputStream, outputStream);
+        BrainfuckInterpreter brainfuckInterpreter = new BrainfuckInterpreter();
         try {
-            brainfuckInterpreter.interpret();
+            brainfuckInterpreter.interpret(sourceStream, inputStream, outputStream);
         } catch (IOException e) {
             e.printStackTrace();
         }

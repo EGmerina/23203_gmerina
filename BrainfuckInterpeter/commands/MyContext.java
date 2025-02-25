@@ -2,7 +2,7 @@ package commands;
 
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.util.Stack;
+import java.util.HashMap;
 import java.util.Vector;
 
 public class MyContext {
@@ -10,43 +10,44 @@ public class MyContext {
     private byte[] memory = new byte[30000];
     private int dataPointer = 0;
 
-    private InputStream srcStream;
+    private Vector<Command> arrayOfCommands;
+    private int instructionPointer = -1;
+
     private InputStream inStream;
     private OutputStream outStream;
 
-    private int instructionPointer = -1;
-    private Vector<Command> commands;
-    private Stack<Integer> beginningsOfCicles;
+    private HashMap<Integer, Integer> pointersToLoops;
 
-    public MyContext(InputStream sourceStream, InputStream inputStream, OutputStream outputStream) {
-        srcStream = sourceStream;
+    public MyContext(InputStream inputStream, OutputStream outputStream) {
         inStream = inputStream;
         outStream = outputStream;
+        Vector<Command> arrayOfCommands = new Vector<Command>();
+        HashMap<Integer, Integer> pointersToLoops = new HashMap<Integer, Integer>();
     }
 
-    public void deleteLoop() {
-        beginningsOfCicles.pop();
+    public void addToArrayOfCommands(Command command) {
+        arrayOfCommands.add(command);
+    }
+
+    public void addPointersToLoops(int loopBegin, int loopEnd) {
+        pointersToLoops.put(loopBegin, loopEnd);
+        pointersToLoops.put(loopEnd, loopBegin);
+    }
+
+    public int getBorderOfLoop(int loopEndOrBegin) {
+        return pointersToLoops.get(loopEndOrBegin);
     }
 
     public Command getCurrentCommand() {
-        return commands.get(instructionPointer);
+        return arrayOfCommands.get(instructionPointer);
     }
 
-    public int getLastCommandNumber() {
-        return commands.size() - 1;
+    public Command getCommand(int index) {
+        return arrayOfCommands.get(index);
     }
 
-    public void mark() {
-        beginningsOfCicles.push(instructionPointer);
-    }
-
-    public void reset() {
-        instructionPointer = beginningsOfCicles.pop();
-    }
-
-    public void add(Command command) {
-        commands.add(command);
-        instructionPointer += 1;
+    public int getNumberOfCommands() {
+        return arrayOfCommands.size();
     }
 
     public void setCurrentByte(byte value) {
@@ -73,10 +74,6 @@ public class MyContext {
         return instructionPointer;
     }
 
-    public InputStream getSourceStream() {
-        return srcStream;
-    }
-
     public InputStream getInputStream() {
         return inStream;
     }
@@ -84,47 +81,5 @@ public class MyContext {
     public OutputStream getOutputStream() {
         return outStream;
     }
-
-    // public void incrementCurrentByte() {
-    // memory[pointer] += 1;
-    // }
-
-    // public void decrementCurrentByte() {
-    // memory[pointer] -= 1;
-    // }
-
-    // public void incrementPointer() {
-    // pointer += 1;
-    // }
-
-    // public void decrementPointer() {
-    // pointer -= 1;
-    // }
-
-    // public void inputCurrentByte() {
-    // try {
-    // memory[pointer] = (byte) inStream.read();
-    // } catch (IOException e) {
-    // e.printStackTrace();
-    // }
-    // }
-
-    // public void outputCurrentByte() {
-    // try {
-    // outStream.write((byte) memory[pointer]);
-    // } catch (IOException e) {
-    // e.printStackTrace();
-    // }
-    // }
-
-    // public void loopEnd() {
-    // if (memory[pointer] != 0) {
-
-    // }
-    // }
-
-    // public void loopBegin() {
-
-    // }
 
 }

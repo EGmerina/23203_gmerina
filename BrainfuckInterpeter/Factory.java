@@ -1,12 +1,9 @@
 
-
+import commands.Command;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Properties;
-
-import commands.Command;
-import commands.DoNothing;
 
 public class Factory {
 
@@ -28,8 +25,7 @@ public class Factory {
             Properties properties = new Properties();
             properties.load(thread);
             if (properties.getProperty(name) == null) {
-                DoNothing command = new DoNothing();
-                return (Command) command;
+                return null;
             } else {
                 newClass = Class.forName(properties.getProperty(name));
             }
