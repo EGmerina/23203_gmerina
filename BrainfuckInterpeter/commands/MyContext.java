@@ -7,22 +7,22 @@ import java.util.Vector;
 
 public class MyContext {
 
-    private byte[] memory = new byte[30000];
+    private final byte[] memory = new byte[30000];
     private int dataPointer = 0;
 
-    private Vector<Command> arrayOfCommands;
-    private int instructionPointer = -1;
+    private final Vector<Command> arrayOfCommands;
+    private int instructionPointer = 0;
 
-    private InputStream inStream;
-    private OutputStream outStream;
+    private final InputStream inStream;
+    private final OutputStream outStream;
 
-    private HashMap<Integer, Integer> pointersToLoops;
+    private final HashMap<Integer, Integer> pointersToLoops;
 
     public MyContext(InputStream inputStream, OutputStream outputStream) {
         inStream = inputStream;
         outStream = outputStream;
-        Vector<Command> arrayOfCommands = new Vector<Command>();
-        HashMap<Integer, Integer> pointersToLoops = new HashMap<Integer, Integer>();
+        arrayOfCommands = new Vector<>();
+        pointersToLoops = new HashMap<>();
     }
 
     public void addToArrayOfCommands(Command command) {

@@ -11,5 +11,6 @@ public class Input implements Command {
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 }

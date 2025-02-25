@@ -5,7 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.lang.reflect.InvocationTargetException;
-import java.util.HashMap;
 import java.util.Stack;
 
 public class BrainfuckInterpreter {
@@ -14,19 +13,18 @@ public class BrainfuckInterpreter {
             throws IOException, ClassNotFoundException, NoSuchMethodException, InstantiationException,
             IllegalArgumentException, IllegalAccessException, InvocationTargetException {
 
-        char newSymbol;
-        Stack<Integer> bordersOfLoops = new Stack<Integer>();
-
-        while ((newSymbol = (char) sourceStream.read()) != -1) {
-            if (newSymbol == '[') {
+        byte newSymbol;
+        Stack<Integer> bordersOfLoops = new Stack<>();
+        while ((newSymbol = (byte) sourceStream.read()) != -1) {
+            if ((char) newSymbol == '[') {
                 bordersOfLoops.add(context.getNumberOfCommands());
             }
-            if (newSymbol == ']') {
+            if ((char) newSymbol == ']') {
                 int loopBegin = bordersOfLoops.pop();
                 int loopEnd = context.getNumberOfCommands();
                 context.addPointersToLoops(loopBegin, loopEnd);
             }
-            Command command = Factory.getInstance().createUnitByName(new String(new char[] { newSymbol }));
+            Command command = Factory.getInstance().createUnitByName(new String(new byte[] { newSymbol }));
             if (command != null) {
                 context.addToArrayOfCommands(command);
             }
@@ -44,6 +42,7 @@ public class BrainfuckInterpreter {
         parseCommandSymbols(sourceStream, context);
 
         while (context.getInstructionPointer() < context.getNumberOfCommands()) {
+            System.out.println(context.getInstructionPointer());
             context.getCurrentCommand().executeCommand(context);
             context.setInstructionPointer(context.getInstructionPointer() + 1);
         }

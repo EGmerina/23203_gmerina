@@ -16,28 +16,38 @@ public class Main {
         InputStream sourceStream = null;
         OutputStream outputStream = null;
 
-        if (args.length == 0) {
-            inputStream = System.in;
-            sourceStream = System.in;
-            outputStream = System.out;
-        } else if (args.length == 1) {
-            try {
-                sourceStream = new FileInputStream("source.txt");
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-            inputStream = System.in;
-            outputStream = System.out;
-        } else {
-            try {
-                inputStream = new FileInputStream("input.txt");
-                sourceStream = new FileInputStream("source.txt");
-                outputStream = new FileOutputStream("output.txt");
+        // if (args.length == 0) {
+        // inputStream = System.in;
+        // sourceStream = System.in;
+        // outputStream = System.out;
+        // } else if (args.length == 1) {
+        // try {
+        // sourceStream = new FileInputStream("source.txt");
+        // } catch (FileNotFoundException e) {
+        // e.printStackTrace();
+        // }
+        // inputStream = System.in;
+        // outputStream = System.out;
+        // } else {
+        // try {
+        // inputStream = new FileInputStream("input.txt");
+        // sourceStream = new FileInputStream("source.txt");
+        // outputStream = new FileOutputStream("output.txt");
 
-            } catch (FileNotFoundException e) {
+        // } catch (FileNotFoundException e) {
 
-                e.printStackTrace();
-            }
+        // e.printStackTrace();
+        // }
+        // }
+
+        try {
+            inputStream = new FileInputStream("files/input.txt");
+            sourceStream = new FileInputStream("files/source.txt");
+            outputStream = new FileOutputStream("files/output.txt");
+
+        } catch (FileNotFoundException e) {
+
+            e.printStackTrace();
         }
 
         BrainfuckInterpreter brainfuckInterpreter = new BrainfuckInterpreter();

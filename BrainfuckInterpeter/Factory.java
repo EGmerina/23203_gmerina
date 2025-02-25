@@ -7,7 +7,7 @@ import java.util.Properties;
 
 public class Factory {
 
-    private HashMap<String, Class> classes;
+    private HashMap<String, Class> classes = new HashMap<>();
 
     private static Factory f = new Factory();
 
