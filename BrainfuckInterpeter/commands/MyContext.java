@@ -42,10 +42,6 @@ public class MyContext {
         return arrayOfCommands.get(instructionPointer);
     }
 
-    public Command getCommand(int index) {
-        return arrayOfCommands.get(index);
-    }
-
     public int getNumberOfCommands() {
         return arrayOfCommands.size();
     }

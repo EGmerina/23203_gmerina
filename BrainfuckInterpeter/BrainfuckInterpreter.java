@@ -1,4 +1,3 @@
-
 import commands.Command;
 import commands.MyContext;
 import java.io.IOException;

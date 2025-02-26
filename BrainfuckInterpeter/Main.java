@@ -1,5 +1,4 @@
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -11,42 +10,37 @@ public class Main {
     public static void main(String[] args) throws ClassNotFoundException, NoSuchMethodException, InstantiationException,
             IllegalArgumentException, IllegalAccessException, InvocationTargetException, IOException {
 
-        InputStream inputStream = null;
-        InputStream sourceStream = null;
-        OutputStream outputStream = null;
+        InputStream inputStream;
+        InputStream sourceStream;
+        OutputStream outputStream;
 
-        // if (args.length == 0) {
-        // inputStream = System.in;
-        // sourceStream = System.in;
-        // outputStream = System.out;
-        // } else if (args.length == 1) {
-        // try {
-        // sourceStream = new FileInputStream("source.txt");
-        // } catch (FileNotFoundException e) {
-        // e.printStackTrace();
-        // }
-        // inputStream = System.in;
-        // outputStream = System.out;
-        // } else {
-        // try {
-        // inputStream = new FileInputStream("input.txt");
-        // sourceStream = new FileInputStream("source.txt");
-        // outputStream = new FileOutputStream("output.txt");
+        switch (args.length) {
+            case 0 -> {
+                sourceStream = new FileInputStream("files/source.txt");
+                inputStream = System.in;
+                outputStream = System.out;
+            }
+            case 1 -> {
+                sourceStream = new FileInputStream(args[0]);
+                inputStream = System.in;
+                outputStream = System.out;
 
-        // } catch (FileNotFoundException e) {
-
-        // e.printStackTrace();
-        // }
-        // }
-
-        try {
-            inputStream = new FileInputStream("files/input.txt");
-            sourceStream = new FileInputStream("files/source.txt");
-            outputStream = new FileOutputStream("files/output.txt");
-
-        } catch (FileNotFoundException e) {
-
-            e.printStackTrace();
+            }
+            case 2 -> {
+                sourceStream = new FileInputStream(args[0]);
+                inputStream = new FileInputStream(args[1]);
+                outputStream = System.out;
+            }
+            case 3 -> {
+                sourceStream = new FileInputStream(args[0]);
+                inputStream = new FileInputStream(args[1]);
+                outputStream = new FileOutputStream(args[2]);
+            }
+            default -> {
+                inputStream = new FileInputStream("files/input.txt");
+                sourceStream = new FileInputStream("files/source.txt");
+                outputStream = new FileOutputStream("files/output.txt");
+            }
         }
 
         BrainfuckInterpreter brainfuckInterpreter = new BrainfuckInterpreter();
