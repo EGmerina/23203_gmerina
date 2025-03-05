@@ -1,31 +1,37 @@
 import commands.Command;
+import commands.LoopBegin;
+import commands.LoopEnd;
 import commands.MyContext;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
-import java.lang.reflect.InvocationTargetException;
 import java.util.Stack;
+import myexceptions.FactoryException;
+import myexceptions.InterpreterException;
 
+/**
+ * Interpret brainfuck code with interpret() function.
+ */
 public class BrainfuckInterpreter {
 
-    private void parseCommandSymbols(InputStream sourceStream, MyContext context)
-            throws IOException, ClassNotFoundException, NoSuchMethodException, InstantiationException,
-            IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+    private void parseCommandSymbols(InputStream sourceStream, MyContext context) throws IOException, FactoryException {
 
         byte newSymbol;
         Stack<Integer> bordersOfLoops = new Stack<>();
+        Factory factory = new Factory();
         while ((newSymbol = (byte) sourceStream.read()) != -1) {
-            if ((char) newSymbol == '[') {
+            Command command = factory.createUnitByName(new String(new byte[] { newSymbol }));
+            if (command == null) {
+                continue;
+            }
+            context.addToArrayOfCommands(command);
+            if (command.getClass() == LoopBegin.class) {
                 bordersOfLoops.add(context.getNumberOfCommands());
             }
-            if ((char) newSymbol == ']') {
+            if (command.getClass() == LoopEnd.class) {
                 int loopBegin = bordersOfLoops.pop();
                 int loopEnd = context.getNumberOfCommands();
                 context.addPointersToLoops(loopBegin, loopEnd);
-            }
-            Command command = Factory.getInstance().createUnitByName(new String(new byte[] { newSymbol }));
-            if (command != null) {
-                context.addToArrayOfCommands(command);
             }
         }
         if (!bordersOfLoops.isEmpty()) {
@@ -33,12 +39,23 @@ public class BrainfuckInterpreter {
         }
     }
 
+    /**
+     * 
+     * @param sourceStream for output result
+     * @param inputStream  for input data
+     * @param outputStream for output data
+     * @throws InterpreterException
+     */
     public void interpret(InputStream sourceStream, InputStream inputStream, OutputStream outputStream)
-            throws IOException, ClassNotFoundException, NoSuchMethodException,
-            InstantiationException, IllegalArgumentException, IllegalAccessException, InvocationTargetException {
+            throws InterpreterException {
 
         MyContext context = new MyContext(inputStream, outputStream);
-        parseCommandSymbols(sourceStream, context);
+        try {
+            parseCommandSymbols(sourceStream, context);
+
+        } catch (IOException | FactoryException e) {
+            throw new InterpreterException("Interpreter can't parse command symbols");
+        }
 
         while (context.getInstructionPointer() < context.getNumberOfCommands()) {
             context.getCurrentCommand().executeCommand(context);

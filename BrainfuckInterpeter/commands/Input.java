@@ -2,6 +2,9 @@ package commands;
 
 import java.io.IOException;
 
+/**
+ * Accept one byte of input, storing its value in the byte at the data pointer.
+ */
 public class Input implements Command {
     @Override
     public void executeCommand(MyContext context) {
@@ -9,7 +12,7 @@ public class Input implements Command {
         try {
             context.setCurrentByte((byte) context.getInputStream().read());
         } catch (IOException e) {
-            e.printStackTrace();
+            System.err.println("Something wrong with Input command");
         }
 
     }

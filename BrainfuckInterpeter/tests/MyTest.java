@@ -40,7 +40,7 @@ public class MyTest {
 
     // @Test
     // public void testInputCommand() throws IOException {
-    // InputStream inputStream = new FileInputStream("test.txt");
+    // InputStream inputStream = new FileInputStream("in.txt");
     // MyContext context = new MyContext(inputStream, null);
     // Input input = new Input();
     // input.executeCommand(context);

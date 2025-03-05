@@ -2,15 +2,18 @@ package commands;
 
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Vector;
 
+/**
+ * contains data that nessesary for execution commands.
+ */
 public class MyContext {
 
     private final byte[] memory = new byte[30000];
     private int dataPointer = 0;
 
-    private final Vector<Command> arrayOfCommands;
+    private final ArrayList<Command> arrayOfCommands;
     private int instructionPointer = 0;
 
     private final InputStream inStream;
@@ -21,7 +24,7 @@ public class MyContext {
     public MyContext(InputStream inputStream, OutputStream outputStream) {
         inStream = inputStream;
         outStream = outputStream;
-        arrayOfCommands = new Vector<>();
+        arrayOfCommands = new ArrayList<>();
         pointersToLoops = new HashMap<>();
     }
 
