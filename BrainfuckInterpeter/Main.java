@@ -7,12 +7,10 @@ import myexceptions.InterpreterException;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException, InterpreterException {
-
+    public static void main(String[] args) throws InterpreterException, IOException {
         InputStream inputStream = null;
         InputStream sourceStream = null;
         OutputStream outputStream = null;
-
         try {
             switch (args.length) {
                 case 0 -> {
@@ -41,6 +39,7 @@ public class Main {
                     sourceStream = new FileInputStream("files/source.txt");
                     outputStream = new FileOutputStream("files/output.txt");
                 }
+
             }
 
             BrainfuckInterpreter brainfuckInterpreter = new BrainfuckInterpreter();

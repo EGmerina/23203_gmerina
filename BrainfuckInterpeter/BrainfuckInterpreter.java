@@ -20,11 +20,12 @@ public class BrainfuckInterpreter {
         Stack<Integer> bordersOfLoops = new Stack<>();
         Factory factory = new Factory();
         while ((newSymbol = (byte) sourceStream.read()) != -1) {
-            Command command = factory.createUnitByName(new String(new byte[] { newSymbol }));
+            Command command = factory.createUnitByName(new String(new byte[] { newSymbol
+            }));
             if (command == null) {
                 continue;
             }
-            context.addToArrayOfCommands(command);
+
             if (command.getClass() == LoopBegin.class) {
                 bordersOfLoops.add(context.getNumberOfCommands());
             }
@@ -33,6 +34,7 @@ public class BrainfuckInterpreter {
                 int loopEnd = context.getNumberOfCommands();
                 context.addPointersToLoops(loopBegin, loopEnd);
             }
+            context.addToArrayOfCommands(command);
         }
         if (!bordersOfLoops.isEmpty()) {
             System.err.println("Wrong number of brackets in program!");
