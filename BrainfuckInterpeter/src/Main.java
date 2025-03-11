@@ -10,13 +10,25 @@ import src.myexceptions.InterpreterException;
 public class Main {
 
     public static void main(String[] args) throws InterpreterException, IOException {
+
+        // InputStream sourceStream = new FileInputStream("src/files/source.txt");
+        // InputStream inputStream = System.in;
+        // OutputStream outputStream = System.out;
+
+        // BrainfuckInterpreter brainfuckInterpreter = new BrainfuckInterpreter();
+        // brainfuckInterpreter.interpret(sourceStream, inputStream, outputStream);
+
+        // inputStream.close();
+        // sourceStream.close();
+        // outputStream.close();
+
         InputStream inputStream = null;
         InputStream sourceStream = null;
         OutputStream outputStream = null;
         try {
             switch (args.length) {
                 case 0 -> {
-                    sourceStream = new FileInputStream("files/source.txt");
+                    sourceStream = new FileInputStream("src/files/source.txt");
                     inputStream = System.in;
                     outputStream = System.out;
                 }
@@ -37,9 +49,9 @@ public class Main {
                     outputStream = new FileOutputStream(args[2]);
                 }
                 default -> {
-                    inputStream = new FileInputStream("files/input.txt");
-                    sourceStream = new FileInputStream("files/source.txt");
-                    outputStream = new FileOutputStream("files/output.txt");
+                    inputStream = new FileInputStream("src/files/input.txt");
+                    sourceStream = new FileInputStream("src/files/source.txt");
+                    outputStream = new FileOutputStream("src/files/output.txt");
                 }
 
             }
