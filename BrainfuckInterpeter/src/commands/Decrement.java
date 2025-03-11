@@ -1,4 +1,4 @@
-package commands;
+package src.commands;
 
 /**
  * Decrement the byte at the data pointer by one.

@@ -1,13 +1,5 @@
 package tests;
 
-import commands.Decrement;
-import commands.Increment;
-import commands.Input;
-import commands.MyContext;
-import commands.Next;
-import commands.Output;
-import commands.Previous;
-
 import static org.junit.Assert.assertEquals;
 
 import java.io.FileInputStream;
@@ -18,6 +10,14 @@ import java.io.OutputStream;
 
 import org.junit.Assert;
 import org.junit.Test;
+
+import src.commands.Decrement;
+import src.commands.Increment;
+import src.commands.Input;
+import src.commands.MyContext;
+import src.commands.Next;
+import src.commands.Output;
+import src.commands.Previous;
 
 public class MyTest {
     @Test

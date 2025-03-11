@@ -1,4 +1,4 @@
-package commands;
+package src.commands;
 
 /**
  * If the byte at the data pointer is nonzero, then instead of moving the

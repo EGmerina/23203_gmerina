@@ -1,4 +1,4 @@
-package commands;
+package src.commands;
 
 /**
  * Increment the data pointer by one (to point to the next cell to the right).

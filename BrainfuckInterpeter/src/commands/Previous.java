@@ -1,4 +1,4 @@
-package commands;
+package src.commands;
 
 /**
  * Decrement the data pointer by one (to point to the next cell to the left).

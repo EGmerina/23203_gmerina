@@ -1,11 +1,13 @@
+package src;
 
-import commands.Command;
+import src.commands.Command;
+import src.myexceptions.FactoryException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.lang.reflect.InvocationTargetException;
 import java.util.HashMap;
 import java.util.Properties;
-import myexceptions.FactoryException;
 
 /**
  * give object of Command class by name of command string.

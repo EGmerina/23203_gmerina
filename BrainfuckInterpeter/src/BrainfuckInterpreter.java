@@ -1,13 +1,15 @@
-import commands.Command;
-import commands.LoopBegin;
-import commands.LoopEnd;
-import commands.MyContext;
+package src;
+import src.commands.Command;
+import src.commands.LoopBegin;
+import src.commands.LoopEnd;
+import src.commands.MyContext;
+import src.myexceptions.FactoryException;
+import src.myexceptions.InterpreterException;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Stack;
-import myexceptions.FactoryException;
-import myexceptions.InterpreterException;
 
 /**
  * Interpret brainfuck code with interpret() function.

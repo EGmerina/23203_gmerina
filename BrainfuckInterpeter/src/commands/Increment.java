@@ -1,4 +1,4 @@
-package commands;
+package src.commands;
 
 /**
  * Increment the byte at the data pointer by one.
