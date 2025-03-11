@@ -1,15 +1,15 @@
 package src;
+
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.OutputStream;
+import java.util.Stack;
 import src.commands.Command;
 import src.commands.LoopBegin;
 import src.commands.LoopEnd;
 import src.commands.MyContext;
 import src.myexceptions.FactoryException;
 import src.myexceptions.InterpreterException;
-
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.OutputStream;
-import java.util.Stack;
 
 /**
  * Interpret brainfuck code with interpret() function.
@@ -22,8 +22,7 @@ public class BrainfuckInterpreter {
         Stack<Integer> bordersOfLoops = new Stack<>();
         Factory factory = new Factory();
         while ((newSymbol = (byte) sourceStream.read()) != -1) {
-            Command command = factory.createUnitByName(new String(new byte[] { newSymbol
-            }));
+            Command command = factory.createUnitByName(new String(new byte[] { newSymbol }));
             if (command == null) {
                 continue;
             }

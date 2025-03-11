@@ -10,18 +10,12 @@ import src.myexceptions.InterpreterException;
 public class Main {
 
     public static void main(String[] args) throws InterpreterException, IOException {
-
-        // InputStream sourceStream = new FileInputStream("src/files/source.txt");
-        // InputStream inputStream = System.in;
-        // OutputStream outputStream = System.out;
-
-        // BrainfuckInterpreter brainfuckInterpreter = new BrainfuckInterpreter();
-        // brainfuckInterpreter.interpret(sourceStream, inputStream, outputStream);
-
-        // inputStream.close();
-        // sourceStream.close();
-        // outputStream.close();
-
+        // File file = new File("example.txt");
+        // if (file.createNewFile()) {
+        // System.out.println("Файл создан");
+        // } else {
+        // System.out.println("Файл уже существует");
+        // }
         InputStream inputStream = null;
         InputStream sourceStream = null;
         OutputStream outputStream = null;

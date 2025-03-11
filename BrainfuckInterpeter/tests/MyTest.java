@@ -1,7 +1,5 @@
 package tests;
 
-import static org.junit.Assert.assertEquals;
-
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -13,7 +11,6 @@ import org.junit.Test;
 
 import src.commands.Decrement;
 import src.commands.Increment;
-import src.commands.Input;
 import src.commands.MyContext;
 import src.commands.Next;
 import src.commands.Output;
