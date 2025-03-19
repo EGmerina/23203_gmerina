@@ -4,6 +4,10 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import java.util.Stack;
+
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import src.commands.Command;
 import src.commands.LoopBegin;
 import src.commands.LoopEnd;
@@ -16,8 +20,10 @@ import src.myexceptions.InterpreterException;
  */
 public class BrainfuckInterpreter {
 
-    private void parseCommandSymbols(InputStream sourceStream, MyContext context) throws IOException, FactoryException {
+    private static final Logger logger = LogManager.getLogger(BrainfuckInterpreter.class);
 
+    private void parseCommandSymbols(InputStream sourceStream, MyContext context) throws IOException, FactoryException {
+        logger.info("parsing starts");
         byte newSymbol;
         Stack<Integer> bordersOfLoops = new Stack<>();
         Factory factory = new Factory();
@@ -40,6 +46,7 @@ public class BrainfuckInterpreter {
         if (!bordersOfLoops.isEmpty()) {
             System.err.println("Wrong number of brackets in program!");
         }
+        logger.info("parsing finished");
     }
 
     /**
@@ -59,10 +66,11 @@ public class BrainfuckInterpreter {
         } catch (IOException | FactoryException e) {
             throw new InterpreterException("Interpreter can't parse command symbols");
         }
-
+        logger.info("start of interpretation");
         while (context.getInstructionPointer() < context.getNumberOfCommands()) {
             context.getCurrentCommand().executeCommand(context);
             context.setInstructionPointer(context.getInstructionPointer() + 1);
         }
+        logger.info("end of interpretation");
     }
 }

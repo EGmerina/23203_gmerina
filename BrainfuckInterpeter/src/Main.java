@@ -6,23 +6,25 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
 import src.myexceptions.InterpreterException;
+import  org.apache.logging.log4j.Logger;
+import  org.apache.logging.log4j.LogManager;
 
 public class Main {
 
+    // private static final Logger log =
+    // Logger.getLogger(LoggingJul.class.getName());
+    private static final Logger logger = LogManager.getLogger(Main.class);
+
     public static void main(String[] args) throws InterpreterException, IOException {
-        // File file = new File("example.txt");
-        // if (file.createNewFile()) {
-        // System.out.println("Файл создан");
-        // } else {
-        // System.out.println("Файл уже существует");
-        // }
+
+        logger.info("Main starts");
         InputStream inputStream = null;
         InputStream sourceStream = null;
         OutputStream outputStream = null;
         try {
             switch (args.length) {
                 case 0 -> {
-                    sourceStream = new FileInputStream("src/files/source.txt");
+                    sourceStream = new FileInputStream("files/source.txt");
                     inputStream = System.in;
                     outputStream = System.out;
                 }
@@ -43,13 +45,13 @@ public class Main {
                     outputStream = new FileOutputStream(args[2]);
                 }
                 default -> {
-                    inputStream = new FileInputStream("src/files/input.txt");
-                    sourceStream = new FileInputStream("src/files/source.txt");
-                    outputStream = new FileOutputStream("src/files/output.txt");
+                    inputStream = new FileInputStream("files/input.txt");
+                    sourceStream = new FileInputStream("files/source.txt");
+                    outputStream = new FileOutputStream("files/output.txt");
                 }
 
             }
-
+            logger.info("Streams initialised successfully");
             BrainfuckInterpreter brainfuckInterpreter = new BrainfuckInterpreter();
             brainfuckInterpreter.interpret(sourceStream, inputStream, outputStream);
 
@@ -57,6 +59,7 @@ public class Main {
             inputStream.close();
             sourceStream.close();
             outputStream.close();
+            logger.info("Main finished");
         }
     }
 }
