@@ -1,8 +1,8 @@
-11:46:40 [main] INFO  src.Main - Main starts
-11:46:40 [main] INFO  src.Main - Streams initialised successfully
-11:46:40 [main] INFO  src.BrainfuckInterpreter - parsing starts
-11:46:40 [main] INFO  src.Factory - Factory initialized successfully
-11:46:40 [main] INFO  src.BrainfuckInterpreter - parsing finished
-11:46:40 [main] INFO  src.BrainfuckInterpreter - start of interpretation
-11:46:40 [main] INFO  src.BrainfuckInterpreter - end of interpretation
-11:46:40 [main] INFO  src.Main - Main finished
+23:12:06 [main] INFO  src.Main - Main starts
+23:12:06 [main] INFO  src.Main - Streams initialised successfully
+23:12:06 [main] INFO  src.BrainfuckInterpreter - parsing starts
+23:12:06 [main] INFO  src.Factory - Factory initialized successfully
+23:12:06 [main] INFO  src.BrainfuckInterpreter - parsing finished
+23:12:06 [main] INFO  src.BrainfuckInterpreter - start of interpretation
+23:12:06 [main] INFO  src.BrainfuckInterpreter - end of interpretation
+23:12:06 [main] INFO  src.Main - Main finished

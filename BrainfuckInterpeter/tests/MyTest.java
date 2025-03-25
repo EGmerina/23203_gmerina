@@ -2,6 +2,7 @@ package tests;
 
 import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
@@ -10,6 +11,8 @@ import java.io.OutputStream;
 import org.junit.Assert;
 import org.junit.Test;
 import src.Main;
+import src.BrainfuckInterpreter;
+import src.myexceptions.InterpreterException;
 
 import src.commands.Decrement;
 import src.commands.Increment;
@@ -81,9 +84,18 @@ public class MyTest {
     }
 
     // @Test
-    // public void testHelloWorld() {
+    // public void testHelloWorld() throws FileNotFoundException, IOException {
+    //     InputStream srcStream = new FileInputStream("hello.txt");
+    //     InputStream inStream = new FileInputStream("in.txt");
+    //     OutputStream outputStream = new FileOutputStream("out.txt");
+    //     BrainfuckInterpreter interpreter = new BrainfuckInterpreter();
 
-    // Assert.assertEquals(5, context.getDataPointer());
+    //     interpreter.interpret(srcStream, inStream, outputStream);
+
+    //     Assert.assertEquals(5, 4);
+    //     srcStream.close();
+    //     inStream.close();
+    //     outputStream.close();
     // }
 
 }
