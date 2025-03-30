@@ -99,3 +99,4 @@ public class MyTest {
     // }
 
 }
+//TODO make test for programs and exceptions
