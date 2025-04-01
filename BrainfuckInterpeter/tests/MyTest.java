@@ -125,5 +125,21 @@ public class MyTest {
 
     }
 
+
+//    @Test
+//    public void testQSort() throws FileNotFoundException, IOException, InterpreterException {
+//        InputStream srcStream = new FileInputStream("BrainfuckInterpeter/files/testqsort.txt");
+//        BrainfuckInterpreter interpreter = new BrainfuckInterpreter();
+//        interpreter.interpret(srcStream, inStream, outputStream);
+//        InputStream reader = new FileInputStream("BrainfuckInterpeter/files/testout.txt");
+//        byte[] buf = new byte[4];
+//        reader.read(buf, 0, 4);
+//        String str = new String(buf, StandardCharsets.UTF_8);
+//        Assert.assertEquals(str, "ABCD");
+//        reader.close();
+//        srcStream.close();
+//
+//    }
+
 }
 //TODO make test for programs and exceptions
