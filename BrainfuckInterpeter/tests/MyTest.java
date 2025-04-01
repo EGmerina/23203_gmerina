@@ -7,8 +7,12 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.OutputStream;
+import java.nio.charset.StandardCharsets;
 
+import org.apache.logging.log4j.core.util.IOUtils;
+import org.junit.After;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
 import src.Main;
 import src.BrainfuckInterpreter;
@@ -23,9 +27,26 @@ import src.commands.Output;
 import src.commands.Previous;
 
 public class MyTest {
+
+    InputStream inStream;
+    OutputStream outputStream;
+    MyContext context;
+
+    @Before
+    public void initStreams() throws FileNotFoundException {
+        inStream = new FileInputStream("BrainfuckInterpeter/files/testin.txt");
+        outputStream = new FileOutputStream("BrainfuckInterpeter/files/testout.txt");
+        context = new MyContext(inStream, outputStream);
+    }
+
+    @After
+    public void deinitStreams() throws IOException {
+        inStream.close();
+        outputStream.close();
+    }
+
     @Test
     public void testDecrementCommand() {
-        MyContext context = new MyContext(null, null);
         context.setCurrentByte((byte) 3);
         Decrement decrement = new Decrement();
         decrement.executeCommand(context);
@@ -34,7 +55,6 @@ public class MyTest {
 
     @Test
     public void testIncrementCommand() {
-        MyContext context = new MyContext(null, null);
         context.setCurrentByte((byte) 3);
         Increment increment = new Increment();
         increment.executeCommand(context);
@@ -43,60 +63,52 @@ public class MyTest {
 
     @Test
     public void testInputCommand() throws IOException {
-        InputStream inputStream = new FileInputStream("in.txt");
-        MyContext context = new MyContext(inputStream, null);
         Input input = new Input();
         input.executeCommand(context);
         Assert.assertEquals((byte) 68, context.getCurrentByte());
-        inputStream.close();
     }
 
     @Test
     public void testOutputCommand() throws IOException {
-        OutputStream outputStream = new FileOutputStream("out.txt");
-        MyContext context = new MyContext(null, outputStream);
         context.setCurrentByte((byte) 65);
         Output output = new Output();
         output.executeCommand(context);
-        InputStream reader = new FileInputStream("out.txt");
+        InputStream reader = new FileInputStream("BrainfuckInterpeter/files/testout.txt");
         byte myByte = (byte) reader.read();
         Assert.assertEquals((byte) 65, myByte);
-        outputStream.close();
         reader.close();
     }
 
     @Test
     public void testNextCommand() {
-        MyContext context = new MyContext(null, null);
-        int curDatarPointer = context.getDataPointer();
+        int curDataPointer = context.getDataPointer();
         Next next = new Next();
         next.executeCommand(context);
-        Assert.assertEquals(curDatarPointer + 1, context.getDataPointer());
+        Assert.assertEquals(curDataPointer + 1, context.getDataPointer());
     }
 
     @Test
     public void testPreviousCommand() {
-        MyContext context = new MyContext(null, null);
         context.setDataPointer(6);
         Previous previous = new Previous();
         previous.executeCommand(context);
         Assert.assertEquals(5, context.getDataPointer());
     }
 
-    // @Test
-    // public void testHelloWorld() throws FileNotFoundException, IOException {
-    //     InputStream srcStream = new FileInputStream("hello.txt");
-    //     InputStream inStream = new FileInputStream("in.txt");
-    //     OutputStream outputStream = new FileOutputStream("out.txt");
-    //     BrainfuckInterpreter interpreter = new BrainfuckInterpreter();
+    @Test
+    public void testHelloWorld() throws FileNotFoundException, IOException, InterpreterException {
+        InputStream srcStream = new FileInputStream("BrainfuckInterpeter/files/testhello.txt");
+        BrainfuckInterpreter interpreter = new BrainfuckInterpreter();
+        interpreter.interpret(srcStream, inStream, outputStream);
+        InputStream reader = new FileInputStream("BrainfuckInterpeter/files/testout.txt");
+        byte[] buf = new byte[12];
+        reader.read(buf, 0, 12);
+        String str = new String(buf, StandardCharsets.UTF_8);
+        Assert.assertEquals(str, "Hello World!");
+        reader.close();
+        srcStream.close();
 
-    //     interpreter.interpret(srcStream, inStream, outputStream);
-
-    //     Assert.assertEquals(5, 4);
-    //     srcStream.close();
-    //     inStream.close();
-    //     outputStream.close();
-    // }
+    }
 
 }
 //TODO make test for programs and exceptions
