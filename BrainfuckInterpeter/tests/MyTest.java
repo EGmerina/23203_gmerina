@@ -97,47 +97,47 @@ public class MyTest {
 
     @Test
     public void testHelloWorld() throws FileNotFoundException, IOException, InterpreterException {
-        InputStream srcStream = new FileInputStream("BrainfuckInterpeter/files/testhello.txt");
-        BrainfuckInterpreter interpreter = new BrainfuckInterpreter();
-        interpreter.interpret(srcStream, inStream, outputStream);
-        InputStream reader = new FileInputStream("BrainfuckInterpeter/files/testout.txt");
-        byte[] buf = new byte[12];
-        reader.read(buf, 0, 12);
-        String str = new String(buf, StandardCharsets.UTF_8);
-        Assert.assertEquals(str, "Hello World!");
-        reader.close();
-        srcStream.close();
+        try (InputStream srcStream = new FileInputStream("BrainfuckInterpeter/files/testhello.txt")) {
+            BrainfuckInterpreter interpreter = new BrainfuckInterpreter();
+            interpreter.interpret(srcStream, inStream, outputStream);
+            try (InputStream reader = new FileInputStream("BrainfuckInterpeter/files/testout.txt")) {
+                byte[] buf = new byte[12];
+                reader.read(buf, 0, 12);
+                String str = new String(buf, StandardCharsets.UTF_8);
+                Assert.assertEquals(str, "Hello World!");
+            }
+        }
 
     }
 
     @Test
     public void testReverse() throws FileNotFoundException, IOException, InterpreterException {
-        InputStream srcStream = new FileInputStream("BrainfuckInterpeter/files/testreverse.txt");
-        BrainfuckInterpreter interpreter = new BrainfuckInterpreter();
-        interpreter.interpret(srcStream, inStream, outputStream);
-        InputStream reader = new FileInputStream("BrainfuckInterpeter/files/testout.txt");
-        byte[] buf = new byte[4];
-        reader.read(buf, 0, 4);
-        String str = new String(buf, StandardCharsets.UTF_8);
-        Assert.assertEquals(str, "CBAD");
-        reader.close();
-        srcStream.close();
-
+        try (InputStream srcStream = new FileInputStream("BrainfuckInterpeter/files/testreverse.txt")) {
+            BrainfuckInterpreter interpreter = new BrainfuckInterpreter();
+            interpreter.interpret(srcStream, inStream, outputStream);
+            try (InputStream reader = new FileInputStream("BrainfuckInterpeter/files/testout.txt")) {
+                byte[] buf = new byte[4];
+                reader.read(buf, 0, 4);
+                String str = new String(buf, StandardCharsets.UTF_8);
+                Assert.assertEquals(str, "CBAD");
+            }
+        }
     }
 
     @Test
-    public void testLoop() {
-        InputStream srcStream = new FileInputStream("BrainfuckInterpeter/files/testloop.txt");
-        BrainfuckInterpreter interpreter = new BrainfuckInterpreter();
-        interpreter.interpret(srcStream, inStream, outputStream);
-        InputStream reader = new FileInputStream("BrainfuckInterpeter/files/testout.txt");
-        byte[] buf = new byte[1];
-        reader.read(buf, 0, 1);
-        String str = new String(buf, StandardCharsets.UTF_8);
-        Assert.assertEquals(str, "H");
-        reader.close();
-        srcStream.close();
-
+    public void testLoop() throws IOException, InterpreterException {
+        try (InputStream srcStream = new FileInputStream("BrainfuckInterpeter/files/testloop.txt")) {
+            BrainfuckInterpreter interpreter = new BrainfuckInterpreter();
+            interpreter.interpret(srcStream, inStream, outputStream);
+            try (InputStream reader = new FileInputStream("BrainfuckInterpeter/files/testout.txt")) {
+                byte[] buf = new byte[1];
+                reader.read(buf, 0, 1);
+                String str = new String(buf, StandardCharsets.UTF_8);
+                Assert.assertEquals(str, "H");
+                reader.close();
+                srcStream.close();
+            }
+        }
     }
 
 }
