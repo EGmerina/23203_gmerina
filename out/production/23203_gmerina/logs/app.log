@@ -1,8 +1,0 @@
-22:33:16 [main] INFO  src.Main - Main starts
-22:33:16 [main] INFO  src.Main - Streams initialised successfully
-22:33:16 [main] INFO  src.BrainfuckInterpreter - parsing starts
-22:33:16 [main] INFO  src.Factory - Factory initialized successfully
-22:33:16 [main] INFO  src.BrainfuckInterpreter - parsing finished
-22:33:16 [main] INFO  src.BrainfuckInterpreter - start of interpretation
-22:33:16 [main] INFO  src.BrainfuckInterpreter - end of interpretation
-22:33:16 [main] INFO  src.Main - Main finished
