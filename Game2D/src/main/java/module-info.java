@@ -1,10 +1,6 @@
-module com.example.game2d {
-    requires javafx.controls;
-    requires javafx.fxml;
-
+/**
+ * @author Almas Baimagambetov (almaslvl@gmail.com)
+ */
+open module pacman.main {
     requires com.almasb.fxgl.all;
-    requires jdk.xml.dom;
-
-    opens com.example.game2d to javafx.fxml;
-    exports com.example.game2d;
 }

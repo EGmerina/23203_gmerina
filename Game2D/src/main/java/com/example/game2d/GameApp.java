@@ -1,160 +1,177 @@
+/*
+ * The MIT License (MIT)
+ *
+ * FXGL - JavaFX Game Library
+ *
+ * Copyright (c) 2015-2017 AlmasB (almaslvl@gmail.com)
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
 package com.example.game2d;
 
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
-import com.almasb.fxgl.app.scene.LoadingScene;
-import com.almasb.fxgl.app.scene.SceneFactory;
-import com.almasb.fxgl.app.scene.Viewport;
-import com.almasb.fxgl.core.util.LazyValue;
-import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.level.Level;
-import com.almasb.fxgl.input.UserAction;
-import com.almasb.fxgl.input.virtual.VirtualButton;
-import com.almasb.fxgl.physics.PhysicsComponent;
-import javafx.application.Application;
-import javafx.fxml.FXMLLoader;
-import javafx.geometry.Point2D;
-import javafx.scene.Scene;
+import com.almasb.fxgl.entity.level.text.TextLevelLoader;
+import com.almasb.fxgl.pathfinding.CellState;
+import com.almasb.fxgl.pathfinding.astar.AStarGrid;
+import com.almasb.fxgl.ui.UI;
+import com.example.game2d.components.PlayerComponent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
-import javafx.scene.shape.Rectangle;
-import javafx.scene.text.Text;
-import javafx.stage.Stage;
+import javafx.util.Duration;
 
-import java.io.IOException;
 import java.util.Map;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
+import static com.example.game2d.GameType.*;
+
 
 public class GameApp extends GameApplication {
 
-
     public static final int BLOCK_SIZE = 40;
 
-    public static final int MAP_SIZE = 20;
+    public static final int MAP_SIZE = 21;
 
     private static final int UI_SIZE = 80;
 
-    @Override
-    protected void initSettings(GameSettings gameSettings) {
-        gameSettings.setWidth(1300);
-        gameSettings.setHeight(1000);
-        gameSettings.setTitle("Game 2D");
+    // seconds
+    public static final int TIME_PER_LEVEL = 110;
 
-
+    public Entity getPlayer() {
+        return getGameWorld().getSingleton(PLAYER);
     }
 
+    public PlayerComponent getPlayerComponent() {
+        return getPlayer().getComponent(PlayerComponent.class);
+    }
 
     @Override
-    protected void initGame() {
-
-        getGameWorld().addEntityFactory(new GameFactory());
-
-//        player = null;
-//
-//        nextLevel();
-
-        player = spawn("player", 50, 50);
-        set("player", player);
-
-        spawn("background");
-
-        Viewport viewport = getGameScene().getViewport();
-        viewport.setBounds(-1500, 0, 250 * 70, getAppHeight());
-        viewport.bindToEntity(player, getAppWidth() / 2, getAppHeight() / 2);
-        viewport.setLazy(true);
-
-//        player = FXGL.entityBuilder()
-//                .at(300, 300)
-//                .view(new Rectangle(25, 25, Color.BLUE))
-//                .buildAndAttach();
+    protected void initSettings(GameSettings settings) {
+        settings.setWidth(MAP_SIZE * BLOCK_SIZE + UI_SIZE);
+        settings.setHeight(MAP_SIZE * BLOCK_SIZE);
+        settings.setTitle("FXGL Pac-man");
+        settings.setVersion("1.0");
+        settings.setManualResizeEnabled(true);
+        settings.setPreserveResizeRatio(true);
     }
 
     @Override
     protected void initInput() {
-        getInput().addAction(new UserAction("Left") {
-            @Override
-            protected void onAction() {
-                player.getComponent(PlayerComponent.class).left();
-            }
+        onKey(KeyCode.W, () -> getPlayerComponent().up());
+        onKey(KeyCode.S, () -> getPlayerComponent().down());
+        onKey(KeyCode.A, () -> getPlayerComponent().left());
+        onKey(KeyCode.D, () -> getPlayerComponent().right());
 
-            @Override
-            protected void onActionEnd() {
-                player.getComponent(PlayerComponent.class).stop();
+        onKeyDown(KeyCode.F, () -> {
+            if (geti("teleport") > 0) {
+                inc("teleport", -1);
+                getPlayerComponent().teleport();
             }
-        }, KeyCode.A, VirtualButton.LEFT);
-
-        getInput().addAction(new UserAction("Right") {
-            @Override
-            protected void onAction() {
-                player.getComponent(PlayerComponent.class).right();
-            }
-
-            @Override
-            protected void onActionEnd() {
-                player.getComponent(PlayerComponent.class).stop();
-            }
-        }, KeyCode.D, VirtualButton.RIGHT);
-
+        });
     }
-
-//    @Override
-//    protected void initUI() {
-//        Text textPixels = new Text();
-//        textPixels.setTranslateX(50);
-//        textPixels.setTranslateY(100);
-//
-//        textPixels.textProperty().bind(FXGL.getWorldProperties().
-//                intProperty("pixelMoved").asString());
-//
-//        FXGL.getGameScene().addUINode(textPixels);
-//    }
 
     @Override
     protected void initGameVars(Map<String, Object> vars) {
-        vars.put("level", STARTING_LEVEL);
-        vars.put("levelTime", 0.0);
+        vars.put("score", 0);
+        vars.put("coins", 0);
+        vars.put("teleport", 1);
+        vars.put("time", TIME_PER_LEVEL);
     }
 
-//    @Override
-//    protected void initPhysics() {
-//        getPhysicsWorld().addCollisionHandler(new PlayerForestHandler());
-//    }
+    @Override
+    protected void initGame() {
+        getGameScene().setBackgroundColor(Color.DARKSLATEGREY);
+
+        getGameWorld().addEntityFactory(new GameFactory());
+
+        Level level = getAssetLoader().loadLevel("level0.txt", new TextLevelLoader(40, 40, ' '));
+        getGameWorld().setLevel(level);
+
+        // init the A* underlying grid and mark cells where blocks are as not walkable
+        AStarGrid grid = AStarGrid.fromWorld(getGameWorld(), MAP_SIZE, MAP_SIZE, BLOCK_SIZE, BLOCK_SIZE, (type) -> {
+            if (type == BLOCK)
+                return CellState.WALKABLE;
+
+            return CellState.NOT_WALKABLE;
+        });
+
+        set("grid", grid);
+
+        // find out number of coins
+        set("coins", getGameWorld().getEntitiesByType(COIN).size());
+
+        run(() -> inc("time", -1), Duration.seconds(1));
+
+        getWorldProperties().<Integer>addListener("time", (old, now) -> {
+            if (now == 0) {
+                onPlayerKilled();
+            }
+        });
+    }
+
+    @Override
+    protected void initPhysics() {
+        onCollisionBegin(PLAYER, ENEMY, (p, e) -> onPlayerKilled());
+
+        onCollisionCollectible(PLAYER, COIN, c -> onCoinPickup());
+    }
+
+    @Override
+    protected void initUI() {
+        UI ui = getAssetLoader().loadUI("game_ui.fxml", new UIController());
+        ui.getRoot().setTranslateX(MAP_SIZE * BLOCK_SIZE);
+
+        getGameScene().addUI(ui);
+    }
 
     @Override
     protected void onUpdate(double tpf) {
-        inc("levelTime", tpf);
-
-//        if (player.getY() > getAppHeight()) {
-//            setLevel(geti("level"));
-//        }
+        if (requestNewGame) {
+            requestNewGame = false;
+            getGameController().startNewGame();
+        }
     }
 
-//    private void nextLevel() {
-//        if (geti("level") == MAX_LEVEL) {
-//            showMessage("You finished the demo!");
-//            return;
-//        }
-//        inc("level", +1);
-//        setLevel(geti("level"));
-//    }
-//
-//    private void setLevel(int levelNum) {
-//        if (player != null) {
-//            player.getComponent(PhysicsComponent.class).
-//                    overwritePosition(new Point2D(50, 50));
-//            player.setZIndex(Integer.MAX_VALUE);
-//        }
-//        set("levelTime", 0.0);
-//        Level level = setLevelFromMap("tmx/level" + levelNum +
-//                ".tmx");
-//        var shortestTime = level.getProperties().
-//                getDouble("star1time");
-////        var levelTimeData = new LevelEndScene.LevelTimeData
-////                (shortestTime * 2.4, shortestTime * 1.3, shortestTime);
-////        set("levelTimeData", levelTimeData);
-//    }
+    public void onCoinPickup() {
+        inc("coins", -1);
+        inc("score", +50);
+
+        if (geti("score") % 2000 == 0) {
+            inc("teleport", +1);
+        }
+
+        if (geti("coins") == 0) {
+            gameOver();
+        }
+    }
+
+    private boolean requestNewGame = false;
+
+    public void onPlayerKilled() {
+        requestNewGame = true;
+    }
+
+    private void gameOver() {
+        getDialogService().showMessageBox("Demo Over. Press OK to exit", getGameController()::exit);
+    }
 
     public static void main(String[] args) {
         launch(args);
