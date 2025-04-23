@@ -29,23 +29,19 @@ import static com.almasb.fxgl.dsl.FXGL.*;
 
 public class GameApp extends GameApplication {
 
-    private static final int MAX_LEVEL = 2;
-    private static final int STARTING_LEVEL = 0;
 
-    private LazyValue<LevelEndScene> levelEndScene = new LazyValue<>(() -> new LevelEndScene());
-    private Entity player;
+    public static final int BLOCK_SIZE = 40;
+
+    public static final int MAP_SIZE = 20;
+
+    private static final int UI_SIZE = 80;
 
     @Override
     protected void initSettings(GameSettings gameSettings) {
         gameSettings.setWidth(1300);
         gameSettings.setHeight(1000);
         gameSettings.setTitle("Game 2D");
-        gameSettings.setSceneFactory(new SceneFactory() {
-            @Override
-            public LoadingScene newLoadingScene() {
-                return new MainLoadingScene();
-            }
-        });
+
 
     }
 
@@ -55,9 +51,9 @@ public class GameApp extends GameApplication {
 
         getGameWorld().addEntityFactory(new GameFactory());
 
-        player = null;
-
-        nextLevel();
+//        player = null;
+//
+//        nextLevel();
 
         player = spawn("player", 50, 50);
         set("player", player);
@@ -103,17 +99,17 @@ public class GameApp extends GameApplication {
 
     }
 
-    @Override
-    protected void initUI() {
-        Text textPixels = new Text();
-        textPixels.setTranslateX(50);
-        textPixels.setTranslateY(100);
-
-        textPixels.textProperty().bind(FXGL.getWorldProperties().
-                intProperty("pixelMoved").asString());
-
-        FXGL.getGameScene().addUINode(textPixels);
-    }
+//    @Override
+//    protected void initUI() {
+//        Text textPixels = new Text();
+//        textPixels.setTranslateX(50);
+//        textPixels.setTranslateY(100);
+//
+//        textPixels.textProperty().bind(FXGL.getWorldProperties().
+//                intProperty("pixelMoved").asString());
+//
+//        FXGL.getGameScene().addUINode(textPixels);
+//    }
 
     @Override
     protected void initGameVars(Map<String, Object> vars) {
@@ -121,44 +117,44 @@ public class GameApp extends GameApplication {
         vars.put("levelTime", 0.0);
     }
 
-    @Override
-    protected void initPhysics() {
-        getPhysicsWorld().addCollisionHandler(new PlayerForestHandler());
-    }
+//    @Override
+//    protected void initPhysics() {
+//        getPhysicsWorld().addCollisionHandler(new PlayerForestHandler());
+//    }
 
     @Override
     protected void onUpdate(double tpf) {
         inc("levelTime", tpf);
 
-        if (player.getY() > getAppHeight()) {
-            setLevel(geti("level"));
-        }
+//        if (player.getY() > getAppHeight()) {
+//            setLevel(geti("level"));
+//        }
     }
 
-    private void nextLevel() {
-        if (geti("level") == MAX_LEVEL) {
-            showMessage("You finished the demo!");
-            return;
-        }
-        inc("level", +1);
-        setLevel(geti("level"));
-    }
-
-    private void setLevel(int levelNum) {
-        if (player != null) {
-            player.getComponent(PhysicsComponent.class).
-                    overwritePosition(new Point2D(50, 50));
-            player.setZIndex(Integer.MAX_VALUE);
-        }
-        set("levelTime", 0.0);
-        Level level = setLevelFromMap("tmx/level" + levelNum +
-                ".tmx");
-        var shortestTime = level.getProperties().
-                getDouble("star1time");
-//        var levelTimeData = new LevelEndScene.LevelTimeData
-//                (shortestTime * 2.4, shortestTime * 1.3, shortestTime);
-//        set("levelTimeData", levelTimeData);
-    }
+//    private void nextLevel() {
+//        if (geti("level") == MAX_LEVEL) {
+//            showMessage("You finished the demo!");
+//            return;
+//        }
+//        inc("level", +1);
+//        setLevel(geti("level"));
+//    }
+//
+//    private void setLevel(int levelNum) {
+//        if (player != null) {
+//            player.getComponent(PhysicsComponent.class).
+//                    overwritePosition(new Point2D(50, 50));
+//            player.setZIndex(Integer.MAX_VALUE);
+//        }
+//        set("levelTime", 0.0);
+//        Level level = setLevelFromMap("tmx/level" + levelNum +
+//                ".tmx");
+//        var shortestTime = level.getProperties().
+//                getDouble("star1time");
+////        var levelTimeData = new LevelEndScene.LevelTimeData
+////                (shortestTime * 2.4, shortestTime * 1.3, shortestTime);
+////        set("levelTimeData", levelTimeData);
+//    }
 
     public static void main(String[] args) {
         launch(args);

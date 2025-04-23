@@ -3,6 +3,8 @@ package com.example.game2d;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.physics.CollisionHandler;
 
+import static com.almasb.fxgl.dsl.FXGLForKtKt.getGameWorld;
+
 public class PlayerForestHandler extends CollisionHandler {
 
     public PlayerForestHandler() {

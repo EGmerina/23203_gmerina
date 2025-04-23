@@ -1,5 +1,5 @@
 package com.example.game2d;
 
 public enum EntityType {
-    PLAYER, RUNNER, FOREST, MARKER
+    PLAYER, RUNNER, FOREST, MARKER, TRAIL
 }
