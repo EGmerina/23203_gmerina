@@ -2,10 +2,19 @@ package com.example.game2d;
 
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
+import com.almasb.fxgl.app.scene.LoadingScene;
+import com.almasb.fxgl.app.scene.SceneFactory;
+import com.almasb.fxgl.app.scene.Viewport;
+import com.almasb.fxgl.core.util.LazyValue;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
+import com.almasb.fxgl.entity.level.Level;
+import com.almasb.fxgl.input.UserAction;
+import com.almasb.fxgl.input.virtual.VirtualButton;
+import com.almasb.fxgl.physics.PhysicsComponent;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
+import javafx.geometry.Point2D;
 import javafx.scene.Scene;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -16,45 +25,81 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.Map;
 
+import static com.almasb.fxgl.dsl.FXGL.*;
+
 public class GameApp extends GameApplication {
 
-    @Override
-    protected void initSettings(GameSettings gameSettings) {
-        gameSettings.setWidth(600);
-        gameSettings.setHeight(600);
-        gameSettings.setTitle("Basic Game App");
-        gameSettings.setVersion("0.1");
-    }
+    private static final int MAX_LEVEL = 2;
+    private static final int STARTING_LEVEL = 0;
 
+    private LazyValue<LevelEndScene> levelEndScene = new LazyValue<>(() -> new LevelEndScene());
     private Entity player;
 
     @Override
+    protected void initSettings(GameSettings gameSettings) {
+        gameSettings.setWidth(1300);
+        gameSettings.setHeight(1000);
+        gameSettings.setTitle("Game 2D");
+        gameSettings.setSceneFactory(new SceneFactory() {
+            @Override
+            public LoadingScene newLoadingScene() {
+                return new MainLoadingScene();
+            }
+        });
+
+    }
+
+
+    @Override
     protected void initGame() {
-        player = FXGL.entityBuilder()
-                .at(300, 300)
-                .view(new Rectangle(25, 25, Color.BLUE))
-                .buildAndAttach();
+
+        getGameWorld().addEntityFactory(new GameFactory());
+
+        player = null;
+
+        nextLevel();
+
+        player = spawn("player", 50, 50);
+        set("player", player);
+
+        spawn("background");
+
+        Viewport viewport = getGameScene().getViewport();
+        viewport.setBounds(-1500, 0, 250 * 70, getAppHeight());
+        viewport.bindToEntity(player, getAppWidth() / 2, getAppHeight() / 2);
+        viewport.setLazy(true);
+
+//        player = FXGL.entityBuilder()
+//                .at(300, 300)
+//                .view(new Rectangle(25, 25, Color.BLUE))
+//                .buildAndAttach();
     }
 
     @Override
     protected void initInput() {
-        FXGL.onKey(KeyCode.RIGHT, () -> {
-            player.translateX(5);
-            FXGL.inc("pixelMoved", +5);
-        });
+        getInput().addAction(new UserAction("Left") {
+            @Override
+            protected void onAction() {
+                player.getComponent(PlayerComponent.class).left();
+            }
 
-        FXGL.onKey(KeyCode.LEFT, () -> {
-            player.translateX(-5);
-            FXGL.inc("pixelMoved", -5);
-        });
+            @Override
+            protected void onActionEnd() {
+                player.getComponent(PlayerComponent.class).stop();
+            }
+        }, KeyCode.A, VirtualButton.LEFT);
 
-        FXGL.onKey(KeyCode.UP, () -> {
-            player.translateY(-5);
-        });
+        getInput().addAction(new UserAction("Right") {
+            @Override
+            protected void onAction() {
+                player.getComponent(PlayerComponent.class).right();
+            }
 
-        FXGL.onKey(KeyCode.DOWN, () -> {
-            player.translateY(5);
-        });
+            @Override
+            protected void onActionEnd() {
+                player.getComponent(PlayerComponent.class).stop();
+            }
+        }, KeyCode.D, VirtualButton.RIGHT);
 
     }
 
@@ -72,7 +117,47 @@ public class GameApp extends GameApplication {
 
     @Override
     protected void initGameVars(Map<String, Object> vars) {
-        vars.put("pixelMoved", 0);
+        vars.put("level", STARTING_LEVEL);
+        vars.put("levelTime", 0.0);
+    }
+
+    @Override
+    protected void initPhysics() {
+        getPhysicsWorld().addCollisionHandler(new PlayerForestHandler());
+    }
+
+    @Override
+    protected void onUpdate(double tpf) {
+        inc("levelTime", tpf);
+
+        if (player.getY() > getAppHeight()) {
+            setLevel(geti("level"));
+        }
+    }
+
+    private void nextLevel() {
+        if (geti("level") == MAX_LEVEL) {
+            showMessage("You finished the demo!");
+            return;
+        }
+        inc("level", +1);
+        setLevel(geti("level"));
+    }
+
+    private void setLevel(int levelNum) {
+        if (player != null) {
+            player.getComponent(PhysicsComponent.class).
+                    overwritePosition(new Point2D(50, 50));
+            player.setZIndex(Integer.MAX_VALUE);
+        }
+        set("levelTime", 0.0);
+        Level level = setLevelFromMap("tmx/level" + levelNum +
+                ".tmx");
+        var shortestTime = level.getProperties().
+                getDouble("star1time");
+//        var levelTimeData = new LevelEndScene.LevelTimeData
+//                (shortestTime * 2.4, shortestTime * 1.3, shortestTime);
+//        set("levelTimeData", levelTimeData);
     }
 
     public static void main(String[] args) {

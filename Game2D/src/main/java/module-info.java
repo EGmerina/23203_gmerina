@@ -3,6 +3,7 @@ module com.example.game2d {
     requires javafx.fxml;
 
     requires com.almasb.fxgl.all;
+    requires jdk.xml.dom;
 
     opens com.example.game2d to javafx.fxml;
     exports com.example.game2d;
