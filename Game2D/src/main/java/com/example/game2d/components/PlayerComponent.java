@@ -39,7 +39,7 @@ import static com.example.game2d.components.PlayerComponent.MoveDirection.*;
 public class PlayerComponent extends Component {
 
     enum MoveDirection {
-        UP, RIGHT, DOWN, LEFT
+        UP, RIGHT, DOWN, LEFT, STOP
     }
 
     private CellMoveComponent moveComponent;
@@ -63,6 +63,10 @@ public class PlayerComponent extends Component {
 
     public void right() {
         nextMoveDir = RIGHT;
+    }
+
+    public void stop() {
+        nextMoveDir = STOP;
     }
 
     @Override
@@ -99,6 +103,9 @@ public class PlayerComponent extends Component {
                 if (astar.getGrid().getLeft(x, y).filter(c -> c.getState().isWalkable()).isPresent())
                     currentMoveDir = nextMoveDir;
                 break;
+            case STOP:
+                currentMoveDir = nextMoveDir;
+                break;
         }
 
         switch (currentMoveDir) {
@@ -113,6 +120,9 @@ public class PlayerComponent extends Component {
                 break;
             case LEFT:
                 astar.moveToLeftCell();
+                break;
+            case STOP:
+                astar.stopMovement();
                 break;
         }
     }

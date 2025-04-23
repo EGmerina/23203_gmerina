@@ -30,6 +30,7 @@ import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.level.Level;
 import com.almasb.fxgl.entity.level.text.TextLevelLoader;
+import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.pathfinding.CellState;
 import com.almasb.fxgl.pathfinding.astar.AStarGrid;
 import com.almasb.fxgl.ui.UI;
@@ -48,7 +49,7 @@ public class GameApp extends GameApplication {
 
     public static final int BLOCK_SIZE = 40;
 
-    public static final int MAP_SIZE = 21;
+    public static final int MAP_SIZE = 20;
 
     private static final int UI_SIZE = 80;
 
@@ -67,7 +68,7 @@ public class GameApp extends GameApplication {
     protected void initSettings(GameSettings settings) {
         settings.setWidth(MAP_SIZE * BLOCK_SIZE + UI_SIZE);
         settings.setHeight(MAP_SIZE * BLOCK_SIZE);
-        settings.setTitle("FXGL Pac-man");
+        settings.setTitle("Game 2D");
         settings.setVersion("1.0");
         settings.setManualResizeEnabled(true);
         settings.setPreserveResizeRatio(true);
@@ -75,10 +76,55 @@ public class GameApp extends GameApplication {
 
     @Override
     protected void initInput() {
-        onKey(KeyCode.W, () -> getPlayerComponent().up());
-        onKey(KeyCode.S, () -> getPlayerComponent().down());
-        onKey(KeyCode.A, () -> getPlayerComponent().left());
-        onKey(KeyCode.D, () -> getPlayerComponent().right());
+
+        getInput().addAction(new UserAction("Left") {
+            @Override
+            protected void onAction() {
+                getPlayerComponent().left();
+            }
+
+            @Override
+            protected void onActionEnd() {
+                getPlayerComponent().stop();
+            }
+        }, KeyCode.LEFT);
+
+        getInput().addAction(new UserAction("Right") {
+            @Override
+            protected void onAction() {
+                getPlayerComponent().right();
+            }
+
+            @Override
+            protected void onActionEnd() {
+                getPlayerComponent().stop();
+            }
+        }, KeyCode.RIGHT);
+
+        getInput().addAction(new UserAction("Down") {
+            @Override
+            protected void onAction() {
+                getPlayerComponent().down();
+            }
+
+            @Override
+            protected void onActionEnd() {
+                getPlayerComponent().stop();
+            }
+        }, KeyCode.DOWN);
+
+        getInput().addAction(new UserAction("Up") {
+            @Override
+            protected void onAction() {
+                getPlayerComponent().up();
+            }
+
+            @Override
+            protected void onActionEnd() {
+                getPlayerComponent().stop();
+            }
+        }, KeyCode.UP);
+        
 
         onKeyDown(KeyCode.F, () -> {
             if (geti("teleport") > 0) {
