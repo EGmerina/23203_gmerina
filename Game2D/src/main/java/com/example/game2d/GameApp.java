@@ -8,6 +8,7 @@ import com.almasb.fxgl.entity.level.text.TextLevelLoader;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.pathfinding.CellState;
 import com.almasb.fxgl.pathfinding.astar.AStarGrid;
+import com.almasb.fxgl.pathfinding.astar.AStarMoveComponent;
 import com.almasb.fxgl.ui.UI;
 import com.example.game2d.components.PlayerComponent;
 import javafx.scene.input.KeyCode;
@@ -22,31 +23,18 @@ import static com.example.game2d.GameType.*;
 
 public class GameApp extends GameApplication {
 
-    public static final int BLOCK_SIZE = 40;
+    public static final int BLOCK_SIZE = 32;
 
-    public static final int MAP_SIZE = 20;
-
-    private static final int UI_SIZE = 80;
-
-    // seconds
-    public static final int TIME_PER_LEVEL = 110;
-
-    public Entity getPlayer() {
-        return getGameWorld().getSingleton(PLAYER);
-    }
-
-    public PlayerComponent getPlayerComponent() {
-        return getPlayer().getComponent(PlayerComponent.class);
-    }
+    private PlayerComponent playerComponent;
+    private AStarGrid grid;
 
     @Override
     protected void initSettings(GameSettings settings) {
-        settings.setWidth(MAP_SIZE * BLOCK_SIZE + UI_SIZE);
-        settings.setHeight(MAP_SIZE * BLOCK_SIZE);
+        settings.setWidth(30 * 32);
+        settings.setHeight(30 * 32);
         settings.setTitle("Game 2D");
         settings.setVersion("1.0");
-        settings.setManualResizeEnabled(true);
-        settings.setPreserveResizeRatio(true);
+
     }
 
     @Override
@@ -55,144 +43,72 @@ public class GameApp extends GameApplication {
         getInput().addAction(new UserAction("Left") {
             @Override
             protected void onAction() {
-                getPlayerComponent().left();
+                playerComponent.left();
             }
 
             @Override
             protected void onActionEnd() {
-                getPlayerComponent().stop();
+                playerComponent.stop();
             }
         }, KeyCode.LEFT);
 
         getInput().addAction(new UserAction("Right") {
             @Override
             protected void onAction() {
-                getPlayerComponent().right();
+                playerComponent.right();
             }
 
             @Override
             protected void onActionEnd() {
-                getPlayerComponent().stop();
+                playerComponent.stop();
             }
         }, KeyCode.RIGHT);
 
         getInput().addAction(new UserAction("Down") {
             @Override
             protected void onAction() {
-                getPlayerComponent().down();
+                playerComponent.down();
             }
 
             @Override
             protected void onActionEnd() {
-                getPlayerComponent().stop();
+                playerComponent.stop();
             }
         }, KeyCode.DOWN);
 
         getInput().addAction(new UserAction("Up") {
             @Override
             protected void onAction() {
-                getPlayerComponent().up();
+                playerComponent.up();
             }
 
             @Override
             protected void onActionEnd() {
-                getPlayerComponent().stop();
+                playerComponent.stop();
             }
         }, KeyCode.UP);
-        
 
-        onKeyDown(KeyCode.F, () -> {
-            if (geti("teleport") > 0) {
-                inc("teleport", -1);
-                getPlayerComponent().teleport();
-            }
-        });
-    }
-
-    @Override
-    protected void initGameVars(Map<String, Object> vars) {
-        vars.put("score", 0);
-        vars.put("coins", 0);
-        vars.put("teleport", 1);
-        vars.put("time", TIME_PER_LEVEL);
     }
 
     @Override
     protected void initGame() {
-        getGameScene().setBackgroundColor(Color.DARKSLATEGREY);
+        getGameScene().setBackgroundColor(Color.LIGHTGRAY);
 
         getGameWorld().addEntityFactory(new GameFactory());
 
-        Level level = getAssetLoader().loadLevel("level0.txt", new TextLevelLoader(40, 40, ' '));
-        getGameWorld().setLevel(level);
+        setLevelFromMap("tmx/level1.tmx");
 
-        // init the A* underlying grid and mark cells where blocks are as not walkable
-        AStarGrid grid = AStarGrid.fromWorld(getGameWorld(), MAP_SIZE, MAP_SIZE, BLOCK_SIZE, BLOCK_SIZE, (type) -> {
-            if (type == BLOCK)
-                return CellState.WALKABLE;
+        grid = AStarGrid.fromWorld(getGameWorld(), 30, 30, BLOCK_SIZE, BLOCK_SIZE, (type) -> {
+//            if (type == WALL || type == BRICK || type == PLAYER_FLAG || type == ENEMY_FLAG)
+//                return CellState.NOT_WALKABLE;
 
-            return CellState.NOT_WALKABLE;
+            return CellState.WALKABLE;
         });
-
         set("grid", grid);
-
-        // find out number of coins
-        set("coins", getGameWorld().getEntitiesByType(COIN).size());
-
-        run(() -> inc("time", -1), Duration.seconds(1));
-
-        getWorldProperties().<Integer>addListener("time", (old, now) -> {
-            if (now == 0) {
-                onPlayerKilled();
-            }
-        });
+        playerComponent = getGameWorld().getSingleton(PLAYER).getComponent(PlayerComponent.class);
+        playerComponent.getEntity().addComponent(new AStarMoveComponent(grid));
     }
 
-    @Override
-    protected void initPhysics() {
-        onCollisionBegin(PLAYER, ENEMY, (p, e) -> onPlayerKilled());
-
-        onCollisionCollectible(PLAYER, COIN, c -> onCoinPickup());
-    }
-
-    @Override
-    protected void initUI() {
-        UI ui = getAssetLoader().loadUI("game_ui.fxml", new UIController());
-        ui.getRoot().setTranslateX(MAP_SIZE * BLOCK_SIZE);
-
-        getGameScene().addUI(ui);
-    }
-
-    @Override
-    protected void onUpdate(double tpf) {
-        if (requestNewGame) {
-            requestNewGame = false;
-            getGameController().startNewGame();
-        }
-    }
-
-    public void onCoinPickup() {
-        inc("coins", -1);
-        inc("score", +50);
-
-        if (geti("score") % 2000 == 0) {
-            inc("teleport", +1);
-        }
-
-        if (geti("coins") == 0) {
-            gameOver();
-        }
-    }
-
-    private boolean requestNewGame = false;
-
-    public void onPlayerKilled() {
-        requestNewGame = true;
-    }
-
-    private void gameOver() {
-        getDialogService().showMessageBox("Demo Over. Press OK to exit", getGameController()::exit);
-    }
 
     public static void main(String[] args) {
         launch(args);

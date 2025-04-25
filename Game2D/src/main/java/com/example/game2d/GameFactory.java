@@ -32,35 +32,35 @@ import static com.example.game2d.GameType.*;
 
 public class GameFactory implements EntityFactory {
 
-    @Spawns("1")
-    public Entity newBlock(SpawnData data) {
-        var rect = new Rectangle(38, 38, Color.BLACK);
-        rect.setArcWidth(15);
-        rect.setArcHeight(15);
-        rect.setStrokeWidth(1);
-        rect.setStroke(Color.BLUE);
+//    @Spawns("56")
+//    public Entity newBlock(SpawnData data) {
+//        var rect = new Rectangle(38, 38, Color.BLACK);
+//        rect.setArcWidth(15);
+//        rect.setArcHeight(15);
+//        rect.setStrokeWidth(1);
+//        rect.setStroke(Color.BLUE);
+//
+//        return entityBuilder(data)
+//                .type(BLOCK)
+//                .viewWithBBox(rect)
+//                .zIndex(-1)
+//                .build();
+//    }
+//
+//    @Spawns("35")
+//    public Entity newCoin(SpawnData data) {
+//
+//        return entityBuilder(data)
+//                .type(COIN)
+//                .bbox(new HitBox(new Point2D(5, 5), BoundingShape.box(30, 30)))
+//                .zIndex(-1)
+//                .with(new CollidableComponent(true))
+//                .with(new CellMoveComponent(BLOCK_SIZE, BLOCK_SIZE, 50))
+//                .scale(0.5, 0.5)
+//                .build();
+//    }
 
-        return entityBuilder(data)
-                .type(BLOCK)
-                .viewWithBBox(rect)
-                .zIndex(-1)
-                .build();
-    }
-
-    @Spawns("0")
-    public Entity newCoin(SpawnData data) {
-
-        return entityBuilder(data)
-                .type(COIN)
-                .bbox(new HitBox(new Point2D(5, 5), BoundingShape.box(30, 30)))
-                .zIndex(-1)
-                .with(new CollidableComponent(true))
-                .with(new CellMoveComponent(BLOCK_SIZE, BLOCK_SIZE, 50))
-                .scale(0.5, 0.5)
-                .build();
-    }
-
-    @Spawns("P")
+    @Spawns("player")
     public Entity newPlayer(SpawnData data) {
         AnimatedTexture view = texture("player.png").toAnimatedTexture(2, Duration.seconds(0.33));
 
@@ -78,39 +78,5 @@ public class GameFactory implements EntityFactory {
                 .build();
     }
 
-    private Supplier<Component> aiComponents = new Supplier<>() {
-        private Map<Integer, Supplier<Component>> components = Map.of(
-                0, () -> new DelayedChasePlayerComponent().withDelay(),
-                1, GuardCoinComponent::new,
-                2, RandomAStarMoveComponent::new,
-                3, DelayedChasePlayerComponent::new
-        );
 
-        private int index = 0;
-
-        @Override
-        public Component get() {
-            // there are 4 enemies
-            if (index == 4) {
-                index = 0;
-            }
-
-            return components.get(index++).get();
-        }
-    };
-
-    @Spawns("E")
-    public Entity newEnemy(SpawnData data) {
-        return entityBuilder(data)
-                .type(ENEMY)
-                .bbox(new HitBox(new Point2D(2, 2), BoundingShape.box(36, 36)))
-                .anchorFromCenter()
-                .with(new CollidableComponent(true))
-                .with(new PaletteChangingComponent(texture("spritesheet.png", 695 * 0.24, 1048 * 0.24)))
-                .with(new CellMoveComponent(BLOCK_SIZE, BLOCK_SIZE, 125))
-                // there is no grid constructed yet, so pass lazily
-                .with(new AStarMoveComponent(new LazyValue<>(() -> geto("grid"))))
-                .with(aiComponents.get())
-                .build();
-    }
 }
