@@ -5,6 +5,7 @@ import com.almasb.fxgl.entity.component.Required;
 import com.almasb.fxgl.pathfinding.CellMoveComponent;
 import com.almasb.fxgl.pathfinding.astar.AStarCell;
 import com.almasb.fxgl.pathfinding.astar.AStarMoveComponent;
+import javafx.scene.paint.Stop;
 
 import static com.example.game2d.components.PlayerComponent.MoveDirection.*;
 
@@ -20,8 +21,8 @@ public class PlayerComponent extends Component {
 
     private AStarMoveComponent astar;
 
-    private MoveDirection currentMoveDir = RIGHT;
-    private MoveDirection nextMoveDir = RIGHT;
+    private MoveDirection currentMoveDir = STOP;
+    private MoveDirection nextMoveDir = STOP;
 
     public void up() {
         nextMoveDir = UP;
@@ -48,14 +49,6 @@ public class PlayerComponent extends Component {
         var x = moveComponent.getCellX();
         var y = moveComponent.getCellY();
 
-        if (x == 0 && currentMoveDir == LEFT) {
-            astar.stopMovementAt(astar.getGrid().getWidth() - 1, moveComponent.getCellY());
-            return;
-
-        } else if (x == astar.getGrid().getWidth() - 1 && currentMoveDir == RIGHT) {
-            astar.stopMovementAt(0, moveComponent.getCellY());
-            return;
-        }
 
         if (astar.isMoving())
             return;
@@ -101,9 +94,5 @@ public class PlayerComponent extends Component {
         }
     }
 
-    public void teleport() {
-        astar.getGrid()
-                .getRandomCell(AStarCell::isWalkable)
-                .ifPresent(c -> astar.stopMovementAt(c.getX(), c.getY()));
-    }
+
 }
