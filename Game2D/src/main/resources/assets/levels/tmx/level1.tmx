@@ -1,11 +1,14 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="5" nextobjectid="9">
-  <tileset firstgid="1" name="GRASS+" tilewidth="32" tileheight="32" tilecount="84" columns="12">
-   <image source="GRASS+.png" width="400" height="224"/>
-  </tileset>
-<!--   <tileset firstgid="85" name="tree_2" tilewidth="64" tileheight="80" tilecount="1" columns="1"> -->
-<!--      <image source="tree_2.png" width="64" height="80"/> -->
-<!--   </tileset> -->
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="38">
+ <tileset firstgid="1" name="GRASS+" tilewidth="32" tileheight="32" tilecount="84" columns="12">
+  <image source="GRASS+.png" trans="ffffff" width="400" height="224"/>
+ </tileset>
+ <tileset firstgid="85" name="mytree" tilewidth="64" tileheight="64" tilecount="1" columns="1">
+  <image source="mytree.png" trans="ffffff" width="64" height="64"/>
+ </tileset>
+ <tileset firstgid="86" name="tree_2" tilewidth="64" tileheight="80" tilecount="1" columns="1">
+  <image source="tree_2.png" trans="ffffff" width="64" height="80"/>
+ </tileset>
  <layer id="1" name="floor" width="30" height="30">
   <data encoding="csv">
 35,35,30,30,30,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,
@@ -40,41 +43,29 @@
 35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,30,30,30,35,35,35,35,35,35
 </data>
  </layer>
-<!--  <layer id="2" name="forest" width="30" height="30"> -->
-<!--   <data encoding="csv"> -->
-<!-- 0,0,0,0,0,0,85,0,85,85,85,0,0,0,0,0,0,0,0,0,85,85,85,85,85,85,85,85,85,0, -->
-<!-- 85,0,0,0,0,85,85,85,85,0,85,85,85,85,85,0,85,85,85,85,85,0,0,0,0,0,0,85,85,85, -->
-<!-- 85,0,0,0,0,85,85,85,0,0,0,0,0,0,85,85,85,0,0,0,0,0,0,0,0,0,0,0,85,85, -->
-<!-- 85,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,85,85, -->
-<!-- 85,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,85,85,0,0,0,85,85, -->
-<!-- 85,85,85,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,85,0,85,0,0,0,85,85, -->
-<!-- 0,0,85,0,85,85,85,85,85,0,0,0,0,85,0,0,0,85,85,0,0,0,85,85,85,0,0,0,85,85, -->
-<!-- 85,85,85,85,85,0,85,85,85,85,85,85,85,85,85,85,85,0,0,0,0,0,0,0,0,0,0,0,85,85, -->
-<!-- 85,85,85,85,85,0,0,0,85,85,85,85,85,85,85,0,0,0,0,0,0,0,0,0,0,0,0,0,85,85, -->
-<!-- 85,85,85,0,0,0,0,0,0,0,0,0,0,0,85,85,0,0,0,85,0,85,0,0,0,0,0,0,85,85, -->
-<!-- 85,85,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,85,85,85,85,0,0,0,0,0,85,85, -->
-<!-- 0,85,0,0,0,85,85,85,0,0,0,0,0,0,0,0,0,0,0,85,85,85,85,85,0,0,0,0,85,85, -->
-<!-- 85,85,0,0,0,0,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,0,85,85,85, -->
-<!-- 85,85,85,0,0,0,0,0,85,85,85,0,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85, -->
-<!-- 85,85,85,0,0,0,0,0,0,0,0,0,0,0,0,0,85,85,85,85,85,85,85,85,85,85,85,85,85,85, -->
-<!-- 85,85,85,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,85,85,85,85,85,85,85, -->
-<!-- 85,85,85,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,85,85,85,85,85,85, -->
-<!-- 85,85,85,0,85,0,0,0,0,0,0,0,85,0,0,0,0,0,0,0,0,0,0,0,0,0,0,85,85,85, -->
-<!-- 85,0,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,0,0,0,0,0,0,0,85,0,85, -->
-<!-- 85,85,85,0,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,85,0,0,0,85,85,85, -->
-<!-- 85,85,85,85,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,85,85,85,85,85,0,0,0,85,85,85, -->
-<!-- 85,85,0,85,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,85,85,0,0,0,0,0,85,85,85, -->
-<!-- 85,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,85,85,85, -->
-<!-- 85,85,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,85,85,85,85, -->
-<!-- 0,85,0,0,0,85,0,0,0,85,0,85,85,85,0,85,85,85,85,85,0,85,85,85,85,0,85,85,85,85, -->
-<!-- 85,85,0,0,0,85,85,85,85,85,85,85,85,85,0,0,85,85,0,85,85,85,85,85,85,85,85,85,85,85, -->
-<!-- 85,85,0,0,0,0,0,85,85,85,85,85,0,0,0,0,0,0,0,0,0,85,85,85,85,85,0,85,85,85, -->
-<!-- 85,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,85,85,0,0,85,85, -->
-<!-- 85,85,85,85,0,0,0,0,0,0,0,0,0,0,85,0,0,0,0,0,0,0,0,0,85,85,85,85,85,85, -->
-<!-- 0,85,85,0,85,85,85,85,85,85,85,85,85,85,85,85,0,85,0,85,0,0,0,0,85,85,85,85,85,85 -->
-<!-- </data> -->
-<!--  </layer> -->
  <objectgroup id="4" name="player">
   <object id="7" name="player" type="player" x="90.6667" y="12" width="24" height="24"/>
+ </objectgroup>
+ <objectgroup id="7" name="trees">
+  <object id="9" name="tree" type="tree" gid="86" x="37" y="239" width="64" height="80"/>
+  <object id="10" name="tree" type="tree" gid="86" x="73" y="253" width="64" height="80"/>
+  <object id="11" name="tree" type="tree" gid="86" x="36" y="293" width="64" height="80"/>
+  <object id="20" name="tree" type="tree" gid="86" x="2" y="349" width="64" height="80"/>
+  <object id="21" name="tree" type="tree" gid="86" x="121" y="241" width="64" height="80"/>
+  <object id="22" name="tree" type="tree" gid="86" x="55" y="553" width="64" height="80"/>
+  <object id="23" name="tree" type="tree" gid="86" x="5" y="526" width="64" height="80"/>
+  <object id="25" name="tree" type="tree" gid="86" x="18" y="427" width="64" height="80"/>
+  <object id="26" name="tree" type="tree" gid="86" x="98" y="578" width="64" height="80"/>
+  <object id="27" name="tree" type="tree" gid="86" x="292" y="429" width="64" height="80"/>
+  <object id="28" name="tree" type="tree" gid="86" x="233" y="226" width="64" height="80"/>
+  <object id="29" name="tree" type="tree" gid="86" x="189" y="77" width="64" height="80"/>
+  <object id="30" name="tree" type="tree" gid="86" x="272" y="817" width="64" height="80"/>
+  <object id="31" name="tree" type="tree" gid="86" x="29" y="693" width="64" height="80"/>
+  <object id="32" name="tree" type="tree" gid="86" x="748" y="843" width="64" height="80"/>
+  <object id="33" name="tree" type="tree" gid="86" x="519" y="795" width="64" height="80"/>
+  <object id="34" name="tree" type="tree" gid="86" x="407" y="592" width="64" height="80"/>
+  <object id="35" name="tree" type="tree" gid="86" x="667" y="399" width="64" height="80"/>
+  <object id="36" name="tree" type="tree" gid="86" x="747" y="199" width="64" height="80"/>
+  <object id="37" name="tree" type="tree" gid="86" x="509" y="97" width="64" height="80"/>
  </objectgroup>
 </map>

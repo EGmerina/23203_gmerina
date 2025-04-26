@@ -13,10 +13,11 @@ import com.almasb.fxgl.pathfinding.astar.AStarMoveComponent;
 import com.almasb.fxgl.physics.BoundingShape;
 import com.almasb.fxgl.physics.HitBox;
 import com.almasb.fxgl.texture.AnimatedTexture;
+import com.almasb.fxgl.texture.Texture;
 import com.example.game2d.components.PaletteChangingComponent;
 import com.example.game2d.components.PlayerComponent;
 import com.example.game2d.components.ai.DelayedChasePlayerComponent;
-import com.example.game2d.components.ai.GuardCoinComponent;
+//import com.example.game2d.components.ai.GuardCoinComponent;
 import javafx.geometry.Point2D;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
@@ -78,5 +79,15 @@ public class GameFactory implements EntityFactory {
                 .build();
     }
 
+    @Spawns("tree")
+    public Entity newTree(SpawnData data) {
+        Texture view = texture("tree_2.png");
+        return entityBuilder(data)
+                .type(TREE)
+                .bbox(new HitBox(new Point2D(4, 4), BoundingShape.box(64, 80)))
+                .anchorFromCenter()
+                .zIndex(100)
+                .build();
+    }
 
 }

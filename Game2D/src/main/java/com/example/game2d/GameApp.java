@@ -98,6 +98,12 @@ public class GameApp extends GameApplication {
 
         setLevelFromMap("tmx/level1.tmx");
 
+        getGameWorld().getEntities().forEach(e -> {
+            if (e.getProperties().exists("zIndex")) {
+                int z = e.getInt("zIndex");
+                e.getViewComponent().setZIndex(z);
+            }
+        });
         grid = AStarGrid.fromWorld(getGameWorld(), 30, 30, BLOCK_SIZE, BLOCK_SIZE, (type) -> {
 //            if (type == WALL || type == BRICK || type == PLAYER_FLAG || type == ENEMY_FLAG)
 //                return CellState.NOT_WALKABLE;
