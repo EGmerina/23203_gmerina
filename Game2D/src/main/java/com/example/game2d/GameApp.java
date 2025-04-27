@@ -92,7 +92,7 @@ public class GameApp extends GameApplication {
 
     @Override
     protected void initGame() {
-        getGameScene().setBackgroundColor(Color.LIGHTGRAY);
+        getGameScene().setBackgroundColor(Color.DARKGREEN);
 
         getGameWorld().addEntityFactory(new GameFactory());
 
