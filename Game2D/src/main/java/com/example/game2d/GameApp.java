@@ -109,8 +109,8 @@ public class GameApp extends GameApplication {
             }
         });
         grid = AStarGrid.fromWorld(getGameWorld(), 30, 30, BLOCK_SIZE, BLOCK_SIZE, (type) -> {
-            if (type == RUNNER | type == PLAYER)
-                return CellState.NOT_WALKABLE;
+//            if (type == RUNNER | type == PLAYER)
+//                return CellState.NOT_WALKABLE;
 
             return CellState.WALKABLE;
         });
