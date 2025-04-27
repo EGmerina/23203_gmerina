@@ -59,7 +59,7 @@ public class GameFactory implements EntityFactory {
                 .type(PLAYER)
                 .bbox(new HitBox(new Point2D(4, 4), BoundingShape.box(32, 32)))
                 .anchorFromCenter()
-               // .view(view.loop())
+                // .view(view.loop())
                 .with(new CollidableComponent(true))
                 .with(new CellMoveComponent(BLOCK_SIZE, BLOCK_SIZE, 200).allowRotation(false))
                 // there is no grid constructed yet, so pass lazily
@@ -71,15 +71,15 @@ public class GameFactory implements EntityFactory {
 
     @Spawns("runner")
     public Entity newRunner(SpawnData data) {
-        AnimatedTexture view = texture("player.png").toAnimatedTexture(2, Duration.seconds(0.33));
+        // AnimatedTexture view = texture("player.png").toAnimatedTexture(2, Duration.seconds(0.33));
 
         return entityBuilder(data)
                 .type(RUNNER)
                 .bbox(new HitBox(new Point2D(4, 4), BoundingShape.box(32, 32)))
                 .anchorFromCenter()
-                .view(view.loop())
+                // .view(view.loop())
                 .with(new CollidableComponent(true))
-                .with(new CellMoveComponent(BLOCK_SIZE, BLOCK_SIZE, 100).allowRotation(true))
+                .with(new CellMoveComponent(BLOCK_SIZE, BLOCK_SIZE, 100).allowRotation(false))
                 // there is no grid constructed yet, so pass lazily
                 .with(new AStarMoveComponent(new LazyValue<>(() -> geto("grid"))))
                 .with(new RunnerComponent())

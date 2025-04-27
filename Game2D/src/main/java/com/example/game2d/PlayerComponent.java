@@ -135,7 +135,6 @@ public class PlayerComponent extends Component {
 
     @Override
     public void onAdded() {
-        entity.getTransformComponent().setScaleOrigin(new Point2D(16, 21));
         entity.getViewComponent().addChild(texture);
 
     }
