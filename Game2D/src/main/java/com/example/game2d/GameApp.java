@@ -2,6 +2,7 @@ package com.example.game2d;
 
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
+import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.level.Level;
 import com.almasb.fxgl.entity.level.text.TextLevelLoader;
@@ -9,6 +10,7 @@ import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.pathfinding.CellState;
 import com.almasb.fxgl.pathfinding.astar.AStarGrid;
 import com.almasb.fxgl.pathfinding.astar.AStarMoveComponent;
+import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.ui.UI;
 import com.example.game2d.components.PlayerComponent;
 import javafx.scene.input.KeyCode;
@@ -115,6 +117,17 @@ public class GameApp extends GameApplication {
         playerComponent.getEntity().addComponent(new AStarMoveComponent(grid));
     }
 
+    @Override
+    protected void initPhysics() {
+        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(GameType.PLAYER, GameType.TREE) {
+            @Override
+            protected void onCollision(Entity player, Entity tree) {
+                FXGL.getDialogService().showMessageBox("Game Over! You hit a tree!", () -> {
+                    FXGL.getGameController().gotoMainMenu();
+                });
+            }
+        });
+    }
 
     public static void main(String[] args) {
         launch(args);

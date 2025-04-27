@@ -84,7 +84,8 @@ public class GameFactory implements EntityFactory {
         Texture view = texture("tree_2.png");
         return entityBuilder(data)
                 .type(TREE)
-                .bbox(new HitBox(new Point2D(4, 4), BoundingShape.box(64, 80)))
+                .with(new CollidableComponent(true))
+                .bbox(new HitBox(new Point2D(4, 4), BoundingShape.box(5, 60)))
                 .anchorFromCenter()
                 .zIndex(100)
                 .build();
