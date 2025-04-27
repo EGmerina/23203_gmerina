@@ -1,13 +1,11 @@
-package com.example.game2d.components;
+package com.example.game2d;
 
 import com.almasb.fxgl.entity.component.Component;
 import com.almasb.fxgl.entity.component.Required;
 import com.almasb.fxgl.pathfinding.CellMoveComponent;
-import com.almasb.fxgl.pathfinding.astar.AStarCell;
 import com.almasb.fxgl.pathfinding.astar.AStarMoveComponent;
-import javafx.scene.paint.Stop;
 
-import static com.example.game2d.components.PlayerComponent.MoveDirection.*;
+import static com.example.game2d.PlayerComponent.MoveDirection.*;
 
 
 @Required(AStarMoveComponent.class)

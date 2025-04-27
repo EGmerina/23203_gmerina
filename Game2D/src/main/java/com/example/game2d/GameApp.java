@@ -6,20 +6,13 @@ import com.almasb.fxgl.app.scene.FXGLMenu;
 import com.almasb.fxgl.app.scene.SceneFactory;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
-import com.almasb.fxgl.entity.level.Level;
-import com.almasb.fxgl.entity.level.text.TextLevelLoader;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.pathfinding.CellState;
 import com.almasb.fxgl.pathfinding.astar.AStarGrid;
 import com.almasb.fxgl.pathfinding.astar.AStarMoveComponent;
 import com.almasb.fxgl.physics.CollisionHandler;
-import com.almasb.fxgl.ui.UI;
-import com.example.game2d.components.PlayerComponent;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
-import javafx.util.Duration;
-
-import java.util.Map;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
 import static com.example.game2d.GameType.*;
@@ -116,8 +109,8 @@ public class GameApp extends GameApplication {
             }
         });
         grid = AStarGrid.fromWorld(getGameWorld(), 30, 30, BLOCK_SIZE, BLOCK_SIZE, (type) -> {
-//            if (type == WALL || type == BRICK || type == PLAYER_FLAG || type == ENEMY_FLAG)
-//                return CellState.NOT_WALKABLE;
+            if (type == RUNNER | type == PLAYER)
+                return CellState.NOT_WALKABLE;
 
             return CellState.WALKABLE;
         });
