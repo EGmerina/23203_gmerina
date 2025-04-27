@@ -8,7 +8,7 @@ import com.almasb.fxgl.pathfinding.astar.AStarMoveComponent;
 public class RunnerComponent extends Component {
     private AStarMoveComponent astar;
     private CellMoveComponent moveComponent;
-    private int PLAYER_SPACE_RADIOUS = 4;
+    private int PLAYER_SPACE_RADIOUS = 32 * 32;
 
     @Override
     public void onUpdate(double tpf) {
@@ -18,17 +18,20 @@ public class RunnerComponent extends Component {
     private void catchUp() {
         var player = FXGL.getGameWorld().getSingleton(GameType.PLAYER);
 
-        int playerX = player.call("getCellX");
-        int playerY = player.call("getCellY");
+        int playerX = (int) player.getX();
+        int playerY = (int) player.getY();
 
-        var myX = moveComponent.getCellX();
-        var myY = moveComponent.getCellY();
+        int playerCellX = player.call("getCellX");
+        int playerCellY = player.call("getCellY");
+
+        var myX = entity.getX();
+        var myY = entity.getY();
 
         if (Math.pow(myX - playerX, 2) + Math.pow(myY - playerY, 2) < PLAYER_SPACE_RADIOUS) {
             astar.stopMovement();
             return;
         }
-        astar.moveToCell(playerX, playerY);
+        astar.moveToCell(playerCellX, playerCellY);
 
     }
 }
