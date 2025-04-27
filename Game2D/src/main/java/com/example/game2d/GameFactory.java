@@ -53,15 +53,15 @@ public class GameFactory implements EntityFactory {
 
     @Spawns("player")
     public Entity newPlayer(SpawnData data) {
-        AnimatedTexture view = texture("player.png").toAnimatedTexture(2, Duration.seconds(0.33));
+        //AnimatedTexture view = texture("Artyom.png").toAnimatedTexture(16, Duration.seconds(0.33));
 
         return entityBuilder(data)
                 .type(PLAYER)
                 .bbox(new HitBox(new Point2D(4, 4), BoundingShape.box(32, 32)))
                 .anchorFromCenter()
-                .view(view.loop())
+               // .view(view.loop())
                 .with(new CollidableComponent(true))
-                .with(new CellMoveComponent(BLOCK_SIZE, BLOCK_SIZE, 200).allowRotation(true))
+                .with(new CellMoveComponent(BLOCK_SIZE, BLOCK_SIZE, 200).allowRotation(false))
                 // there is no grid constructed yet, so pass lazily
                 .with(new AStarMoveComponent(new LazyValue<>(() -> geto("grid"))))
                 .with(new PlayerComponent())
@@ -98,6 +98,7 @@ public class GameFactory implements EntityFactory {
                 .zIndex(100)
                 .build();
     }
+
     @Spawns("trail")
     public Entity newTrail(SpawnData data) {
         return entityBuilder(data)
