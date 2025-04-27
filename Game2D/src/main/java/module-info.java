@@ -3,4 +3,5 @@
  */
 open module pacman.main {
     requires com.almasb.fxgl.all;
+    requires annotations;
 }

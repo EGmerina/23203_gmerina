@@ -2,6 +2,8 @@ package com.example.game2d;
 
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
+import com.almasb.fxgl.app.scene.FXGLMenu;
+import com.almasb.fxgl.app.scene.SceneFactory;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.level.Level;
@@ -36,7 +38,14 @@ public class GameApp extends GameApplication {
         settings.setHeight(30 * 32);
         settings.setTitle("Game 2D");
         settings.setVersion("1.0");
-
+        settings.getCSSList().add("main.css");
+        settings.setMainMenuEnabled(true);
+        settings.setSceneFactory(new SceneFactory() {
+            @Override
+            public FXGLMenu newMainMenu() {
+                return new GameMainMenu();
+            }
+        });
     }
 
     @Override

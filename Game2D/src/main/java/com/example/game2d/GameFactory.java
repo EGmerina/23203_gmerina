@@ -85,9 +85,15 @@ public class GameFactory implements EntityFactory {
         return entityBuilder(data)
                 .type(TREE)
                 .with(new CollidableComponent(true))
-                .bbox(new HitBox(new Point2D(4, 4), BoundingShape.box(5, 60)))
+                .bbox(new HitBox(new Point2D(10, 10), BoundingShape.box(10, 30)))
                 .anchorFromCenter()
                 .zIndex(100)
+                .build();
+    }
+    @Spawns("trail")
+    public Entity newTrail(SpawnData data) {
+        return entityBuilder(data)
+                .type(TRAIL)
                 .build();
     }
 
