@@ -39,6 +39,7 @@ public class GameApp extends GameApplication {
     public static final int BLOCK_SIZE = 32;
     public static final int TIME_PER_LEVEL = 110;
     public static final int MAP_SIZE = 30;
+    private static final int UI_SIZE = 80;
 
     private PlayerComponent playerComponent;
     private AStarGrid grid;
@@ -46,8 +47,8 @@ public class GameApp extends GameApplication {
 
     @Override
     protected void initSettings(GameSettings settings) {
-        settings.setWidth(30 * 32);
-        settings.setHeight(30 * 32);
+        settings.setWidth(MAP_SIZE * BLOCK_SIZE + UI_SIZE);
+        settings.setHeight(MAP_SIZE * BLOCK_SIZE);
         settings.setTitle("Game 2D");
         settings.setVersion("1.0");
         settings.getCSSList().add("main.css");
@@ -137,6 +138,16 @@ public class GameApp extends GameApplication {
 
         playerComponent = getGameWorld().getSingleton(PLAYER).getComponent(PlayerComponent.class);
         playerComponent.getEntity().addComponent(new AStarMoveComponent(grid));
+
+        run(() -> inc("time", -1), Duration.seconds(1));
+
+        getWorldProperties().<Integer>addListener("time", (old, now) -> {
+            if (now == 0) {
+                FXGL.getDialogService().showMessageBox("Game Over! Time is up!", () -> {
+                    FXGL.getGameController().gotoMainMenu();
+                });
+            }
+        });
     }
 
     @Override
@@ -161,12 +172,13 @@ public class GameApp extends GameApplication {
 
     @Override
     protected void initGameVars(Map<String, Object> vars) {
-        vars.put("levelTime", 0.0);
+        vars.put("time", TIME_PER_LEVEL);
+        vars.put("score", 0);
     }
 
     @Override
     protected void onUpdate(double tpf) {
-        inc("levelTime", tpf);
+//        inc("time", tpf);
     }
 
     @Override

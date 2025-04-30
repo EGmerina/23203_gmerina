@@ -4,13 +4,13 @@
 <?import javafx.scene.layout.Pane?>
 <?import javafx.scene.shape.Rectangle?>
 
-<Pane fx:id="root" prefWidth="80" prefHeight="840"
+<Pane fx:id="root" prefWidth="80" prefHeight="960"
       xmlns="http://javafx.com/javafx/17"
       xmlns:fx="http://javafx.com/fxml/1">
 
-    <Rectangle fill="black" width="80" height="840" />
+    <Rectangle fill="black" width="80" height="960" />
 
     <Label fx:id="labelScore" translateX="10" translateY="790" textFill="white" />
-
+    <Label fx:id="labelTime" translateX="10" translateY="500" textFill="white" />
 
 </Pane>

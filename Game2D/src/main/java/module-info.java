@@ -1,7 +1,5 @@
-/**
- * @author Almas Baimagambetov (almaslvl@gmail.com)
- */
-open module pacman.main {
+
+open module src.main {
     requires com.almasb.fxgl.all;
     requires annotations;
 }
