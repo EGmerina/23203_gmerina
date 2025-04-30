@@ -151,22 +151,22 @@ public class GameApp extends GameApplication {
         });
     }
 
-//    @Override
-//    protected void initGameVars(Map<String, Object> vars) {
-//        vars.put("levelTime", 0.0);
-//    }
-//
-//    @Override
-//    protected void onUpdate(double tpf) {
-//        inc("levelTime", tpf);
-//    }
-//
-//    @Override
-//    protected void initUI() {
-//        UI ui = getAssetLoader().loadUI("game_ui.fxml", new UIController());
-//        ui.getRoot().setTranslateX(MAP_SIZE * BLOCK_SIZE);
-//        getGameScene().addUI(ui);
-//    }
+    @Override
+    protected void initGameVars(Map<String, Object> vars) {
+        vars.put("levelTime", 0.0);
+    }
+
+    @Override
+    protected void onUpdate(double tpf) {
+        inc("levelTime", tpf);
+    }
+
+    @Override
+    protected void initUI() {
+        UI ui = getAssetLoader().loadUI("game_ui.fxml", new UIController());
+        ui.getRoot().setTranslateX(MAP_SIZE * BLOCK_SIZE);
+        getGameScene().addUI(ui);
+    }
 
     public static void main(String[] args) {
         launch(args);

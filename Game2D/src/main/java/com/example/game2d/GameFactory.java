@@ -41,7 +41,7 @@ public class GameFactory implements EntityFactory {
 
     @Spawns("runner")
     public Entity newRunner(SpawnData data) {
-       return entityBuilder(data)
+        return entityBuilder(data)
                 .type(RUNNER)
                 .bbox(new HitBox(new Point2D(4, 4), BoundingShape.box(16, 32)))
                 .anchorFromCenter()
@@ -69,6 +69,26 @@ public class GameFactory implements EntityFactory {
         int height = data.get("height");
         return entityBuilder(data)
                 .type(TRAIL)
+                .bbox(new HitBox(BoundingShape.box(width, height)))
+                .build();
+    }
+
+    @Spawns("start")
+    public Entity newStart(SpawnData data) {
+        int width = data.get("width");
+        int height = data.get("height");
+        return entityBuilder(data)
+                .type(START)
+                .bbox(new HitBox(BoundingShape.box(width, height)))
+                .build();
+    }
+
+    @Spawns("end")
+    public Entity newEnd(SpawnData data) {
+        int width = data.get("width");
+        int height = data.get("height");
+        return entityBuilder(data)
+                .type(END)
                 .bbox(new HitBox(BoundingShape.box(width, height)))
                 .build();
     }
