@@ -14,7 +14,6 @@ import java.util.List;
 
 import static com.almasb.fxgl.dsl.FXGL.image;
 import static com.example.game2d.PlayerComponent.MoveDirection.*;
-import static com.example.game2d.PlayerComponent.MoveDirection.DOWN;
 
 public class RunnerComponent extends Component {
     private AStarMoveComponent astar;
@@ -60,14 +59,12 @@ public class RunnerComponent extends Component {
                 texture.loopAnimationChannel(animWalkDown);
             }
 
-        } else {
-            if (texture.getAnimationChannel() != animIdle) {
-                texture.loopAnimationChannel(animIdle);
-            }
-
         }
-
-
+//        else {
+//            if (texture.getAnimationChannel() != animIdle && currentMoveDir == STOP) {
+//                texture.loopAnimationChannel(animIdle);
+//            }
+//        }
 
     }
 

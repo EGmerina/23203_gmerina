@@ -116,13 +116,13 @@ public class GameApp extends GameApplication {
         getGameWorld().addEntityFactory(new GameFactory());
 
         setLevelFromMap("tmx/level1.tmx");
-
-        getGameWorld().getEntities().forEach(e -> {
-            if (e.getProperties().exists("zIndex")) {
-                int z = e.getInt("zIndex");
-                e.getViewComponent().setZIndex(z);
-            }
-        });
+//
+//        getGameWorld().getEntities().forEach(e -> {
+//            if (e.getProperties().exists("zIndex")) {
+//                int z = e.getInt("zIndex");
+//                e.getViewComponent().setZIndex(z);
+//            }
+//        });
 
 
         grid = AStarGrid.fromWorld(getGameWorld(), 30, 30, BLOCK_SIZE, BLOCK_SIZE, (type) -> {

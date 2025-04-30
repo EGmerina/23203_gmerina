@@ -84,12 +84,12 @@ public class PlayerComponent extends Component {
                 texture.loopAnimationChannel(animWalkDown);
             }
 
-        } else {
-            if (texture.getAnimationChannel() != animIdle) {
-                texture.loopAnimationChannel(animIdle);
-            }
-
         }
+//        else {
+//            if (texture.getAnimationChannel() != animIdle) {
+//                texture.loopAnimationChannel(animIdle);
+//            }
+//        }
 
         switch (currentMoveDir) {
             case UP:
