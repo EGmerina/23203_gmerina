@@ -20,12 +20,14 @@ import com.almasb.fxgl.pathfinding.CellState;
 import com.almasb.fxgl.pathfinding.astar.AStarGrid;
 import com.almasb.fxgl.pathfinding.astar.AStarMoveComponent;
 import com.almasb.fxgl.physics.CollisionHandler;
+import com.almasb.fxgl.ui.UI;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polyline;
 import javafx.util.Duration;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
@@ -35,6 +37,8 @@ import static com.example.game2d.GameType.*;
 public class GameApp extends GameApplication {
 
     public static final int BLOCK_SIZE = 32;
+    public static final int TIME_PER_LEVEL = 110;
+    public static final int MAP_SIZE = 30;
 
     private PlayerComponent playerComponent;
     private AStarGrid grid;
@@ -116,13 +120,6 @@ public class GameApp extends GameApplication {
         getGameWorld().addEntityFactory(new GameFactory());
 
         setLevelFromMap("tmx/level1.tmx");
-//
-//        getGameWorld().getEntities().forEach(e -> {
-//            if (e.getProperties().exists("zIndex")) {
-//                int z = e.getInt("zIndex");
-//                e.getViewComponent().setZIndex(z);
-//            }
-//        });
 
 
         grid = AStarGrid.fromWorld(getGameWorld(), 30, 30, BLOCK_SIZE, BLOCK_SIZE, (type) -> {
@@ -153,6 +150,23 @@ public class GameApp extends GameApplication {
             }
         });
     }
+
+//    @Override
+//    protected void initGameVars(Map<String, Object> vars) {
+//        vars.put("levelTime", 0.0);
+//    }
+//
+//    @Override
+//    protected void onUpdate(double tpf) {
+//        inc("levelTime", tpf);
+//    }
+//
+//    @Override
+//    protected void initUI() {
+//        UI ui = getAssetLoader().loadUI("game_ui.fxml", new UIController());
+//        ui.getRoot().setTranslateX(MAP_SIZE * BLOCK_SIZE);
+//        getGameScene().addUI(ui);
+//    }
 
     public static void main(String[] args) {
         launch(args);

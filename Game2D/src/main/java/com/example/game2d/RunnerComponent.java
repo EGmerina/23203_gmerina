@@ -19,6 +19,7 @@ public class RunnerComponent extends Component {
     private AStarMoveComponent astar;
     private CellMoveComponent moveComponent;
     private int PLAYER_SPACE_RADIOUS = 32 * 32;
+    private int MAX_SPACE_FROM_PLAYER = 32 * 32 * 120;
 
     private AnimatedTexture texture;
 
@@ -103,6 +104,9 @@ public class RunnerComponent extends Component {
 
         if (Math.pow(myX - playerX, 2) + Math.pow(myY - playerY, 2) < PLAYER_SPACE_RADIOUS) {
             astar.stopMovement();
+            return;
+        } else if (Math.pow(myX - playerX, 2) + Math.pow(myY - playerY, 2) > MAX_SPACE_FROM_PLAYER) {
+            FXGL.getGameWorld().removeEntity(entity);
             return;
         }
         astar.moveToCell(playerCellX, playerCellY);
