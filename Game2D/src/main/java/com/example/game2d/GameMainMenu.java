@@ -28,7 +28,7 @@ public class GameMainMenu extends FXGLMenu {
 
 
         StackPane root = new StackPane(box);
-        root.setPrefSize(FXGL.getAppWidth(), FXGL.getAppHeight());  // растягиваем на весь экран
+        root.setPrefSize(FXGL.getAppWidth(), FXGL.getAppHeight());  
 
         getContentRoot().getChildren().addAll(bg, root);
 

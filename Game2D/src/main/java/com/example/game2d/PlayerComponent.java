@@ -44,26 +44,25 @@ public class PlayerComponent extends Component {
     private AStarMoveComponent astar;
 
     private MoveDirection currentMoveDir = STOP;
-    private MoveDirection nextMoveDir = STOP;
 
     public void up() {
-        nextMoveDir = UP;
+        currentMoveDir = UP;
     }
 
     public void down() {
-        nextMoveDir = DOWN;
+        currentMoveDir = DOWN;
     }
 
     public void left() {
-        nextMoveDir = LEFT;
+        currentMoveDir = LEFT;
     }
 
     public void right() {
-        nextMoveDir = RIGHT;
+        currentMoveDir = RIGHT;
     }
 
     public void stop() {
-        nextMoveDir = STOP;
+        currentMoveDir = STOP;
     }
 
     @Override
@@ -92,28 +91,6 @@ public class PlayerComponent extends Component {
 
         }
 
-        switch (nextMoveDir) {
-            case UP:
-                if (astar.getGrid().getUp(x, y).filter(c -> c.getState().isWalkable()).isPresent())
-                    currentMoveDir = nextMoveDir;
-                break;
-            case RIGHT:
-                if (astar.getGrid().getRight(x, y).filter(c -> c.getState().isWalkable()).isPresent())
-                    currentMoveDir = nextMoveDir;
-                break;
-            case DOWN:
-                if (astar.getGrid().getDown(x, y).filter(c -> c.getState().isWalkable()).isPresent())
-                    currentMoveDir = nextMoveDir;
-                break;
-            case LEFT:
-                if (astar.getGrid().getLeft(x, y).filter(c -> c.getState().isWalkable()).isPresent())
-                    currentMoveDir = nextMoveDir;
-                break;
-            case STOP:
-                currentMoveDir = nextMoveDir;
-                break;
-        }
-
         switch (currentMoveDir) {
             case UP:
                 astar.moveToUpCell();
@@ -136,8 +113,5 @@ public class PlayerComponent extends Component {
     @Override
     public void onAdded() {
         entity.getViewComponent().addChild(texture);
-
     }
-
-
 }

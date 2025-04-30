@@ -57,7 +57,7 @@ public class GameFactory implements EntityFactory {
         return entityBuilder(data)
                 .type(TREE)
                 .with(new CollidableComponent(true))
-                .bbox(new HitBox(new Point2D(32, 40), BoundingShape.box(15, 35)))
+                .bbox(new HitBox(new Point2D(32, 40), BoundingShape.box(10, 30)))
                 .anchorFromCenter()
                 .zIndex(100)
                 .build();

@@ -13,13 +13,5 @@ public class PlayerTreeHandler extends CollisionHandler {
 
     @Override
     protected void onCollisionBegin(Entity player, Entity tree) {
-//        Entity keyEntity = tree.getObject("keyEntity");
-//
-//        if (!keyEntity.isActive()) {
-//            keyEntity.setProperty("activated", false);
-//            getGameWorld().addEntity(keyEntity);
-//        }
-//
-//        keyEntity.setOpacity(1);
     }
 }
