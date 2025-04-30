@@ -12,7 +12,7 @@ import javafx.util.Duration;
 
 import java.util.List;
 
-import static com.almasb.fxgl.dsl.FXGL.image;
+import static com.almasb.fxgl.dsl.FXGL.*;
 import static com.example.game2d.PlayerComponent.MoveDirection.*;
 
 public class RunnerComponent extends Component {
@@ -49,7 +49,6 @@ public class RunnerComponent extends Component {
         currentMoveDir = getCurrentMovDir();
 
         if (astar.isMoving()) {
-
             if (texture.getAnimationChannel() != animWalkRight && currentMoveDir == RIGHT) {
                 texture.loopAnimationChannel(animWalkRight);
             } else if (texture.getAnimationChannel() != animWalkLeft && currentMoveDir == LEFT) {
@@ -107,6 +106,7 @@ public class RunnerComponent extends Component {
             return;
         } else if (Math.pow(myX - playerX, 2) + Math.pow(myY - playerY, 2) > MAX_SPACE_FROM_PLAYER) {
             FXGL.getGameWorld().removeEntity(entity);
+            inc("score", -300);
             return;
         }
         astar.moveToCell(playerCellX, playerCellY);
@@ -116,7 +116,7 @@ public class RunnerComponent extends Component {
     @Override
     public void onAdded() {
         entity.getViewComponent().addChild(texture);
-
+        run(() -> inc("score", 1), Duration.seconds(1));
     }
 }
 

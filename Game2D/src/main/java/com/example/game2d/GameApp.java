@@ -37,7 +37,7 @@ import static com.example.game2d.GameType.*;
 public class GameApp extends GameApplication {
 
     public static final int BLOCK_SIZE = 32;
-    public static final int TIME_PER_LEVEL = 110;
+    public static final int TIME_PER_LEVEL = 50;
     public static final int MAP_SIZE = 30;
     private static final int UI_SIZE = 80;
 
@@ -163,7 +163,7 @@ public class GameApp extends GameApplication {
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(GameType.PLAYER, GameType.END) {
             @Override
             protected void onCollision(Entity player, Entity tree) {
-                FXGL.getDialogService().showMessageBox("Well done!!! You ran all the way to the end :)", () -> {
+                FXGL.getDialogService().showMessageBox("Well done!!! You ran all the way to the end :)\nScore: " + FXGL.getWorldProperties().getInt("score"), () -> {
                     FXGL.getGameController().gotoMainMenu();
                 });
             }

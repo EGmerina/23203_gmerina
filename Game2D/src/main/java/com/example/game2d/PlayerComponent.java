@@ -11,6 +11,7 @@ import javafx.scene.image.Image;
 import javafx.util.Duration;
 
 import static com.almasb.fxgl.dsl.FXGL.image;
+import static com.almasb.fxgl.dsl.FXGL.inc;
 import static com.example.game2d.PlayerComponent.MoveDirection.*;
 
 
@@ -94,15 +95,19 @@ public class PlayerComponent extends Component {
         switch (currentMoveDir) {
             case UP:
                 astar.moveToUpCell();
+                inc("score", 1);
                 break;
             case RIGHT:
                 astar.moveToRightCell();
+                inc("score", 1);
                 break;
             case DOWN:
                 astar.moveToDownCell();
+                inc("score", 1);
                 break;
             case LEFT:
                 astar.moveToLeftCell();
+                inc("score", 1);
                 break;
             case STOP:
                 astar.stopMovement();
