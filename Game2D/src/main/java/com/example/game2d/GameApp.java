@@ -4,12 +4,18 @@ import com.almasb.fxgl.animation.Interpolators;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.app.scene.FXGLMenu;
+import com.almasb.fxgl.app.scene.LoadingScene;
 import com.almasb.fxgl.app.scene.SceneFactory;
+import com.almasb.fxgl.app.services.FXGLAssetLoaderService;
 import com.almasb.fxgl.core.math.Vec2;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.SpawnData;
+import com.almasb.fxgl.entity.level.Level;
+import com.almasb.fxgl.entity.level.tiled.TMXLevelLoader;
+import com.almasb.fxgl.entity.level.tiled.TiledMap;
 import com.almasb.fxgl.input.UserAction;
+import com.almasb.fxgl.io.FileSystemService;
 import com.almasb.fxgl.pathfinding.CellState;
 import com.almasb.fxgl.pathfinding.astar.AStarGrid;
 import com.almasb.fxgl.pathfinding.astar.AStarMoveComponent;
@@ -32,6 +38,7 @@ public class GameApp extends GameApplication {
 
     private PlayerComponent playerComponent;
     private AStarGrid grid;
+    private AStarGrid runnerGrid;
 
     @Override
     protected void initSettings(GameSettings settings) {
@@ -116,21 +123,20 @@ public class GameApp extends GameApplication {
                 e.getViewComponent().setZIndex(z);
             }
         });
-        grid = AStarGrid.fromWorld(getGameWorld(), 30, 30, BLOCK_SIZE, BLOCK_SIZE, (type) -> {
-            if (type == TRAIL)
-                return CellState.NOT_WALKABLE;
 
+
+        grid = AStarGrid.fromWorld(getGameWorld(), 30, 30, BLOCK_SIZE, BLOCK_SIZE, (type) -> {
             return CellState.WALKABLE;
         });
         set("grid", grid);
-        var waypoints = FXGL.getGameWorld().getObjectGroup("waypoints")
-                .getObject("way1")
-                .getPolyline(); // получаем точки полилинии
 
-        // Преобразуем в список Vec2 (если нужно)
-        List<Vec2> path = waypoints.getPoints().stream()
-                .map(p -> Vec2.fromPixels(p.x, p.y))
-                .collect(Collectors.toList());
+        runnerGrid = AStarGrid.fromWorld(getGameWorld(), 30, 30, BLOCK_SIZE, BLOCK_SIZE, (type) -> {
+            if (type == TRAIL)
+                return CellState.WALKABLE;
+
+            return CellState.NOT_WALKABLE;
+        });
+        set("runnerGrid", runnerGrid);
 
         playerComponent = getGameWorld().getSingleton(PLAYER).getComponent(PlayerComponent.class);
         playerComponent.getEntity().addComponent(new AStarMoveComponent(grid));

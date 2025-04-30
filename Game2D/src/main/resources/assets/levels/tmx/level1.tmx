@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="12" nextobjectid="41">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="13" nextobjectid="130">
  <tileset firstgid="1" name="GRASS+" tilewidth="32" tileheight="32" tilecount="84" columns="12">
   <image source="GRASS+.png" trans="ffffff" width="400" height="224"/>
  </tileset>
@@ -12,6 +12,44 @@
  <tileset firstgid="87" name="trail" tilewidth="32" tileheight="32" tilecount="1" columns="1">
   <image source="trail.png" trans="ffffff" width="32" height="32"/>
  </tileset>
+ <objectgroup id="12" name="trail">
+  <object id="74" type="trail" x="67" y="0" width="91" height="62"/>
+  <object id="76" type="trail" x="98.5" y="63" width="91" height="62"/>
+  <object id="77" type="trail" x="188.5" y="95" width="353" height="32"/>
+  <object id="78" type="trail" x="256.5" y="61" width="252" height="32"/>
+  <object id="79" type="trail" x="191" y="127" width="31" height="32"/>
+  <object id="80" type="trail" x="383.5" y="222" width="446" height="32"/>
+  <object id="81" type="trail" x="609" y="477" width="252" height="32"/>
+  <object id="82" type="trail" x="447" y="446" width="449" height="32"/>
+  <object id="83" type="trail" x="449" y="257" width="190" height="32"/>
+  <object id="84" type="trail" x="384" y="189" width="92" height="32"/>
+  <object id="85" type="trail" x="415" y="158" width="128" height="32"/>
+  <object id="86" type="trail" x="480" y="129" width="62" height="32"/>
+  <object id="87" type="trail" x="737" y="257" width="156" height="32"/>
+  <object id="88" type="trail" x="801" y="290" width="95" height="32"/>
+  <object id="89" type="trail" x="481" y="414" width="188" height="32"/>
+  <object id="90" type="trail" x="860" y="326" width="38" height="119"/>
+  <object id="91" type="trail" x="891" y="350.5" width="38" height="64"/>
+  <object id="92" type="trail" x="830.5" y="413" width="31" height="32"/>
+  <object id="93" type="trail" x="257" y="478" width="252" height="32"/>
+  <object id="94" type="trail" x="225" y="513" width="252" height="32"/>
+  <object id="95" type="trail" x="226" y="865" width="252" height="61"/>
+  <object id="96" type="trail" x="416" y="705.5" width="38" height="161"/>
+  <object id="97" type="trail" x="446" y="609.5" width="33" height="259"/>
+  <object id="98" type="trail" x="672.5" y="606.5" width="62" height="351"/>
+  <object id="99" type="trail" x="160" y="575.5" width="32" height="190"/>
+  <object id="100" type="trail" x="126" y="641" width="32" height="190"/>
+  <object id="101" type="trail" x="641.5" y="768" width="31" height="32"/>
+  <object id="102" type="trail" x="736.5" y="862" width="31" height="98"/>
+  <object id="103" type="trail" x="737.5" y="640" width="31" height="98"/>
+  <object id="104" type="trail" x="640.5" y="575" width="31" height="127"/>
+  <object id="105" type="trail" x="160.5" y="801.5" width="31" height="97"/>
+  <object id="106" type="trail" x="194.5" y="832.5" width="31" height="64"/>
+  <object id="107" type="trail" x="190.5" y="543" width="31" height="64"/>
+  <object id="108" type="trail" x="222.5" y="548" width="31" height="32"/>
+  <object id="109" type="trail" x="479" y="575" width="161" height="63"/>
+  <object id="110" type="trail" x="480.5" y="641" width="63" height="32"/>
+ </objectgroup>
  <layer id="1" name="floor" width="30" height="30">
   <data encoding="csv">
 35,35,30,30,30,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,
@@ -46,17 +84,6 @@
 35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,35,30,30,30,35,35,35,35,35,35
 </data>
  </layer>
- <objectgroup id="11" name="waypoints">
-  <object id="70" name="way1" type="waypoint" x="0" y="576">
-   <polyline points="130,-539 178,-464 501,-458 491,-401 411,-341 604,-317 807,-322 876,-256 851,-91 728,-83 609,-128 485.75,-109.375 290.5,-56.75 237.063,-21.8438 173.625,58.0625 152.75,239.875 238,331.5 434.5,328.75 483,68 663,52 722,365"/>
-  </object>
- </objectgroup>
- <objectgroup id="4" name="player">
-  <object id="7" name="player" type="player" x="90.6667" y="12" width="24" height="24"/>
- </objectgroup>
- <objectgroup id="8" name="runners">
-  <object id="38" name="runner" type="runner" x="135" y="22"/>
- </objectgroup>
  <objectgroup id="7" name="trees">
   <object id="9" name="tree" type="tree" gid="86" x="37" y="239" width="64" height="80"/>
   <object id="10" name="tree" type="tree" gid="86" x="73" y="253" width="64" height="80"/>
@@ -77,5 +104,30 @@
   <object id="35" name="tree" type="tree" gid="86" x="667" y="399" width="64" height="80"/>
   <object id="36" name="tree" type="tree" gid="86" x="747" y="199" width="64" height="80"/>
   <object id="37" name="tree" type="tree" gid="86" x="509" y="97" width="64" height="80"/>
+  <object id="111" name="tree" type="tree" gid="86" x="382" y="354" width="64" height="80"/>
+  <object id="112" name="tree" type="tree" gid="86" x="480" y="372" width="64" height="80"/>
+  <object id="113" name="tree" type="tree" gid="86" x="296" y="262" width="64" height="80"/>
+  <object id="114" name="tree" type="tree" gid="86" x="160" y="311" width="64" height="80"/>
+  <object id="115" name="tree" type="tree" gid="86" x="151" y="376" width="64" height="80"/>
+  <object id="116" name="tree" type="tree" gid="86" x="89" y="355" width="64" height="80"/>
+  <object id="117" name="tree" type="tree" gid="86" x="244" y="345" width="64" height="80"/>
+  <object id="118" name="tree" type="tree" gid="86" x="555" y="215" width="64" height="80"/>
+  <object id="119" name="tree" type="tree" gid="86" x="641" y="213" width="64" height="80"/>
+  <object id="120" name="tree" type="tree" gid="86" x="318" y="62" width="64" height="80"/>
+  <object id="121" name="tree" type="tree" gid="86" x="850" y="235" width="64" height="80"/>
+  <object id="122" name="tree" type="tree" gid="86" x="783" y="611" width="64" height="80"/>
+  <object id="123" name="tree" type="tree" gid="86" x="283" y="637" width="64" height="80"/>
+  <object id="124" name="tree" type="tree" gid="86" x="531" y="557" width="64" height="80"/>
+  <object id="125" name="tree" type="tree" gid="86" x="549" y="716" width="64" height="80"/>
+  <object id="126" name="tree" type="tree" gid="86" x="589" y="759" width="64" height="80"/>
+  <object id="127" name="tree" type="tree" gid="86" x="606" y="919" width="64" height="80"/>
+  <object id="128" name="tree" type="tree" gid="86" x="490" y="862" width="64" height="80"/>
+  <object id="129" name="tree" type="tree" gid="86" x="856" y="707" width="64" height="80"/>
+ </objectgroup>
+ <objectgroup id="8" name="runners">
+  <object id="38" name="runner" type="runner" x="135" y="22"/>
+ </objectgroup>
+ <objectgroup id="4" name="player">
+  <object id="7" name="player" type="player" x="90.6667" y="12" width="24" height="24"/>
  </objectgroup>
 </map>

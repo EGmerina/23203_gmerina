@@ -21,17 +21,13 @@ public class RunnerComponent extends Component {
     private CellMoveComponent moveComponent;
     private int PLAYER_SPACE_RADIOUS = 32 * 32;
 
-    private List<Point2D> waypoints;
-    private Point2D nextWaypoint;
-
     private AnimatedTexture texture;
 
     private AnimationChannel animIdle, animWalkRight, animWalkLeft, animWalkUp, animWalkDown;
 
     private PlayerComponent.MoveDirection currentMoveDir = STOP;
 
-    public RunnerComponent(Way way) {
-        waypoints = way.getWaypoints();
+    public RunnerComponent() {
 
         Image image = image("runner.png");
 
@@ -119,8 +115,6 @@ public class RunnerComponent extends Component {
     @Override
     public void onAdded() {
         entity.getViewComponent().addChild(texture);
-        nextWaypoint = waypoints.remove(0);
-        entity.setPosition(nextWaypoint);
 
     }
 }

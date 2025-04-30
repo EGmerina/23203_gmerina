@@ -14,6 +14,8 @@ import com.almasb.fxgl.texture.AnimatedTexture;
 import com.almasb.fxgl.texture.Texture;
 //import com.example.game2d.components.ai.GuardCoinComponent;
 import javafx.geometry.Point2D;
+import javafx.scene.paint.Color;
+import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
@@ -81,8 +83,8 @@ public class GameFactory implements EntityFactory {
                 .with(new CollidableComponent(true))
                 .with(new CellMoveComponent(BLOCK_SIZE, BLOCK_SIZE, 100).allowRotation(false))
                 // there is no grid constructed yet, so pass lazily
-                .with(new AStarMoveComponent(new LazyValue<>(() -> geto("grid"))))
-                .with(new RunnerComponent(data.get("way")))
+                .with(new AStarMoveComponent(new LazyValue<>(() -> geto("runnerGrid"))))
+                .with(new RunnerComponent())
                 .rotationOrigin(35 / 2.0, 40 / 2.0)
                 .build();
     }
@@ -101,15 +103,18 @@ public class GameFactory implements EntityFactory {
 
     @Spawns("trail")
     public Entity newTrail(SpawnData data) {
+        int width = data.get("width");
+        int height = data.get("height");
         return entityBuilder(data)
                 .type(TRAIL)
+                .bbox(new HitBox(BoundingShape.box(width, height)))
                 .build();
     }
-
-    @Spawns("waypoint")
-    public Entity newWaypoint(SpawnData data) {
-        return entityBuilder(data)
-                .type(WAY)
-                .build();
-    }
+//
+//    @Spawns("waypoint")
+//    public Entity newWaypoint(SpawnData data) {
+//        return entityBuilder(data)
+//                .type(WAY)
+//                .build();
+//    }
 }
