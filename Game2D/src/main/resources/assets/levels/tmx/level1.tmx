@@ -86,7 +86,7 @@
  </layer>
  <objectgroup id="13" name="start_end">
   <object id="138" name="start" type="start" x="66" y="3" width="96" height="59"/>
-  <object id="141" name="end" type="end" x="672" y="900.5" width="96" height="59"/>
+  <object id="141" name="end" type="end" x="672" y="920.5" width="96" height="39"/>
  </objectgroup>
  <objectgroup id="7" name="trees">
   <object id="9" name="tree" type="tree" gid="86" x="37" y="239" width="64" height="80"/>

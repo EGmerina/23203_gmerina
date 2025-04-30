@@ -149,6 +149,14 @@ public class GameApp extends GameApplication {
                 });
             }
         });
+        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(GameType.PLAYER, GameType.END) {
+            @Override
+            protected void onCollision(Entity player, Entity tree) {
+                FXGL.getDialogService().showMessageBox("Well done!!! You ran all the way to the end :)", () -> {
+                    FXGL.getGameController().gotoMainMenu();
+                });
+            }
+        });
     }
 
     @Override

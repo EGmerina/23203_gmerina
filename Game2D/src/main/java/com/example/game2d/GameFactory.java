@@ -79,6 +79,7 @@ public class GameFactory implements EntityFactory {
         int height = data.get("height");
         return entityBuilder(data)
                 .type(START)
+                .with(new CollidableComponent(true))
                 .bbox(new HitBox(BoundingShape.box(width, height)))
                 .build();
     }
@@ -89,6 +90,7 @@ public class GameFactory implements EntityFactory {
         int height = data.get("height");
         return entityBuilder(data)
                 .type(END)
+                .with(new CollidableComponent(true))
                 .bbox(new HitBox(BoundingShape.box(width, height)))
                 .build();
     }
