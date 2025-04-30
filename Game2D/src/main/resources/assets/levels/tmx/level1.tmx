@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="13" nextobjectid="130">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="13" nextobjectid="138">
  <tileset firstgid="1" name="GRASS+" tilewidth="32" tileheight="32" tilecount="84" columns="12">
   <image source="GRASS+.png" trans="ffffff" width="400" height="224"/>
  </tileset>
@@ -123,6 +123,13 @@
   <object id="127" name="tree" type="tree" gid="86" x="606" y="919" width="64" height="80"/>
   <object id="128" name="tree" type="tree" gid="86" x="490" y="862" width="64" height="80"/>
   <object id="129" name="tree" type="tree" gid="86" x="856" y="707" width="64" height="80"/>
+  <object id="130" name="tree" type="tree" gid="85" x="130" y="452" width="64" height="64"/>
+  <object id="132" name="tree" type="tree" gid="85" x="350" y="648" width="64" height="64"/>
+  <object id="133" name="tree" type="tree" gid="85" x="33" y="853" width="64" height="64"/>
+  <object id="134" name="tree" type="tree" gid="85" x="549" y="846" width="64" height="64"/>
+  <object id="135" name="tree" type="tree" gid="85" x="605" y="358" width="64" height="64"/>
+  <object id="136" name="tree" type="tree" gid="85" x="672" y="113" width="64" height="64"/>
+  <object id="137" name="tree" type="tree" gid="85" x="834" y="725" width="64" height="64"/>
  </objectgroup>
  <objectgroup id="8" name="runners">
   <object id="38" name="runner" type="runner" x="135" y="22"/>
