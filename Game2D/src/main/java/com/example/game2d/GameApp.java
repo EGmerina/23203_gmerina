@@ -1,11 +1,14 @@
 package com.example.game2d;
 
+import com.almasb.fxgl.animation.Interpolators;
 import com.almasb.fxgl.app.GameApplication;
 import com.almasb.fxgl.app.GameSettings;
 import com.almasb.fxgl.app.scene.FXGLMenu;
 import com.almasb.fxgl.app.scene.SceneFactory;
+import com.almasb.fxgl.core.math.Vec2;
 import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
+import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.pathfinding.CellState;
 import com.almasb.fxgl.pathfinding.astar.AStarGrid;
@@ -13,6 +16,11 @@ import com.almasb.fxgl.pathfinding.astar.AStarMoveComponent;
 import com.almasb.fxgl.physics.CollisionHandler;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
+import javafx.scene.shape.Polyline;
+import javafx.util.Duration;
+
+import java.util.List;
+import java.util.stream.Collectors;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
 import static com.example.game2d.GameType.*;
@@ -109,12 +117,21 @@ public class GameApp extends GameApplication {
             }
         });
         grid = AStarGrid.fromWorld(getGameWorld(), 30, 30, BLOCK_SIZE, BLOCK_SIZE, (type) -> {
-//            if (type == RUNNER | type == PLAYER)
-//                return CellState.NOT_WALKABLE;
+            if (type == TRAIL)
+                return CellState.NOT_WALKABLE;
 
             return CellState.WALKABLE;
         });
         set("grid", grid);
+        var waypoints = FXGL.getGameWorld().getObjectGroup("waypoints")
+                .getObject("way1")
+                .getPolyline(); // получаем точки полилинии
+
+        // Преобразуем в список Vec2 (если нужно)
+        List<Vec2> path = waypoints.getPoints().stream()
+                .map(p -> Vec2.fromPixels(p.x, p.y))
+                .collect(Collectors.toList());
+
         playerComponent = getGameWorld().getSingleton(PLAYER).getComponent(PlayerComponent.class);
         playerComponent.getEntity().addComponent(new AStarMoveComponent(grid));
     }

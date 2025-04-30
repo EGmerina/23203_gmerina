@@ -10,6 +10,8 @@ import javafx.geometry.Point2D;
 import javafx.scene.image.Image;
 import javafx.util.Duration;
 
+import java.util.List;
+
 import static com.almasb.fxgl.dsl.FXGL.image;
 import static com.example.game2d.PlayerComponent.MoveDirection.*;
 import static com.example.game2d.PlayerComponent.MoveDirection.DOWN;
@@ -19,13 +21,17 @@ public class RunnerComponent extends Component {
     private CellMoveComponent moveComponent;
     private int PLAYER_SPACE_RADIOUS = 32 * 32;
 
+    private List<Point2D> waypoints;
+    private Point2D nextWaypoint;
+
     private AnimatedTexture texture;
 
     private AnimationChannel animIdle, animWalkRight, animWalkLeft, animWalkUp, animWalkDown;
 
     private PlayerComponent.MoveDirection currentMoveDir = STOP;
 
-    public RunnerComponent() {
+    public RunnerComponent(Way way) {
+        waypoints = way.getWaypoints();
 
         Image image = image("runner.png");
 
@@ -64,6 +70,9 @@ public class RunnerComponent extends Component {
             }
 
         }
+
+
+
     }
 
     private PlayerComponent.MoveDirection getCurrentMovDir() {
@@ -110,6 +119,8 @@ public class RunnerComponent extends Component {
     @Override
     public void onAdded() {
         entity.getViewComponent().addChild(texture);
+        nextWaypoint = waypoints.remove(0);
+        entity.setPosition(nextWaypoint);
 
     }
 }

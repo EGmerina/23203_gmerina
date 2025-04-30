@@ -82,7 +82,7 @@ public class GameFactory implements EntityFactory {
                 .with(new CellMoveComponent(BLOCK_SIZE, BLOCK_SIZE, 100).allowRotation(false))
                 // there is no grid constructed yet, so pass lazily
                 .with(new AStarMoveComponent(new LazyValue<>(() -> geto("grid"))))
-                .with(new RunnerComponent())
+                .with(new RunnerComponent(data.get("way")))
                 .rotationOrigin(35 / 2.0, 40 / 2.0)
                 .build();
     }
@@ -106,4 +106,10 @@ public class GameFactory implements EntityFactory {
                 .build();
     }
 
+    @Spawns("waypoint")
+    public Entity newWaypoint(SpawnData data) {
+        return entityBuilder(data)
+                .type(WAY)
+                .build();
+    }
 }
