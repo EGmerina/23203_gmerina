@@ -148,6 +148,11 @@ public class GameApp extends GameApplication {
                 });
             }
         });
+
+        getGameScene().getViewport().bindToEntity(getGameWorld().getSingleton(PLAYER), getAppWidth()/2, getAppHeight()/2);
+        Entity cameraEntity = FXGL.entityBuilder()
+                .with(new CameraComponent(getGameWorld().getSingleton(PLAYER), 0.01)) // 0.1 - коэффициент плавности
+                .buildAndAttach();
     }
 
     @Override
