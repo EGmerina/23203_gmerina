@@ -12,7 +12,5 @@ Game2D/.mvn/*
 Game2D/logs/*
 Game2D/system/*
 Game2D/target/*
-Game2D/mvnw
-Game2D/mvnw.cmd
-Game2D/pom.xml
+.gitignore
 
