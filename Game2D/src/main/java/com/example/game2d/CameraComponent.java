@@ -10,19 +10,21 @@ public class CameraComponent extends Component {
 
     private Entity player;
     private double smoothness;
+    private int ZOOM = 2;
+    private int levelHeight = 30 * 32;
+    private int levelWidth = 30 * 32;
 
     public CameraComponent(Entity target, double smoothness) {
         if (target == null) return;
         this.player = target;
         this.smoothness = smoothness;
+
     }
 
     @Override
     public void onUpdate(double tpf) {
 
-        double cameraX = getGameScene().getViewport().getX();
-        double cameraY = getGameScene().getViewport().getY();
-
+//
 //        double targetX = Math.min(Math.max(0, player.getX() - getAppWidth() / 2),
 //                levelWidth - getAppWidth());
 //        double targetY = Math.min(Math.max(0, player.getY() - getAppHeight() / 2),
@@ -35,8 +37,8 @@ public class CameraComponent extends Component {
 
         // Вычисляем целевую позицию (центрируем камеру на цели)
         Point2D targetPos = new Point2D(
-                player.getX() - getGameScene().getViewport().getWidth() / 2,
-                player.getY() - getGameScene().getViewport().getHeight() / 2
+                Math.min(Math.max(player.getX() - levelWidth / (2 * ZOOM), 0), levelWidth / 2),
+                Math.min(Math.max(player.getY() - levelHeight / (2 * ZOOM), 0), levelHeight / 2)
         );
 
         // Плавная интерполяция между текущей и целевой позицией
@@ -46,6 +48,6 @@ public class CameraComponent extends Component {
         getGameScene().getViewport().setX(newPos.getX());
         getGameScene().getViewport().setY(newPos.getY());
 
-        getGameScene().getViewport().setZoom(2);
+
     }
 }

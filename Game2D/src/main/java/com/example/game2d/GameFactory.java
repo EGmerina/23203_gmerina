@@ -33,7 +33,7 @@ public class GameFactory implements EntityFactory {
                 .bbox(new HitBox(new Point2D(4, 4), BoundingShape.box(16, 32)))
                 .anchorFromCenter()
                 .with(new CollidableComponent(true))
-                .with(new CellMoveComponent(BLOCK_SIZE, BLOCK_SIZE, 200).allowRotation(false))
+                .with(new CellMoveComponent(BLOCK_SIZE, BLOCK_SIZE, 180).allowRotation(false))
                 .with(new AStarMoveComponent(new LazyValue<>(() -> geto("grid"))))
                 .with(new PlayerComponent())
                 .build();

@@ -31,6 +31,7 @@ import java.util.Map;
 import java.util.stream.Collectors;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
+import static com.almasb.fxgl.dsl.FXGLForKtKt.getGameScene;
 import static com.example.game2d.GameType.*;
 
 
@@ -149,10 +150,11 @@ public class GameApp extends GameApplication {
             }
         });
 
-        getGameScene().getViewport().bindToEntity(getGameWorld().getSingleton(PLAYER), getAppWidth()/2, getAppHeight()/2);
+        //getGameScene().getViewport().bindToEntity(getGameWorld().getSingleton(PLAYER), getAppWidth()/2, getAppHeight()/2);
         Entity cameraEntity = FXGL.entityBuilder()
-                .with(new CameraComponent(getGameWorld().getSingleton(PLAYER), 0.01)) // 0.1 - коэффициент плавности
+                .with(new CameraComponent(getGameWorld().getSingleton(PLAYER), 0.1)) // 0.1 - коэффициент плавности
                 .buildAndAttach();
+
     }
 
     @Override
@@ -171,6 +173,17 @@ public class GameApp extends GameApplication {
                 FXGL.getDialogService().showMessageBox("Well done!!! You ran all the way to the end :)\nScore: " + FXGL.getWorldProperties().getInt("score"), () -> {
                     FXGL.getGameController().gotoMainMenu();
                 });
+            }
+        });
+        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(GameType.PLAYER, START) {
+            @Override
+            protected void onCollision(Entity player, Entity tree) {
+                getGameScene().getViewport().setZoom(1);
+            }
+
+            @Override
+            protected void onCollisionEnd(Entity player, Entity tree) {
+                getGameScene().getViewport().setZoom(2);
             }
         });
     }
