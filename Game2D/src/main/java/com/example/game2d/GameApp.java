@@ -21,6 +21,7 @@ import com.almasb.fxgl.pathfinding.astar.AStarGrid;
 import com.almasb.fxgl.pathfinding.astar.AStarMoveComponent;
 import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.ui.UI;
+import javafx.beans.property.IntegerProperty;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polyline;
@@ -196,7 +197,14 @@ public class GameApp extends GameApplication {
 
     @Override
     protected void onUpdate(double tpf) {
-//        inc("time", tpf);
+
+        getWorldProperties().addListener("time", (oldTime, newTime) -> {
+            int score = getWorldProperties().getValue("score");
+            int time = getWorldProperties().getValue("time");
+            score = score * (int) (time / 25.0);
+            getWorldProperties().setValue("score", score);
+        });
+
     }
 
     @Override

@@ -116,7 +116,7 @@ public class RunnerComponent extends Component {
     @Override
     public void onAdded() {
         entity.getViewComponent().addChild(texture);
-        run(() -> inc("score", 1), Duration.seconds(1));
+        run(() -> inc("score", 1), Duration.seconds(0.5));
     }
 }
 
