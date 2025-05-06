@@ -85,27 +85,28 @@ public class GameFactory implements EntityFactory {
 
     @Spawns("trail")
     public Entity newTrail(SpawnData data) {
-//        int width = data.get("width");
-//        int height = data.get("height");
-//        return entityBuilder(data)
-//                .type(TRAIL)
-//                .bbox(new HitBox(BoundingShape.box(width, height)))
-////                .build();
+        int width = data.get("width");
+        int height = data.get("height");
+        return entityBuilder(data)
+                .type(TRAIL)
+                .bbox(new HitBox(BoundingShape.box(width, height)))
+                .build();
+    }
 //        Element polygonElement = data.get("polygon");
 //        String pointsStr = polygonElement.getAttribute("points");
 //
 //        // Преобразуем строку точек в массив Point2D
 //        Point2D[] vertices = parsePolygonPoints(pointsStr);
-
-        String pointsStr = data.get("polygonPoints");
-        Point2D[] vertices = parsePolygonPoints(pointsStr);
-
-        return entityBuilder(data)
-                .type(GameType.TRAIL)
-                .bbox(new HitBox(BoundingShape.polygon(vertices)))
-                .with(new CollidableComponent(true))
-                .build();
-    }
+//
+//        String pointsStr = data.get("polygonPoints");
+//        Point2D[] vertices = parsePolygonPoints(pointsStr);
+//
+//        return entityBuilder(data)
+//                .type(GameType.TRAIL)
+//                .bbox(new HitBox(BoundingShape.polygon(vertices)))
+//                .with(new CollidableComponent(true))
+//                .build();
+//    }
 
 
     @Spawns("start")

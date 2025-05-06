@@ -42,9 +42,9 @@ import static com.example.game2d.GameType.*;
 
 public class GameApp extends GameApplication {
 
-    public static final int BLOCK_SIZE = 16;
+    public static final int BLOCK_SIZE = 32;
     public static final int TIME_PER_LEVEL = 50;
-    public static final int MAP_SIZE = 60;
+    public static final int MAP_SIZE = 30;
     private static final int UI_SIZE = 80;
 
     private PlayerComponent playerComponent;
@@ -129,7 +129,7 @@ public class GameApp extends GameApplication {
 
         getGameWorld().addEntityFactory(new GameFactory());
 
-        setLevelFromMap("tmx/level2.tmx");
+        setLevelFromMap("tmx/level1.tmx");
 
 
         grid = AStarGrid.fromWorld(getGameWorld(), MAP_SIZE, MAP_SIZE, BLOCK_SIZE, BLOCK_SIZE, (type) -> {
@@ -138,7 +138,7 @@ public class GameApp extends GameApplication {
         set("grid", grid);
 
         runnerGrid = AStarGrid.fromWorld(getGameWorld(), MAP_SIZE, MAP_SIZE, BLOCK_SIZE, BLOCK_SIZE, (type) -> {
-            if (type == TRAIL || type ==START || type == END)
+            if (type == TRAIL || type == START || type == END)
                 return CellState.WALKABLE;
 
             return CellState.NOT_WALKABLE;
