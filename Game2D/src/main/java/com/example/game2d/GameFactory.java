@@ -18,6 +18,11 @@ import javafx.scene.paint.Color;
 import javafx.scene.shape.Rectangle;
 import javafx.util.Duration;
 
+import javax.lang.model.element.Element;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import static com.almasb.fxgl.dsl.FXGL.*;
 import static com.example.game2d.GameApp.BLOCK_SIZE;
 import static com.example.game2d.GameType.*;
@@ -63,15 +68,45 @@ public class GameFactory implements EntityFactory {
                 .build();
     }
 
+
+    private Point2D[] parsePolygonPoints(String pointsStr) {
+        String[] points = pointsStr.split(" ");
+        Point2D[] vertices = new Point2D[points.length];
+
+        for (int i = 0; i < points.length; i++) {
+            String[] xy = points[i].split(",");
+            double x = Double.parseDouble(xy[0]);
+            double y = Double.parseDouble(xy[1]);
+            vertices[i] = new Point2D(x, y);
+        }
+
+        return vertices;
+    }
+
     @Spawns("trail")
     public Entity newTrail(SpawnData data) {
-        int width = data.get("width");
-        int height = data.get("height");
+//        int width = data.get("width");
+//        int height = data.get("height");
+//        return entityBuilder(data)
+//                .type(TRAIL)
+//                .bbox(new HitBox(BoundingShape.box(width, height)))
+////                .build();
+//        Element polygonElement = data.get("polygon");
+//        String pointsStr = polygonElement.getAttribute("points");
+//
+//        // Преобразуем строку точек в массив Point2D
+//        Point2D[] vertices = parsePolygonPoints(pointsStr);
+
+        String pointsStr = data.get("polygonPoints");
+        Point2D[] vertices = parsePolygonPoints(pointsStr);
+
         return entityBuilder(data)
-                .type(TRAIL)
-                .bbox(new HitBox(BoundingShape.box(width, height)))
+                .type(GameType.TRAIL)
+                .bbox(new HitBox(BoundingShape.polygon(vertices)))
+                .with(new CollidableComponent(true))
                 .build();
     }
+
 
     @Spawns("start")
     public Entity newStart(SpawnData data) {

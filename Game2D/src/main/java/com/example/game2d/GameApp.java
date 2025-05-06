@@ -21,12 +21,16 @@ import com.almasb.fxgl.pathfinding.astar.AStarGrid;
 import com.almasb.fxgl.pathfinding.astar.AStarMoveComponent;
 import com.almasb.fxgl.physics.CollisionHandler;
 import com.almasb.fxgl.ui.UI;
+import javafx.animation.Interpolator;
 import javafx.beans.property.IntegerProperty;
+import javafx.scene.effect.ColorAdjust;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
 import javafx.scene.shape.Polyline;
 import javafx.util.Duration;
 
+import java.net.URL;
+import java.nio.file.Paths;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -38,14 +42,17 @@ import static com.example.game2d.GameType.*;
 
 public class GameApp extends GameApplication {
 
-    public static final int BLOCK_SIZE = 32;
+    public static final int BLOCK_SIZE = 16;
     public static final int TIME_PER_LEVEL = 50;
-    public static final int MAP_SIZE = 30;
+    public static final int MAP_SIZE = 60;
     private static final int UI_SIZE = 80;
 
     private PlayerComponent playerComponent;
     private AStarGrid grid;
     private AStarGrid runnerGrid;
+
+//    private boolean isNight = false;
+//    private ColorAdjust nightEffect = new ColorAdjust();
 
     @Override
     protected void initSettings(GameSettings settings) {
@@ -122,16 +129,16 @@ public class GameApp extends GameApplication {
 
         getGameWorld().addEntityFactory(new GameFactory());
 
-        setLevelFromMap("tmx/level1.tmx");
+        setLevelFromMap("tmx/level2.tmx");
 
 
-        grid = AStarGrid.fromWorld(getGameWorld(), 30, 30, BLOCK_SIZE, BLOCK_SIZE, (type) -> {
+        grid = AStarGrid.fromWorld(getGameWorld(), MAP_SIZE, MAP_SIZE, BLOCK_SIZE, BLOCK_SIZE, (type) -> {
             return CellState.WALKABLE;
         });
         set("grid", grid);
 
-        runnerGrid = AStarGrid.fromWorld(getGameWorld(), 30, 30, BLOCK_SIZE, BLOCK_SIZE, (type) -> {
-            if (type == TRAIL)
+        runnerGrid = AStarGrid.fromWorld(getGameWorld(), MAP_SIZE, MAP_SIZE, BLOCK_SIZE, BLOCK_SIZE, (type) -> {
+            if (type == TRAIL || type ==START || type == END)
                 return CellState.WALKABLE;
 
             return CellState.NOT_WALKABLE;
@@ -155,6 +162,25 @@ public class GameApp extends GameApplication {
         Entity cameraEntity = FXGL.entityBuilder()
                 .with(new CameraComponent(getGameWorld().getSingleton(PLAYER), 0.1)) // 0.1 - коэффициент плавности
                 .buildAndAttach();
+
+//        nightEffect.setBrightness(0);  // Начальная яркость (день)
+//        FXGL.getGameWorld().getEntities().forEach(entity -> {
+//            entity.getViewComponent().getParent().setEffect(nightEffect);
+//        });
+//
+//        // Таймер для смены дня и ночи (каждые 30 сек)
+//        FXGL.run(() -> {
+//            isNight = !isNight;
+//            double targetBrightness = isNight ? -0.2 : 0.0;
+//            FXGL.animationBuilder()
+//                    .duration(Duration.seconds(3))
+//                    .interpolator(Interpolator.EASE_BOTH)
+//                    .animate(nightEffect.brightnessProperty())
+//                    .from(nightEffect.getBrightness())
+//                    .to(targetBrightness)
+//                    .buildAndPlay();
+//        }, Duration.seconds(25));
+
 
     }
 
