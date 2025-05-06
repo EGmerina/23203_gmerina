@@ -16,6 +16,7 @@ import com.almasb.fxgl.entity.level.tiled.TMXLevelLoader;
 import com.almasb.fxgl.entity.level.tiled.TiledMap;
 import com.almasb.fxgl.input.UserAction;
 import com.almasb.fxgl.io.FileSystemService;
+import com.almasb.fxgl.pathfinding.CellMoveComponent;
 import com.almasb.fxgl.pathfinding.CellState;
 import com.almasb.fxgl.pathfinding.astar.AStarGrid;
 import com.almasb.fxgl.pathfinding.astar.AStarMoveComponent;
@@ -196,7 +197,7 @@ public class GameApp extends GameApplication {
         });
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(GameType.PLAYER, GameType.END) {
             @Override
-            protected void onCollision(Entity player, Entity tree) {
+            protected void onCollision(Entity player, Entity end) {
                 FXGL.getDialogService().showMessageBox("Well done!!! You ran all the way to the end :)\nScore: " + FXGL.getWorldProperties().getInt("score"), () -> {
                     FXGL.getGameController().gotoMainMenu();
                 });
@@ -210,14 +211,24 @@ public class GameApp extends GameApplication {
                 });
             }
         });
+        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(GameType.PLAYER, PUDDLE) {
+            @Override
+            protected void onCollision(Entity player, Entity puddle) {
+                CellMoveComponent moveComponent = player.getComponent(CellMoveComponent.class);
+                moveComponent.setSpeed(100);
+                FXGL.runOnce(() -> {
+                    moveComponent.setSpeed(180);
+                }, Duration.seconds(4));
+            }
+        });
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(GameType.PLAYER, START) {
             @Override
-            protected void onCollision(Entity player, Entity tree) {
+            protected void onCollision(Entity player, Entity start) {
                 getGameScene().getViewport().setZoom(1);
             }
 
             @Override
-            protected void onCollisionEnd(Entity player, Entity tree) {
+            protected void onCollisionEnd(Entity player, Entity start) {
                 getGameScene().getViewport().setZoom(2);
             }
         });
