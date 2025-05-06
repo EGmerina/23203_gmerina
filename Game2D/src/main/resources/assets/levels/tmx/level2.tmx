@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="8" nextobjectid="56">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="10" nextobjectid="101">
  <tileset firstgid="1" name="GRASS+" tilewidth="32" tileheight="32" tilecount="84" columns="12">
   <image source="GRASS+.png" trans="ffffff" width="400" height="224"/>
  </tileset>
@@ -135,12 +135,59 @@
   <object id="38" name="tree" type="tree" gid="436" x="576" y="672" width="64" height="64"/>
   <object id="39" name="tree" type="tree" gid="436" x="672" y="832" width="64" height="64"/>
   <object id="40" name="tree" type="tree" gid="436" x="672" y="192" width="64" height="64"/>
-  <object id="41" name="tree" type="tree" gid="436" x="640" y="224" width="64" height="64"/>
+  <object id="41" name="tree" type="tree" gid="436" x="704" y="224" width="64" height="64"/>
   <object id="42" name="tree" type="tree" gid="436" x="320" y="32" width="64" height="64"/>
+  <object id="76" name="trail" type="trail" x="384" y="128" width="96" height="32"/>
+  <object id="77" name="trail" type="trail" x="416" y="96" width="64" height="32"/>
+  <object id="78" name="trail" type="trail" x="832" y="0" width="64" height="32"/>
+  <object id="79" name="trail" type="trail" x="736" y="0" width="64" height="32"/>
+  <object id="80" name="trail" type="trail" x="352" y="160" width="64" height="32"/>
+  <object id="81" name="trail" type="trail" x="704" y="256" width="64" height="32"/>
+  <object id="82" name="trail" type="trail" x="480" y="800" width="64" height="32"/>
+  <object id="83" name="trail" type="trail" x="320" y="768" width="64" height="32"/>
+  <object id="84" name="trail" type="trail" x="352" y="736" width="64" height="32"/>
+  <object id="85" name="trail" type="trail" x="896" y="608" width="64" height="32"/>
+  <object id="86" name="trail" type="trail" x="416" y="672" width="64" height="32"/>
+  <object id="91" name="trail" type="trail" x="736" y="768" width="64" height="32"/>
+  <object id="92" name="trail" type="trail" x="768" y="832" width="64" height="32"/>
+  <object id="93" name="trail" type="trail" x="896" y="704" width="64" height="128"/>
+  <object id="96" name="trail" type="trail" x="896" y="832" width="32" height="32"/>
+  <object id="97" name="trail" type="trail" x="928" y="640" width="32" height="64"/>
+ </objectgroup>
+ <objectgroup id="8" name="trail">
+  <object id="56" name="trail" type="trail" x="448" y="32" width="448" height="32"/>
+  <object id="57" name="trail" type="trail" x="416" y="64" width="256" height="32"/>
+  <object id="58" name="trail" type="trail" x="352" y="224" width="384" height="32"/>
+  <object id="59" name="trail" type="trail" x="736" y="288" width="192" height="32"/>
+  <object id="60" name="trail" type="trail" x="768" y="320" width="192" height="32"/>
+  <object id="61" name="trail" type="trail" x="704" y="352" width="224" height="32"/>
+  <object id="62" name="trail" type="trail" x="480" y="384" width="352" height="32"/>
+  <object id="63" name="trail" type="trail" x="480" y="416" width="224" height="32"/>
+  <object id="64" name="trail" type="trail" x="416" y="544" width="512" height="32"/>
+  <object id="65" name="trail" type="trail" x="704" y="576" width="224" height="32"/>
+  <object id="66" name="trail" type="trail" x="352" y="512" width="160" height="32"/>
+  <object id="67" name="trail" type="trail" x="352" y="480" width="128" height="32"/>
+  <object id="68" name="trail" type="trail" x="416" y="448" width="96" height="32"/>
+  <object id="69" name="trail" type="trail" x="480" y="192" width="96" height="32"/>
+  <object id="70" name="trail" type="trail" x="352" y="192" width="96" height="32"/>
+  <object id="71" name="trail" type="trail" x="800" y="512" width="96" height="32"/>
+  <object id="72" name="trail" type="trail" x="544" y="576" width="128" height="32"/>
+  <object id="73" name="trail" type="trail" x="544" y="672" width="128" height="32"/>
+  <object id="74" name="trail" type="trail" x="320" y="832" width="256" height="32"/>
+  <object id="75" name="trail" type="trail" x="480" y="864" width="96" height="96"/>
+  <object id="87" name="trail" type="trail" x="384" y="704" width="352" height="32"/>
+  <object id="88" name="trail" type="trail" x="320" y="800" width="96" height="32"/>
+  <object id="89" name="trail" type="trail" x="672" y="736" width="96" height="32"/>
+  <object id="90" name="trail" type="trail" x="736" y="800" width="96" height="32"/>
+  <object id="94" name="trail" type="trail" x="800" y="896" width="96" height="32"/>
+  <object id="95" name="trail" type="trail" x="768" y="864" width="160" height="32"/>
  </objectgroup>
  <objectgroup id="4" name="start_end">
   <object id="43" name="start" type="start" x="896" y="0" width="64" height="96"/>
   <object id="44" name="end" type="end" x="480" y="928" width="96" height="32"/>
+ </objectgroup>
+ <objectgroup id="9" name="runner">
+  <object id="98" name="runner" type="runner" x="928" y="64"/>
  </objectgroup>
  <objectgroup id="5" name="player">
   <object id="45" name="player" type="player" x="928" y="32"/>
