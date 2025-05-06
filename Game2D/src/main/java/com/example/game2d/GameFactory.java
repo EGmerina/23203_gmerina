@@ -59,11 +59,12 @@ public class GameFactory implements EntityFactory {
 
     @Spawns("tree")
     public Entity newTree(SpawnData data) {
+        int width = data.get("width");
+        int height = data.get("height");
         return entityBuilder(data)
                 .type(TREE)
                 .with(new CollidableComponent(true))
-                .bbox(new HitBox(new Point2D(32, 40), BoundingShape.box(10, 30)))
-                .anchorFromCenter()
+                .bbox(new HitBox(new Point2D(16, 32), BoundingShape.box(width/2, height/4)))
                 .zIndex(100)
                 .build();
     }
@@ -89,6 +90,28 @@ public class GameFactory implements EntityFactory {
         int height = data.get("height");
         return entityBuilder(data)
                 .type(TRAIL)
+                .bbox(new HitBox(BoundingShape.box(width, height)))
+                .build();
+    }
+
+    @Spawns("sea")
+    public Entity newSea(SpawnData data) {
+        int width = data.get("width");
+        int height = data.get("height");
+        return entityBuilder(data)
+                .type(SEA)
+                .with(new CollidableComponent(true))
+                .bbox(new HitBox(BoundingShape.box(width, height)))
+                .build();
+    }
+
+    @Spawns("puddle")
+    public Entity newPuddle(SpawnData data) {
+        int width = data.get("width");
+        int height = data.get("height");
+        return entityBuilder(data)
+                .type(PUDDLE)
+                .with(new CollidableComponent(true))
                 .bbox(new HitBox(BoundingShape.box(width, height)))
                 .build();
     }

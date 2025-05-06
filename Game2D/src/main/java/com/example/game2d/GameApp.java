@@ -129,7 +129,7 @@ public class GameApp extends GameApplication {
 
         getGameWorld().addEntityFactory(new GameFactory());
 
-        setLevelFromMap("tmx/level1.tmx");
+        setLevelFromMap("tmx/level2.tmx");
 
 
         grid = AStarGrid.fromWorld(getGameWorld(), MAP_SIZE, MAP_SIZE, BLOCK_SIZE, BLOCK_SIZE, (type) -> {
@@ -198,6 +198,14 @@ public class GameApp extends GameApplication {
             @Override
             protected void onCollision(Entity player, Entity tree) {
                 FXGL.getDialogService().showMessageBox("Well done!!! You ran all the way to the end :)\nScore: " + FXGL.getWorldProperties().getInt("score"), () -> {
+                    FXGL.getGameController().gotoMainMenu();
+                });
+            }
+        });
+        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(GameType.PLAYER, GameType.SEA) {
+            @Override
+            protected void onCollision(Entity player, Entity sea) {
+                FXGL.getDialogService().showMessageBox("Game Over! You drowned!", () -> {
                     FXGL.getGameController().gotoMainMenu();
                 });
             }
