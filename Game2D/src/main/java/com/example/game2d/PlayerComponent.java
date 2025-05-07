@@ -86,28 +86,20 @@ public class PlayerComponent extends Component {
             }
 
         }
-//        else {
-//            if (texture.getAnimationChannel() != animIdle) {
-//                texture.loopAnimationChannel(animIdle);
-//            }
-//        }
+
 
         switch (currentMoveDir) {
             case UP:
                 astar.moveToUpCell();
-                inc("score", 1);
                 break;
             case RIGHT:
                 astar.moveToRightCell();
-                inc("score", 1);
                 break;
             case DOWN:
                 astar.moveToDownCell();
-                inc("score", 1);
                 break;
             case LEFT:
                 astar.moveToLeftCell();
-                inc("score", 1);
                 break;
             case STOP:
                 astar.stopMovement();

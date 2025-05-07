@@ -10,7 +10,6 @@
 
     <Rectangle fill="black" width="80" height="960" />
 
-    <Label fx:id="labelScore" translateX="10" translateY="790" textFill="white" />
     <Label fx:id="labelTime" translateX="10" translateY="500" textFill="white" />
 
 </Pane>

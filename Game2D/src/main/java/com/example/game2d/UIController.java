@@ -38,10 +38,8 @@ public class UIController implements com.almasb.fxgl.ui.UIController {
 
         root.getChildren().addAll(timeBar);
 
-        labelScore.setFont(getUIFactoryService().newFont(18));
-        labelTime.setFont(getUIFactoryService().newFont(12));
+        labelTime.setFont(getUIFactoryService().newFont(18));
 
-        labelScore.textProperty().bind(getip("score").asString("Score:\n%d"));
         labelTime.textProperty().bind(getip("time").asString("Time:\n%d sec"));
 
     }

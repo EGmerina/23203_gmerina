@@ -224,21 +224,9 @@ public class GameApp extends GameApplication {
     protected void initGameVars(Map<String, Object> vars) {
         vars.put("time", 0);
         vars.put("countdown", TIME_PER_LEVEL);
-        vars.put("score", 0);
         vars.put("level", STARTING_LEVEL);
     }
 
-    @Override
-    protected void onUpdate(double tpf) {
-
-        getWorldProperties().addListener("time", (oldTime, newTime) -> {
-            int score = getWorldProperties().getValue("score");
-            int time = getWorldProperties().getValue("time");
-            score = score * (int) (time / 25.0);
-            getWorldProperties().setValue("score", score);
-        });
-
-    }
 
     @Override
     protected void initUI() {

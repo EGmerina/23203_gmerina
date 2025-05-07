@@ -60,12 +60,6 @@ public class RunnerComponent extends Component {
             }
 
         }
-//        else {
-//            if (texture.getAnimationChannel() != animIdle && currentMoveDir == STOP) {
-//                texture.loopAnimationChannel(animIdle);
-//            }
-//        }
-
     }
 
     private PlayerComponent.MoveDirection getCurrentMovDir() {
@@ -107,7 +101,6 @@ public class RunnerComponent extends Component {
             return;
         } else if (Math.pow(myX - playerX, 2) + Math.pow(myY - playerY, 2) > MAX_SPACE_FROM_PLAYER) {
             FXGL.getGameWorld().removeEntity(entity);
-            inc("score", -300);
             return;
         }
         astar.moveToCell(playerCellX, playerCellY);
@@ -117,7 +110,6 @@ public class RunnerComponent extends Component {
     @Override
     public void onAdded() {
         entity.getViewComponent().addChild(texture);
-        run(() -> inc("score", 1), Duration.seconds(0.5));
     }
 }
 
