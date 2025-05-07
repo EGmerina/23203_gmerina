@@ -150,7 +150,7 @@ public class GameApp extends GameApplication {
         set("grid", grid);
 
 
-        getWorldProperties().<Integer>addListener("time", (old, now) -> {
+        getWorldProperties().<Integer>addListener("countdown", (old, now) -> {
             if (now == 0) {
                 FXGL.getDialogService().showMessageBox("Game Over! Time is up!", () -> {
                     FXGL.getGameController().gotoMainMenu();
@@ -210,8 +210,9 @@ public class GameApp extends GameApplication {
             @Override
             protected void onCollisionEnd(Entity player, Entity start) {
                 getGameScene().getViewport().setZoom(2);
-                if ((int) getWorldProperties().getValue("time") == 50) {
-                    run(() -> inc("time", -1), Duration.seconds(1));
+                if ((int) getWorldProperties().getValue("countdown") == 50) {
+                    run(() -> inc("countdown", -1), Duration.seconds(1));
+                    run(() -> inc("time", 1), Duration.seconds(1));
                 }
 
             }
@@ -221,7 +222,8 @@ public class GameApp extends GameApplication {
 
     @Override
     protected void initGameVars(Map<String, Object> vars) {
-        vars.put("time", TIME_PER_LEVEL);
+        vars.put("time", 0);
+        vars.put("countdown", TIME_PER_LEVEL);
         vars.put("score", 0);
         vars.put("level", STARTING_LEVEL);
     }
@@ -247,7 +249,8 @@ public class GameApp extends GameApplication {
 
     private void setLevel(int levelNum) {
 
-        set("time", 50);
+        set("countdown", TIME_PER_LEVEL);
+        set("time", 0);
 
         Level level = setLevelFromMap("tmx/level" + levelNum + ".tmx");
         System.out.println("level");

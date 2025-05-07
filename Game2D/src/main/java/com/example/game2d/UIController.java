@@ -34,7 +34,7 @@ public class UIController implements com.almasb.fxgl.ui.UIController {
         timeBar.setMaxValue(GameApp.TIME_PER_LEVEL);
         timeBar.setMinValue(0);
         timeBar.setCurrentValue(GameApp.TIME_PER_LEVEL);
-        timeBar.currentValueProperty().bind(getip("time"));
+        timeBar.currentValueProperty().bind(getip("countdown"));
 
         root.getChildren().addAll(timeBar);
 
