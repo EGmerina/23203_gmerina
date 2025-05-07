@@ -52,7 +52,7 @@ public class GameApp extends GameApplication {
     public static final int MAP_SIZE = 30;
     private static final int UI_SIZE = 80;
 
-    private static final int MAX_LEVEL = 3;
+    private static final int MAX_LEVEL = 2;
     private static final int STARTING_LEVEL = 0;
 
 
@@ -276,7 +276,9 @@ public class GameApp extends GameApplication {
 
     private void nextLevel() {
         if (geti("level") == MAX_LEVEL) {
-            showMessage("You finished the demo!");
+            FXGL.getDialogService().showMessageBox("You finished the game!", () -> {
+                FXGL.getGameController().gotoMainMenu();
+            });
             return;
         }
         inc("level", +1);

@@ -23,9 +23,7 @@ import javafx.util.Duration;
 
 import static com.almasb.fxgl.dsl.FXGL.*;
 
-/**
- * @author Almas Baimagambetov (almaslvl@gmail.com)
- */
+
 public class LevelEndScene extends SubScene {
 
     private static final int WIDTH = 400;
@@ -64,8 +62,8 @@ public class LevelEndScene extends SubScene {
                 bg, vbox
         );
 
-        root.setTranslateX(1280 / 2 - WIDTH / 2);
-        root.setTranslateY(720 / 2 - HEIGHT / 2);
+        root.setTranslateX(getAppWidth() / 2 - WIDTH / 2);
+        root.setTranslateY(getAppHeight() / 2 - HEIGHT / 2);
 
         var textLevel = new Text();
         textLevel.textProperty().bind(getip("level").asString("Level %d"));
