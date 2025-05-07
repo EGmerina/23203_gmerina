@@ -233,6 +233,7 @@ public class GameApp extends GameApplication {
         vars.put("countdown", TIME_PER_LEVEL);
         vars.put("level", STARTING_LEVEL);
         vars.put("lostRunners", 0);
+        vars.put("distance", 0.0);
     }
 
 
@@ -248,6 +249,7 @@ public class GameApp extends GameApplication {
         set("countdown", TIME_PER_LEVEL);
         set("time", 0);
         set("lostRunners", 0);
+        set("distance", 0.0);
 
         Level level = setLevelFromMap("tmx/level" + levelNum + ".tmx");
         runnerGrid = AStarGrid.fromWorld(getGameWorld(), MAP_SIZE, MAP_SIZE, BLOCK_SIZE, BLOCK_SIZE, (type) -> {
@@ -268,7 +270,7 @@ public class GameApp extends GameApplication {
 
         var shortestTime = level.getProperties().getDouble("star1time");
 
-        var levelTimeData = new LevelEndScene.LevelTimeData(shortestTime * 2.4, shortestTime * 1.3, 1);
+        var levelTimeData = new LevelEndScene.LevelTimeData(shortestTime * 2.4, 150.0, 1);
 
         set("levelTimeData", levelTimeData);
     }

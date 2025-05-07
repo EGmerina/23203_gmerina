@@ -8,6 +8,7 @@ import javafx.scene.paint.Color;
 
 import static com.almasb.fxgl.dsl.FXGL.getUIFactoryService;
 import static com.almasb.fxgl.dsl.FXGL.getip;
+import static com.almasb.fxgl.dsl.FXGLForKtKt.getdp;
 
 public class UIController implements com.almasb.fxgl.ui.UIController {
 
@@ -21,6 +22,10 @@ public class UIController implements com.almasb.fxgl.ui.UIController {
 
     @FXML
     private Label labelTime;
+
+    @FXML
+    private Label labelDistance;
+
 
     @Override
     public void init() {
@@ -43,6 +48,9 @@ public class UIController implements com.almasb.fxgl.ui.UIController {
 
         labelLostRunners.setFont(getUIFactoryService().newFont(14));
         labelLostRunners.textProperty().bind(getip("lostRunners").asString("Lost\nrunners:\n%d "));
+
+        labelDistance.setFont(getUIFactoryService().newFont(14));
+        labelDistance.textProperty().bind(getdp("distance").asString("distance:\n%.0f "));
 
     }
 }

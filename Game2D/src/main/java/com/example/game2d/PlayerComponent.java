@@ -22,6 +22,9 @@ public class PlayerComponent extends Component {
 
     private AnimationChannel animIdle, animWalkRight, animWalkLeft, animWalkUp, animWalkDown;
 
+    private double prevX;
+    private double prevY;
+
     public PlayerComponent() {
 
         Image image = image("Artyom.png");
@@ -34,6 +37,8 @@ public class PlayerComponent extends Component {
 
         texture = new AnimatedTexture(animIdle);
         texture.loop();
+
+
     }
 
     enum MoveDirection {
@@ -45,6 +50,7 @@ public class PlayerComponent extends Component {
     private AStarMoveComponent astar;
 
     private MoveDirection currentMoveDir = STOP;
+
 
     public void up() {
         currentMoveDir = UP;
@@ -71,6 +77,12 @@ public class PlayerComponent extends Component {
 
         var x = moveComponent.getCellX();
         var y = moveComponent.getCellY();
+
+        double displacement = Math.sqrt(Math.pow(x - prevX, 2) + Math.pow(y - prevY, 2));
+        inc("distance", displacement);
+
+        prevX = x;
+        prevY = y;
 
 
         if (astar.isMoving()) {
@@ -107,8 +119,11 @@ public class PlayerComponent extends Component {
         }
     }
 
+
     @Override
     public void onAdded() {
         entity.getViewComponent().addChild(texture);
+        prevX = moveComponent.getCellX();
+        prevY = moveComponent.getCellY();
     }
 }

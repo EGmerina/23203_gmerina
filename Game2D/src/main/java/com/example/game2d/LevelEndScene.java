@@ -97,13 +97,15 @@ public class LevelEndScene extends SubScene {
 
         int lostRunners = geti("lostRunners");
 
+        double distance = getd("distance");
+
         LevelTimeData timeData = geto("levelTimeData");
 
         textUserTime.setText(String.format("Your time: %.0f sec!", userTime.toSeconds()));
 
         gradeBox.getChildren().setAll(
                 new Grade(Duration.seconds(timeData.star1), userTime),
-                new Grade(Duration.seconds(timeData.star2), userTime),
+                new Grade(Duration.seconds(timeData.star2), distance),
                 new Grade(Duration.seconds(timeData.star3), lostRunners)
         );
 
@@ -153,6 +155,17 @@ public class LevelEndScene extends SubScene {
             getChildren().add((lostRunners < gradeTime.toSeconds()) ? STAR_FULL.copy() : STAR_EMPTY.copy());
 
             getChildren().add(getUIFactoryService().newText(String.format("lost runners\n     <%.0f", gradeTime.toSeconds()), Color.WHITE, 16.0));
+        }
+        public Grade(Duration gradeTime, double distance) {
+            super(15);
+
+            HBox.setHgrow(this, Priority.ALWAYS);
+
+            setAlignment(Pos.CENTER);
+
+            getChildren().add((distance > gradeTime.toSeconds()) ? STAR_FULL.copy() : STAR_EMPTY.copy());
+
+            getChildren().add(getUIFactoryService().newText(String.format("distance\n     >%.0f", gradeTime.toSeconds()), Color.WHITE, 16.0));
         }
     }
 
