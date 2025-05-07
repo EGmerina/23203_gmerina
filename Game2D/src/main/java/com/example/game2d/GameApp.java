@@ -137,9 +137,8 @@ public class GameApp extends GameApplication {
     @Override
     protected void initGame() {
         getGameScene().setBackgroundColor(Color.DARKGREEN);
-
         getGameWorld().addEntityFactory(new GameFactory());
-
+        set("level", 0);
         nextLevel();
 
         set("player", player);
@@ -269,7 +268,9 @@ public class GameApp extends GameApplication {
 
 
         var shortestTime = level.getProperties().getDouble("star1time");
-
+//        var minDistance = level.getProperties().getDouble("star1time");
+//        var shortestTime = level.getProperties().getDouble("star1time");
+//
         var levelTimeData = new LevelEndScene.LevelTimeData(shortestTime * 2.4, 150.0, 1);
 
         set("levelTimeData", levelTimeData);

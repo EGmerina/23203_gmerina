@@ -35,7 +35,6 @@ public class GameFactory implements EntityFactory {
 
     @Spawns("player")
     public Entity newPlayer(SpawnData data) {
-        System.out.println("spawn player");
         return entityBuilder(data)
                 .type(PLAYER)
                 .bbox(new HitBox(new Point2D(4, 4), BoundingShape.box(16, 32)))
@@ -90,7 +89,6 @@ public class GameFactory implements EntityFactory {
 
     @Spawns("trail")
     public Entity newTrail(SpawnData data) {
-        System.out.println("trail");
         int width = data.get("width");
         int height = data.get("height");
         return entityBuilder(data)
