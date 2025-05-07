@@ -1,6 +1,7 @@
 package com.example.game2d;
 
 import com.almasb.fxgl.core.util.LazyValue;
+import com.almasb.fxgl.dsl.FXGL;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.EntityFactory;
 import com.almasb.fxgl.entity.SpawnData;
@@ -48,13 +49,13 @@ public class GameFactory implements EntityFactory {
 
     @Spawns("runner")
     public Entity newRunner(SpawnData data) {
-        System.out.println("runner");
+        double speed = FXGL.random(80, 140);
         return entityBuilder(data)
                 .type(RUNNER)
                 .bbox(new HitBox(new Point2D(4, 4), BoundingShape.box(16, 32)))
                 .anchorFromCenter()
                 .with(new CollidableComponent(true))
-                .with(new CellMoveComponent(BLOCK_SIZE, BLOCK_SIZE, 100).allowRotation(false))
+                .with(new CellMoveComponent(BLOCK_SIZE, BLOCK_SIZE, speed).allowRotation(false))
                 .with(new AStarMoveComponent(new LazyValue<>(() -> geto("runnerGrid"))))
                 .with(new RunnerComponent())
                 .build();

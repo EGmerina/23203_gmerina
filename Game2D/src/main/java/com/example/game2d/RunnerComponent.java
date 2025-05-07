@@ -27,9 +27,17 @@ public class RunnerComponent extends Component {
 
     private PlayerComponent.MoveDirection currentMoveDir = STOP;
 
+    private final List<Image> runnerImages = List.of(
+            image("runner1.png"),
+            image("runner.png"),
+            image("runner2.png")
+    );
+
     public RunnerComponent() {
 
-        Image image = image("runner.png");
+        Image image = runnerImages.get(FXGL.random(0, runnerImages.size() - 1));
+
+       // Image image = image("runner2.png");
 
         animIdle = new AnimationChannel(image, 24, 16, 32, Duration.seconds(1), 2, 2);
         animWalkRight = new AnimationChannel(image, 24, 16, 32, Duration.seconds(1), 0, 5);

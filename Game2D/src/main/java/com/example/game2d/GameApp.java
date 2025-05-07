@@ -201,6 +201,13 @@ public class GameApp extends GameApplication {
                 }, Duration.seconds(4));
             }
         });
+        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(RUNNER, RUNNER) {
+            @Override
+            protected void onCollision(Entity runner1, Entity runner2) {
+                CellMoveComponent moveComponent = runner1.getComponent(CellMoveComponent.class);
+                moveComponent.moveToCell(moveComponent.getCellX()+1, moveComponent.getCellY());
+            }
+        });
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(GameType.PLAYER, START) {
             @Override
             protected void onCollision(Entity player, Entity start) {

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="10" nextobjectid="102">
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="10" nextobjectid="109">
  <properties>
   <property name="star1time" type="float" value="7"/>
  </properties>
@@ -157,7 +157,7 @@
   <object id="96" name="trail" type="trail" x="896" y="832" width="32" height="32"/>
   <object id="97" name="trail" type="trail" x="928" y="640" width="32" height="64"/>
  </objectgroup>
- <objectgroup id="8" name="trail" visible="0">
+ <objectgroup id="8" name="trail">
   <object id="56" name="trail" type="trail" x="448" y="32" width="448" height="32"/>
   <object id="57" name="trail" type="trail" x="416" y="64" width="256" height="32"/>
   <object id="58" name="trail" type="trail" x="352" y="224" width="384" height="32"/>
@@ -192,6 +192,7 @@
  </objectgroup>
  <objectgroup id="9" name="runner">
   <object id="98" name="runner" type="runner" x="896" y="64" width="32" height="32"/>
+  <object id="108" name="runner" type="runner" x="896" y="32"/>
  </objectgroup>
  <objectgroup id="5" name="player">
   <object id="45" name="player" type="player" x="928" y="32"/>
