@@ -8,7 +8,9 @@ import com.almasb.fxgl.app.scene.LoadingScene;
 import com.almasb.fxgl.app.scene.SceneFactory;
 import com.almasb.fxgl.app.services.FXGLAssetLoaderService;
 import com.almasb.fxgl.core.math.Vec2;
+import com.almasb.fxgl.core.util.LazyValue;
 import com.almasb.fxgl.dsl.FXGL;
+import com.almasb.fxgl.dsl.FXGLForKtKt;
 import com.almasb.fxgl.entity.Entity;
 import com.almasb.fxgl.entity.SpawnData;
 import com.almasb.fxgl.entity.level.Level;
@@ -21,9 +23,11 @@ import com.almasb.fxgl.pathfinding.CellState;
 import com.almasb.fxgl.pathfinding.astar.AStarGrid;
 import com.almasb.fxgl.pathfinding.astar.AStarMoveComponent;
 import com.almasb.fxgl.physics.CollisionHandler;
+import com.almasb.fxgl.physics.PhysicsComponent;
 import com.almasb.fxgl.ui.UI;
 import javafx.animation.Interpolator;
 import javafx.beans.property.IntegerProperty;
+import javafx.geometry.Point2D;
 import javafx.scene.effect.ColorAdjust;
 import javafx.scene.input.KeyCode;
 import javafx.scene.paint.Color;
@@ -48,12 +52,20 @@ public class GameApp extends GameApplication {
     public static final int MAP_SIZE = 30;
     private static final int UI_SIZE = 80;
 
+    private static final int MAX_LEVEL = 3;
+    private static final int STARTING_LEVEL = 0;
+
+
     private PlayerComponent playerComponent;
     private AStarGrid grid;
     private AStarGrid runnerGrid;
 
 //    private boolean isNight = false;
 //    private ColorAdjust nightEffect = new ColorAdjust();
+
+    private LazyValue<LevelEndScene> levelEndScene = new LazyValue<>(() -> new LevelEndScene());
+
+    private Entity player;
 
     @Override
     protected void initSettings(GameSettings settings) {
@@ -130,8 +142,11 @@ public class GameApp extends GameApplication {
 
         getGameWorld().addEntityFactory(new GameFactory());
 
-        setLevelFromMap("tmx/level2.tmx");
+        player = null;
+        nextLevel();
+        player = getGameWorld().getSingleton(PLAYER);
 
+        set("player", player);
 
         grid = AStarGrid.fromWorld(getGameWorld(), MAP_SIZE, MAP_SIZE, BLOCK_SIZE, BLOCK_SIZE, (type) -> {
             return CellState.WALKABLE;
@@ -195,14 +210,34 @@ public class GameApp extends GameApplication {
                 });
             }
         });
-        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(GameType.PLAYER, GameType.END) {
-            @Override
-            protected void onCollision(Entity player, Entity end) {
-                FXGL.getDialogService().showMessageBox("Well done!!! You ran all the way to the end :)\nScore: " + FXGL.getWorldProperties().getInt("score"), () -> {
-                    FXGL.getGameController().gotoMainMenu();
-                });
-            }
+//        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(GameType.PLAYER, GameType.END) {
+//            @Override
+//            protected void onCollision(Entity player, Entity end) {
+////                FXGL.getDialogService().showMessageBox("Well done!!! You ran all the way to the end :)\nScore: " + FXGL.getWorldProperties().getInt("score"), () -> {
+////                    FXGL.getGameController().gotoMainMenu();
+////                });
+//
+//                levelEndScene.get().onLevelFinish();
+//
+//                // the above runs in its own scene, so fade will wait until
+//                // the user exits that scene
+//                FXGL.getGameScene().getViewport().fade(() -> {
+//                    nextLevel();
+//                });
+//            }
+//
+//        });
+
+        onCollisionOneTimeOnly(PLAYER, END, (player, end) -> {
+            levelEndScene.get().onLevelFinish();
+
+            // the above runs in its own scene, so fade will wait until
+            // the user exits that scene
+            FXGL.getGameScene().getViewport().fade(() -> {
+                nextLevel();
+            });
         });
+
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(GameType.PLAYER, GameType.SEA) {
             @Override
             protected void onCollision(Entity player, Entity sea) {
@@ -238,6 +273,7 @@ public class GameApp extends GameApplication {
     protected void initGameVars(Map<String, Object> vars) {
         vars.put("time", TIME_PER_LEVEL);
         vars.put("score", 0);
+        vars.put("level", STARTING_LEVEL);
     }
 
     @Override
@@ -258,6 +294,51 @@ public class GameApp extends GameApplication {
         ui.getRoot().setTranslateX(MAP_SIZE * BLOCK_SIZE);
         getGameScene().addUI(ui);
     }
+
+    private void setLevel(int levelNum) {
+
+        set("levelTime", 0.0);
+
+        Level level = setLevelFromMap("tmx/level" + levelNum + ".tmx");
+
+        if (player != null) {
+            // FXGL.getGameWorld().reset(); // Удаляет все сущности
+
+// 2. Очищаем физический мир (если используется)
+            //  getPhysicsWorld().clear();
+//            player.removeFromWorld();
+//            player = spawn("player", getAppWidth() - 40, 150);
+//            player.setZIndex(Integer.MAX_VALUE);
+//            getGameScene().getViewport().bindToEntity(player, getAppWidth() / 2, getAppHeight() / 2);
+//            playerComponent = getGameWorld().getSingleton(PLAYER).getComponent(PlayerComponent.class);
+//            playerComponent.getEntity().addComponent(new AStarMoveComponent(grid));
+            playerComponent = getGameWorld().getSingleton(PLAYER).getComponent(PlayerComponent.class);
+            playerComponent.getEntity().addComponent(new AStarMoveComponent(grid));
+            Entity cameraEntity = FXGL.entityBuilder()
+                    .with(new CameraComponent(getGameWorld().getSingleton(PLAYER), 0.1)) // 0.1 - коэффициент плавности
+                    .buildAndAttach();
+
+        }
+
+        var shortestTime = level.getProperties().getDouble("star1time");
+
+        var levelTimeData = new LevelEndScene.LevelTimeData(shortestTime * 2.4, shortestTime * 1.3, shortestTime);
+
+        set("levelTimeData", levelTimeData);
+    }
+
+    private void nextLevel() {
+        if (geti("level") == MAX_LEVEL) {
+            showMessage("You finished the demo!");
+            return;
+        }
+        System.out.println("nextLevel");
+        inc("level", +1);
+
+        setLevel(geti("level"));
+
+    }
+
 
     public static void main(String[] args) {
         launch(args);
