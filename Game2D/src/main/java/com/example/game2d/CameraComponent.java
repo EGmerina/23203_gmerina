@@ -18,28 +18,32 @@ public class CameraComponent extends Component {
         if (target == null) return;
         this.player = target;
         this.smoothness = smoothness;
-
     }
 
     @Override
     public void onUpdate(double tpf) {
 
-//
-//        double targetX = Math.min(Math.max(0, player.getX() - getAppWidth() / 2),
-//                levelWidth - getAppWidth());
-//        double targetY = Math.min(Math.max(0, player.getY() - getAppHeight() / 2),
-//                levelHeight - getAppHeight());
+        double zoom = getGameScene().getViewport().getZoom();
+
 
         Point2D cameraPos = new Point2D(
                 getGameScene().getViewport().getX(),
                 getGameScene().getViewport().getY()
         );
 
-        // Вычисляем целевую позицию (центрируем камеру на цели)
-        Point2D targetPos = new Point2D(
-                Math.min(Math.max(player.getX() - levelWidth / (2 * ZOOM), 0), levelWidth / 2),
-                Math.min(Math.max(player.getY() - levelHeight / (2 * ZOOM), 0), levelHeight / 2)
-        );
+        // Вычисляем границы
+        double minX = getGameScene().getViewport().getWidth() / (2 * zoom);
+        double minY = getGameScene().getViewport().getHeight() / (2 * zoom);
+        double maxX = levelWidth - getGameScene().getViewport().getWidth() / (2 * zoom);
+        double maxY = levelHeight - getGameScene().getViewport().getHeight() / (2 * zoom);
+
+
+        double targetX = Math.min(Math.max(player.getX(), minX), maxX);
+        double targetY = Math.min(Math.max(player.getY(), minY), maxY);
+
+
+
+        Point2D targetPos = new Point2D(targetX - levelWidth / (2 * zoom) + 40/zoom, targetY - levelHeight / (2 * zoom));
 
         // Плавная интерполяция между текущей и целевой позицией
         Point2D newPos = cameraPos.interpolate(targetPos, smoothness * tpf * 60);

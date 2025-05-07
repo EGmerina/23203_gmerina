@@ -60,8 +60,6 @@ public class GameApp extends GameApplication {
     private AStarGrid grid;
     private AStarGrid runnerGrid;
 
-//    private boolean isNight = false;
-//    private ColorAdjust nightEffect = new ColorAdjust();
 
     private LazyValue<LevelEndScene> levelEndScene = new LazyValue<>(() -> new LevelEndScene());
 
@@ -142,9 +140,8 @@ public class GameApp extends GameApplication {
 
         getGameWorld().addEntityFactory(new GameFactory());
 
-        player = null;
         nextLevel();
-        player = getGameWorld().getSingleton(PLAYER);
+
 
         set("player", player);
 
@@ -174,29 +171,9 @@ public class GameApp extends GameApplication {
             }
         });
 
-        //getGameScene().getViewport().bindToEntity(getGameWorld().getSingleton(PLAYER), getAppWidth()/2, getAppHeight()/2);
         Entity cameraEntity = FXGL.entityBuilder()
                 .with(new CameraComponent(getGameWorld().getSingleton(PLAYER), 0.1)) // 0.1 - коэффициент плавности
                 .buildAndAttach();
-
-//        nightEffect.setBrightness(0);  // Начальная яркость (день)
-//        FXGL.getGameWorld().getEntities().forEach(entity -> {
-//            entity.getViewComponent().getParent().setEffect(nightEffect);
-//        });
-//
-//        // Таймер для смены дня и ночи (каждые 30 сек)
-//        FXGL.run(() -> {
-//            isNight = !isNight;
-//            double targetBrightness = isNight ? -0.2 : 0.0;
-//            FXGL.animationBuilder()
-//                    .duration(Duration.seconds(3))
-//                    .interpolator(Interpolator.EASE_BOTH)
-//                    .animate(nightEffect.brightnessProperty())
-//                    .from(nightEffect.getBrightness())
-//                    .to(targetBrightness)
-//                    .buildAndPlay();
-//        }, Duration.seconds(25));
-
 
     }
 
@@ -210,29 +187,10 @@ public class GameApp extends GameApplication {
                 });
             }
         });
-//        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(GameType.PLAYER, GameType.END) {
-//            @Override
-//            protected void onCollision(Entity player, Entity end) {
-////                FXGL.getDialogService().showMessageBox("Well done!!! You ran all the way to the end :)\nScore: " + FXGL.getWorldProperties().getInt("score"), () -> {
-////                    FXGL.getGameController().gotoMainMenu();
-////                });
-//
-//                levelEndScene.get().onLevelFinish();
-//
-//                // the above runs in its own scene, so fade will wait until
-//                // the user exits that scene
-//                FXGL.getGameScene().getViewport().fade(() -> {
-//                    nextLevel();
-//                });
-//            }
-//
-//        });
 
         onCollisionOneTimeOnly(PLAYER, END, (player, end) -> {
             levelEndScene.get().onLevelFinish();
 
-            // the above runs in its own scene, so fade will wait until
-            // the user exits that scene
             FXGL.getGameScene().getViewport().fade(() -> {
                 nextLevel();
             });
@@ -301,24 +259,13 @@ public class GameApp extends GameApplication {
 
         Level level = setLevelFromMap("tmx/level" + levelNum + ".tmx");
 
-        if (player != null) {
-            // FXGL.getGameWorld().reset(); // Удаляет все сущности
+        playerComponent = getGameWorld().getSingleton(PLAYER).getComponent(PlayerComponent.class);
+        playerComponent.getEntity().addComponent(new AStarMoveComponent(grid));
+        Entity cameraEntity = FXGL.entityBuilder()
+                .with(new CameraComponent(getGameWorld().getSingleton(PLAYER), 0.1)) // 0.1 - коэффициент плавности
+                .buildAndAttach();
+        player = getGameWorld().getSingleton(PLAYER);
 
-// 2. Очищаем физический мир (если используется)
-            //  getPhysicsWorld().clear();
-//            player.removeFromWorld();
-//            player = spawn("player", getAppWidth() - 40, 150);
-//            player.setZIndex(Integer.MAX_VALUE);
-//            getGameScene().getViewport().bindToEntity(player, getAppWidth() / 2, getAppHeight() / 2);
-//            playerComponent = getGameWorld().getSingleton(PLAYER).getComponent(PlayerComponent.class);
-//            playerComponent.getEntity().addComponent(new AStarMoveComponent(grid));
-            playerComponent = getGameWorld().getSingleton(PLAYER).getComponent(PlayerComponent.class);
-            playerComponent.getEntity().addComponent(new AStarMoveComponent(grid));
-            Entity cameraEntity = FXGL.entityBuilder()
-                    .with(new CameraComponent(getGameWorld().getSingleton(PLAYER), 0.1)) // 0.1 - коэффициент плавности
-                    .buildAndAttach();
-
-        }
 
         var shortestTime = level.getProperties().getDouble("star1time");
 
@@ -332,7 +279,6 @@ public class GameApp extends GameApplication {
             showMessage("You finished the demo!");
             return;
         }
-        System.out.println("nextLevel");
         inc("level", +1);
 
         setLevel(geti("level"));
