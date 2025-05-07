@@ -101,6 +101,7 @@ public class RunnerComponent extends Component {
         var myX = entity.getX();
         var myY = entity.getY();
 
+
         if (Math.pow(myX - playerX, 2) + Math.pow(myY - playerY, 2) < PLAYER_SPACE_RADIOUS) {
             astar.stopMovement();
             return;

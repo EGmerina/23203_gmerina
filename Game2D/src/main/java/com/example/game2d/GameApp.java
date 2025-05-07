@@ -142,7 +142,6 @@ public class GameApp extends GameApplication {
 
         nextLevel();
 
-
         set("player", player);
 
         grid = AStarGrid.fromWorld(getGameWorld(), MAP_SIZE, MAP_SIZE, BLOCK_SIZE, BLOCK_SIZE, (type) -> {
@@ -150,16 +149,6 @@ public class GameApp extends GameApplication {
         });
         set("grid", grid);
 
-        runnerGrid = AStarGrid.fromWorld(getGameWorld(), MAP_SIZE, MAP_SIZE, BLOCK_SIZE, BLOCK_SIZE, (type) -> {
-            if (type == TRAIL || type == START || type == END)
-                return CellState.WALKABLE;
-
-            return CellState.NOT_WALKABLE;
-        });
-        set("runnerGrid", runnerGrid);
-
-        playerComponent = getGameWorld().getSingleton(PLAYER).getComponent(PlayerComponent.class);
-        playerComponent.getEntity().addComponent(new AStarMoveComponent(grid));
 
         run(() -> inc("time", -1), Duration.seconds(1));
 
@@ -258,6 +247,14 @@ public class GameApp extends GameApplication {
         set("levelTime", 0.0);
 
         Level level = setLevelFromMap("tmx/level" + levelNum + ".tmx");
+        System.out.println("level");
+        runnerGrid = AStarGrid.fromWorld(getGameWorld(), MAP_SIZE, MAP_SIZE, BLOCK_SIZE, BLOCK_SIZE, (type) -> {
+            if (type == TRAIL || type == START || type == END || type == PLAYER)
+                return CellState.WALKABLE;
+
+            return CellState.NOT_WALKABLE;
+        });
+        set("runnerGrid", runnerGrid);
 
         playerComponent = getGameWorld().getSingleton(PLAYER).getComponent(PlayerComponent.class);
         playerComponent.getEntity().addComponent(new AStarMoveComponent(grid));
@@ -265,6 +262,7 @@ public class GameApp extends GameApplication {
                 .with(new CameraComponent(getGameWorld().getSingleton(PLAYER), 0.1)) // 0.1 - коэффициент плавности
                 .buildAndAttach();
         player = getGameWorld().getSingleton(PLAYER);
+
 
 
         var shortestTime = level.getProperties().getDouble("star1time");

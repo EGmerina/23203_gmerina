@@ -48,6 +48,7 @@ public class GameFactory implements EntityFactory {
 
     @Spawns("runner")
     public Entity newRunner(SpawnData data) {
+        System.out.println("runner");
         return entityBuilder(data)
                 .type(RUNNER)
                 .bbox(new HitBox(new Point2D(4, 4), BoundingShape.box(16, 32)))
@@ -72,22 +73,23 @@ public class GameFactory implements EntityFactory {
     }
 
 
-    private Point2D[] parsePolygonPoints(String pointsStr) {
-        String[] points = pointsStr.split(" ");
-        Point2D[] vertices = new Point2D[points.length];
-
-        for (int i = 0; i < points.length; i++) {
-            String[] xy = points[i].split(",");
-            double x = Double.parseDouble(xy[0]);
-            double y = Double.parseDouble(xy[1]);
-            vertices[i] = new Point2D(x, y);
-        }
-
-        return vertices;
-    }
+//    private Point2D[] parsePolygonPoints(String pointsStr) {
+//        String[] points = pointsStr.split(" ");
+//        Point2D[] vertices = new Point2D[points.length];
+//
+//        for (int i = 0; i < points.length; i++) {
+//            String[] xy = points[i].split(",");
+//            double x = Double.parseDouble(xy[0]);
+//            double y = Double.parseDouble(xy[1]);
+//            vertices[i] = new Point2D(x, y);
+//        }
+//
+//        return vertices;
+//    }
 
     @Spawns("trail")
     public Entity newTrail(SpawnData data) {
+        System.out.println("trail");
         int width = data.get("width");
         int height = data.get("height");
         return entityBuilder(data)
@@ -117,22 +119,6 @@ public class GameFactory implements EntityFactory {
                 .bbox(new HitBox(BoundingShape.box(width, height)))
                 .build();
     }
-//        Element polygonElement = data.get("polygon");
-//        String pointsStr = polygonElement.getAttribute("points");
-//
-//        // Преобразуем строку точек в массив Point2D
-//        Point2D[] vertices = parsePolygonPoints(pointsStr);
-//
-//        String pointsStr = data.get("polygonPoints");
-//        Point2D[] vertices = parsePolygonPoints(pointsStr);
-//
-//        return entityBuilder(data)
-//                .type(GameType.TRAIL)
-//                .bbox(new HitBox(BoundingShape.polygon(vertices)))
-//                .with(new CollidableComponent(true))
-//                .build();
-//    }
-
 
     @Spawns("start")
     public Entity newStart(SpawnData data) {

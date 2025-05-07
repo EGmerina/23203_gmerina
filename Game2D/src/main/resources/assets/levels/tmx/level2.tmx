@@ -1,8 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="10" nextobjectid="101">
-   <properties>
-    <property name="star1time" type="float" value="7"/>
-   </properties>
+<map version="1.10" tiledversion="1.11.2" orientation="orthogonal" renderorder="right-down" width="30" height="30" tilewidth="32" tileheight="32" infinite="0" nextlayerid="10" nextobjectid="102">
+ <properties>
+  <property name="star1time" type="float" value="7"/>
+ </properties>
  <tileset firstgid="1" name="GRASS+" tilewidth="32" tileheight="32" tilecount="84" columns="12">
   <image source="GRASS+.png" trans="ffffff" width="400" height="224"/>
  </tileset>
@@ -157,7 +157,7 @@
   <object id="96" name="trail" type="trail" x="896" y="832" width="32" height="32"/>
   <object id="97" name="trail" type="trail" x="928" y="640" width="32" height="64"/>
  </objectgroup>
- <objectgroup id="8" name="trail">
+ <objectgroup id="8" name="trail" visible="0">
   <object id="56" name="trail" type="trail" x="448" y="32" width="448" height="32"/>
   <object id="57" name="trail" type="trail" x="416" y="64" width="256" height="32"/>
   <object id="58" name="trail" type="trail" x="352" y="224" width="384" height="32"/>
@@ -184,13 +184,14 @@
   <object id="90" name="trail" type="trail" x="736" y="800" width="96" height="32"/>
   <object id="94" name="trail" type="trail" x="800" y="896" width="96" height="32"/>
   <object id="95" name="trail" type="trail" x="768" y="864" width="160" height="32"/>
+  <object id="101" name="trail" type="trail" x="896" y="0" width="64" height="96"/>
  </objectgroup>
  <objectgroup id="4" name="start_end">
   <object id="43" name="start" type="start" x="896" y="0" width="64" height="96"/>
   <object id="44" name="end" type="end" x="480" y="928" width="96" height="32"/>
  </objectgroup>
  <objectgroup id="9" name="runner">
-  <object id="98" name="runner" type="runner" x="928" y="64"/>
+  <object id="98" name="runner" type="runner" x="896" y="64" width="32" height="32"/>
  </objectgroup>
  <objectgroup id="5" name="player">
   <object id="45" name="player" type="player" x="928" y="32"/>
