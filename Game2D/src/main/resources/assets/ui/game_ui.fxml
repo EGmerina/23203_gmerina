@@ -8,8 +8,9 @@
       xmlns="http://javafx.com/javafx/17"
       xmlns:fx="http://javafx.com/fxml/1">
 
-    <Rectangle fill="black" width="80" height="960" />
+    <Rectangle fill="black" width="80" height="960"/>
 
-    <Label fx:id="labelTime" translateX="10" translateY="500" textFill="white" />
+    <Label fx:id="labelLostRunners" translateX="10" translateY="790" textFill="white" />
+    <Label fx:id="labelTime" translateX="10" translateY="500" textFill="white"/>
 
 </Pane>

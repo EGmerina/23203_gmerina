@@ -201,13 +201,13 @@ public class GameApp extends GameApplication {
                 }, Duration.seconds(4));
             }
         });
-        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(RUNNER, RUNNER) {
-            @Override
-            protected void onCollision(Entity runner1, Entity runner2) {
-                CellMoveComponent moveComponent = runner1.getComponent(CellMoveComponent.class);
-                moveComponent.moveToCell(moveComponent.getCellX()+1, moveComponent.getCellY());
-            }
-        });
+//        FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(RUNNER, RUNNER) {
+//            @Override
+//            protected void onCollision(Entity runner1, Entity runner2) {
+//                CellMoveComponent moveComponent = runner1.getComponent(CellMoveComponent.class);
+//                moveComponent.moveToCell(moveComponent.getCellX()+1, moveComponent.getCellY());
+//            }
+//        });
         FXGL.getPhysicsWorld().addCollisionHandler(new CollisionHandler(GameType.PLAYER, START) {
             @Override
             protected void onCollision(Entity player, Entity start) {
@@ -217,7 +217,7 @@ public class GameApp extends GameApplication {
             @Override
             protected void onCollisionEnd(Entity player, Entity start) {
                 getGameScene().getViewport().setZoom(2);
-                if ((int) getWorldProperties().getValue("countdown") == 50) {
+                if ((int) getWorldProperties().getValue("countdown") == TIME_PER_LEVEL) {
                     run(() -> inc("countdown", -1), Duration.seconds(1));
                     run(() -> inc("time", 1), Duration.seconds(1));
                 }
@@ -232,6 +232,7 @@ public class GameApp extends GameApplication {
         vars.put("time", 0);
         vars.put("countdown", TIME_PER_LEVEL);
         vars.put("level", STARTING_LEVEL);
+        vars.put("lostRunners", 0);
     }
 
 
@@ -246,9 +247,9 @@ public class GameApp extends GameApplication {
 
         set("countdown", TIME_PER_LEVEL);
         set("time", 0);
+        set("lostRunners", 0);
 
         Level level = setLevelFromMap("tmx/level" + levelNum + ".tmx");
-        System.out.println("level");
         runnerGrid = AStarGrid.fromWorld(getGameWorld(), MAP_SIZE, MAP_SIZE, BLOCK_SIZE, BLOCK_SIZE, (type) -> {
             if (type == TRAIL || type == START || type == END || type == PLAYER)
                 return CellState.WALKABLE;
@@ -267,7 +268,7 @@ public class GameApp extends GameApplication {
 
         var shortestTime = level.getProperties().getDouble("star1time");
 
-        var levelTimeData = new LevelEndScene.LevelTimeData(shortestTime * 2.4, shortestTime * 1.3, shortestTime);
+        var levelTimeData = new LevelEndScene.LevelTimeData(shortestTime * 2.4, shortestTime * 1.3, 1);
 
         set("levelTimeData", levelTimeData);
     }

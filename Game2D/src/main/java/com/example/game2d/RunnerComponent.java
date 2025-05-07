@@ -109,6 +109,7 @@ public class RunnerComponent extends Component {
             return;
         } else if (Math.pow(myX - playerX, 2) + Math.pow(myY - playerY, 2) > MAX_SPACE_FROM_PLAYER) {
             FXGL.getGameWorld().removeEntity(entity);
+            inc("lostRunners", 1);
             return;
         }
         astar.moveToCell(playerCellX, playerCellY);

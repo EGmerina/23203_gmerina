@@ -95,6 +95,8 @@ public class LevelEndScene extends SubScene {
 
         Duration userTime = Duration.seconds(geti("time"));
 
+        int lostRunners = geti("lostRunners");
+
         LevelTimeData timeData = geto("levelTimeData");
 
         textUserTime.setText(String.format("Your time: %.0f sec!", userTime.toSeconds()));
@@ -102,7 +104,7 @@ public class LevelEndScene extends SubScene {
         gradeBox.getChildren().setAll(
                 new Grade(Duration.seconds(timeData.star1), userTime),
                 new Grade(Duration.seconds(timeData.star2), userTime),
-                new Grade(Duration.seconds(timeData.star3), userTime)
+                new Grade(Duration.seconds(timeData.star3), lostRunners)
         );
 
         for (int i = 0; i < gradeBox.getChildren().size(); i++) {
@@ -138,7 +140,19 @@ public class LevelEndScene extends SubScene {
 
             getChildren().add(userTime.lessThanOrEqualTo(gradeTime) ? STAR_FULL.copy() : STAR_EMPTY.copy());
 
-            getChildren().add(getUIFactoryService().newText(String.format("<%.0f", gradeTime.toSeconds()), Color.WHITE, 16.0));
+            getChildren().add(getUIFactoryService().newText(String.format("time\n <%.0f", gradeTime.toSeconds()), Color.WHITE, 16.0));
+        }
+
+        public Grade(Duration gradeTime, int lostRunners) {
+            super(15);
+
+            HBox.setHgrow(this, Priority.ALWAYS);
+
+            setAlignment(Pos.CENTER);
+
+            getChildren().add((lostRunners < gradeTime.toSeconds()) ? STAR_FULL.copy() : STAR_EMPTY.copy());
+
+            getChildren().add(getUIFactoryService().newText(String.format("lost runners\n     <%.0f", gradeTime.toSeconds()), Color.WHITE, 16.0));
         }
     }
 

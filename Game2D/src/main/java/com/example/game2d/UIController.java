@@ -17,7 +17,7 @@ public class UIController implements com.almasb.fxgl.ui.UIController {
     private ProgressBar timeBar;
 
     @FXML
-    private Label labelScore;
+    private Label  labelLostRunners;
 
     @FXML
     private Label labelTime;
@@ -39,8 +39,10 @@ public class UIController implements com.almasb.fxgl.ui.UIController {
         root.getChildren().addAll(timeBar);
 
         labelTime.setFont(getUIFactoryService().newFont(18));
-
         labelTime.textProperty().bind(getip("time").asString("Time:\n%d sec"));
+
+        labelLostRunners.setFont(getUIFactoryService().newFont(14));
+        labelLostRunners.textProperty().bind(getip("lostRunners").asString("Lost\nrunners:\n%d "));
 
     }
 }
