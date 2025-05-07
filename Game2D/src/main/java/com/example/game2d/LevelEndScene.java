@@ -39,7 +39,7 @@ public class LevelEndScene extends SubScene {
         var bg = new Rectangle(WIDTH, HEIGHT, Color.color(0, 0, 0, 0.85));
         bg.setStroke(Color.BLUE);
         bg.setStrokeWidth(1.75);
-        bg.setEffect(new DropShadow(28, Color.color(0,0,0, 0.9)));
+        bg.setEffect(new DropShadow(28, Color.color(0, 0, 0, 0.9)));
 
         VBox.setVgrow(gradeBox, Priority.ALWAYS);
 
@@ -93,7 +93,7 @@ public class LevelEndScene extends SubScene {
     public void onLevelFinish() {
         isAnimationDone.setValue(false);
 
-        Duration userTime = Duration.seconds(getd("levelTime"));
+        Duration userTime = Duration.seconds(geti("time"));
 
         LevelTimeData timeData = geto("levelTimeData");
 

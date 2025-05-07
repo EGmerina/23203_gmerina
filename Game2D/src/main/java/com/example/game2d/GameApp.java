@@ -150,8 +150,6 @@ public class GameApp extends GameApplication {
         set("grid", grid);
 
 
-        run(() -> inc("time", -1), Duration.seconds(1));
-
         getWorldProperties().<Integer>addListener("time", (old, now) -> {
             if (now == 0) {
                 FXGL.getDialogService().showMessageBox("Game Over! Time is up!", () -> {
@@ -212,8 +210,13 @@ public class GameApp extends GameApplication {
             @Override
             protected void onCollisionEnd(Entity player, Entity start) {
                 getGameScene().getViewport().setZoom(2);
+                if ((int) getWorldProperties().getValue("time") == 50) {
+                    run(() -> inc("time", -1), Duration.seconds(1));
+                }
+
             }
         });
+
     }
 
     @Override
@@ -244,7 +247,7 @@ public class GameApp extends GameApplication {
 
     private void setLevel(int levelNum) {
 
-        set("levelTime", 0.0);
+        set("time", 50);
 
         Level level = setLevelFromMap("tmx/level" + levelNum + ".tmx");
         System.out.println("level");
@@ -262,7 +265,6 @@ public class GameApp extends GameApplication {
                 .with(new CameraComponent(getGameWorld().getSingleton(PLAYER), 0.1)) // 0.1 - коэффициент плавности
                 .buildAndAttach();
         player = getGameWorld().getSingleton(PLAYER);
-
 
 
         var shortestTime = level.getProperties().getDouble("star1time");
