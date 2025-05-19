@@ -8,6 +8,37 @@
     <artifactId>Torrent</artifactId>
     <version>1.0-SNAPSHOT</version>
 
+    <build>
+        <plugins>
+            <!-- Плагин для сборки JAR -->
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-assembly-plugin</artifactId>
+                <version>3.7.0</version>
+                <configuration>
+                    <descriptorRefs>
+                        <descriptorRef>jar-with-dependencies</descriptorRef>
+                    </descriptorRefs>
+                    <archive>
+                        <manifest>
+                            <addClasspath>true</addClasspath>
+                            <mainClass>org.example.MyTorrent</mainClass>
+                        </manifest>
+                    </archive>
+                </configuration>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>single</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+
+
     <repositories>
         <repository>
             <id>central</id>
@@ -27,14 +58,9 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.turn</groupId>
-            <artifactId>ttorrent-core</artifactId>
-            <version>1.5</version>
-        </dependency>
-        <dependency>
-            <groupId>com.github.DrBrad</groupId>
-            <artifactId>Bencode</artifactId>
-            <version>4.01</version>
+            <groupId>com.dampcake</groupId>
+            <artifactId>bencode</artifactId>
+            <version>1.4.2</version>
         </dependency>
     </dependencies>
 

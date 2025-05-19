@@ -1,25 +1,31 @@
 package org.example;
 
-import com.turn.ttorrent.common.Torrent;
+import com.dampcake.bencode.Bencode;
+import com.dampcake.bencode.Type;
 
 import java.io.File;
 import java.io.IOException;
-import java.security.NoSuchAlgorithmException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.util.Map;
 
 public class MetaTorrentData {
     private String infoHash;
     private int peacesNumber;
     private int peacesLength;
 
-    public MetaTorrentData(String torrentFile) {
+    public MetaTorrentData(String torrentFile) throws IOException {
+        Bencode bencode = new Bencode();
 
-        try {
-            Torrent torrent = Torrent.load(new File(torrentFile));
-            infoHash = torrent.getHexInfoHash();
+        File file = new File(torrentFile);
+        byte[] data = new byte[(int) file.length()];
 
-        } catch (IOException | NoSuchAlgorithmException e) {
-            System.out.println("Problems with parsing torrent file");
-            throw new RuntimeException(e);
-        }
+        Path pathToTorrentFile = Paths.get(torrentFile);
+        data = Files.readAllBytes(pathToTorrentFile);
+
+        Map<String, Object> torrentData = bencode.decode(data, Type.DICTIONARY);
+
+        System.out.println(torrentData.get("date"));
     }
 }

@@ -1,6 +1,10 @@
 package org.example;
 
+import com.dampcake.bencode.Bencode;
+import com.dampcake.bencode.Type;
+
 import javax.sound.sampled.Port;
+import java.io.File;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -8,8 +12,12 @@ import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
 import java.nio.channels.SocketChannel;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
@@ -27,52 +35,20 @@ public class MyTorrent {
         }
         myPort = Integer.parseInt(args[1]);
 
-        MetaTorrentData metaTorrentData = new MetaTorrentData(args[0]);
-//        for (String peer : args) {
-//            TorrentClient newTorrentClient = new TorrentClient(peer);
-//            clients.add(newTorrentClient);
-//        }
+       // MetaTorrentData metaTorrentData = new MetaTorrentData(args[0]);
 
-        startDownloading();
-        startSeeding();
+        Bencode bencode = new Bencode();
 
-        Selector selector = Selector.open();
+        File file = new File(args[0]);
+        byte[] data = new byte[(int) file.length()];
 
-        ServerSocketChannel serverChannel = ServerSocketChannel.open();
-        serverChannel.bind(new InetSocketAddress(myPort));
-        serverChannel.configureBlocking(false);
-        serverChannel.register(selector, SelectionKey.OP_ACCEPT);
+        Path pathToTorrentFile = Paths.get(args[0]);
+        data = Files.readAllBytes(pathToTorrentFile);
 
-        ByteBuffer buffer = ByteBuffer.allocate(BUFFER_SIZE);
+        Map<String, Object> torrentData = bencode.decode(data, Type.DICTIONARY);
 
-        while (true){
-            selector.select();
-            Set<SelectionKey> selectedKeys = selector.selectedKeys();
-            Iterator<SelectionKey> iter = selectedKeys.iterator();
-
-        }
-
-        threadPool.submit(() -> {
-            String message = new String(data).trim();
-            System.out.println("Processing in thread " + Thread.currentThread().getName() + ": " + message);
-
-            // Тяжёлая обработка
-            try {
-                Thread.sleep(1000); // Имитация долгой обработки
-                ByteBuffer response = ByteBuffer.wrap(("Echo: " + message).getBytes());
-                client.write(response);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-        });
-
-
-    }
-
-    private static void startSeeding() {
-    }
-
-    private static void startDownloading() {
+        //System.out.println(torrentData);
+        System.out.println(torrentData.get("creation date"));
 
     }
 }
@@ -84,3 +60,8 @@ public class MyTorrent {
  * отправляет bitfield
  *
  * */
+//mvn compile
+//mvn exec:java -Dexec.mainClass="org.example.MyTorrent"
+//java -jar <имя_файла.jar> <аргументы>
+//mvn clean package
+//  java -jar target/Torrent-1.0-SNAPSHOT-jar-with-dependencies.jar src/main/resources/peer1/EnglishBook.pdf.torrent  1 1
