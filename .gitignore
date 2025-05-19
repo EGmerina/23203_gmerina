@@ -13,4 +13,7 @@ Game2D/logs/*
 Game2D/system/*
 Game2D/target/*
 .gitignore
-
+Torrent/.idea/*
+Torrent/.mvn
+Torrent/src/main/resources/peer1/*
+.idea
