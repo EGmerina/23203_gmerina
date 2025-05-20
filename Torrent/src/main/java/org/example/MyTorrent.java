@@ -22,11 +22,15 @@ public class MyTorrent {
         String[] peers = Arrays.copyOfRange(args, 3, args.length);
 
         MetaTorrentData metaTorrentData = new MetaTorrentData(args[0], args[1]);
-        BitField bitField = new BitField(metaTorrentData); //TODO не заполняется
+        // BitField bitField = new BitField(metaTorrentData); //TODO не заполняется
         TorrentClient torrentClient = new TorrentClient(peers);
         TorrentServer torrentServer = new TorrentServer(args[2]);
 
-        torrentServer.start();
+        Thread serverThread = new Thread(() -> {
+            torrentServer.start();
+        });
+        serverThread.start();
+
         torrentClient.start();
 
     }
@@ -50,4 +54,4 @@ public class MyTorrent {
 //mvn exec:java -Dexec.mainClass="org.example.MyTorrent"
 //java -jar <имя_файла.jar> <аргументы>
 //mvn clean package
-//  java -jar target/Torrent-1.0-SNAPSHOT-jar-with-dependencies.jar src/main/resources/peer1/EnglishBook.pdf  src/main/resources/peer1/EnglishBook.pdf.torrent  1 1
+// java -jar target/Torrent-1.0-SNAPSHOT-jar-with-dependencies.jar src/main/resources/peer1/EnglishBook.pdf src/main/resources/peer1/EnglishBook.pdf.torrent  9991 127.0.0.1:9992
