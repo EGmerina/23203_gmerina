@@ -35,20 +35,7 @@ public class MyTorrent {
         }
         myPort = Integer.parseInt(args[1]);
 
-       // MetaTorrentData metaTorrentData = new MetaTorrentData(args[0]);
-
-        Bencode bencode = new Bencode();
-
-        File file = new File(args[0]);
-        byte[] data = new byte[(int) file.length()];
-
-        Path pathToTorrentFile = Paths.get(args[0]);
-        data = Files.readAllBytes(pathToTorrentFile);
-
-        Map<String, Object> torrentData = bencode.decode(data, Type.DICTIONARY);
-
-        //System.out.println(torrentData);
-        System.out.println(torrentData.get("creation date"));
+        MetaTorrentData metaTorrentData = new MetaTorrentData(args[0]);
 
     }
 }
