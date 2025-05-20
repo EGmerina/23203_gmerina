@@ -2,6 +2,7 @@ package org.example;
 
 import java.io.IOException;
 
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
 import java.util.concurrent.ExecutorService;
@@ -13,7 +14,7 @@ public class MyTorrent {
     private static ArrayList<TorrentClient> clients;
     private static final ExecutorService threadPool = Executors.newFixedThreadPool(10);
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
         if (args.length < 3) {
             System.out.println("Usage: java TorrentClient <torrent-file> <my_port> <peer1-ip:port> [peer2-ip:port ...]");
             return;

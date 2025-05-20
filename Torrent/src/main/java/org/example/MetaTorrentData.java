@@ -48,6 +48,9 @@ public class MetaTorrentData {
 
     }
 
+    public String getPieceHash(int pieceIndex) {
+        return infoHashes.get(pieceIndex);
+    }
 
     public int getPiecesNumber() {
         return piecesNumber;
