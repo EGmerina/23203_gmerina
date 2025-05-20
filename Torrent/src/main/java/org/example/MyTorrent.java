@@ -15,13 +15,13 @@ public class MyTorrent {
     private static final ExecutorService threadPool = Executors.newFixedThreadPool(10);
 
     public static void main(String[] args) throws IOException, NoSuchAlgorithmException {
-        if (args.length < 3) {
-            System.out.println("Usage: java TorrentClient <torrent-file> <my_port> <peer1-ip:port> [peer2-ip:port ...]");
+        if (args.length < 4) {
+            System.out.println("Usage: java TorrentClient <source_file> <torrent-file> <my_port> <peer1-ip:port> [peer2-ip:port ...]");
             return;
         }
-        myPort = Integer.parseInt(args[1]);
+        myPort = Integer.parseInt(args[2]);
 
-        MetaTorrentData metaTorrentData = new MetaTorrentData(args[0]);
+        MetaTorrentData metaTorrentData = new MetaTorrentData(args[0], args[1]);
         BitField bitField = new BitField(metaTorrentData);
 
     }
@@ -38,4 +38,4 @@ public class MyTorrent {
 //mvn exec:java -Dexec.mainClass="org.example.MyTorrent"
 //java -jar <имя_файла.jar> <аргументы>
 //mvn clean package
-//  java -jar target/Torrent-1.0-SNAPSHOT-jar-with-dependencies.jar src/main/resources/peer1/EnglishBook.pdf.torrent  1 1
+//  java -jar target/Torrent-1.0-SNAPSHOT-jar-with-dependencies.jar src/main/resources/peer1/EnglishBook.pdf  src/main/resources/peer1/EnglishBook.pdf.torrent  1 1

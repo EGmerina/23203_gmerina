@@ -17,8 +17,11 @@ public class MetaTorrentData {
     private int piecesNumber;
     private int piecesLength;
     private int sourceFileLength;
+    private String sourceFileName;
 
-    public MetaTorrentData(String torrentFile) throws IOException {
+    public MetaTorrentData(String sourceFile, String torrentFile) throws IOException {
+
+        sourceFileName = sourceFile;
 
         infoHashes = new ArrayList<>();
 
@@ -35,8 +38,8 @@ public class MetaTorrentData {
         Map<String, Object> info = (Map<String, Object>) torrentData.get("info");
         piecesLength = ((Long) info.get("piece length")).intValue();
         sourceFileLength = ((Long) info.get("length")).intValue();
-        piecesNumber = sourceFileLength / piecesLength; //TODO тут не округляется в большую сторону
-        piecesNumber = (piecesNumber % HASH_LENGTH == 0) ? piecesNumber : piecesNumber + 1;
+        piecesNumber = sourceFileLength / piecesLength; //TODO тут не округляется в большую сторону ,  тут вообще не понятно как считается, количество хэшей меньше.
+       // piecesNumber = (piecesNumber % HASH_LENGTH == 0) ? piecesNumber : piecesNumber + 1;
 
         String hashes = info.get("pieces").toString();
         int hashesLength = hashes.length();
@@ -46,6 +49,10 @@ public class MetaTorrentData {
             infoHashes.add(hashes.substring(i, end));
         }
 
+    }
+
+    public String getSourceFileName() {
+        return sourceFileName;
     }
 
     public String getPieceHash(int pieceIndex) {
