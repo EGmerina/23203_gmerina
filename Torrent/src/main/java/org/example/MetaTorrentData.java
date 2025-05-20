@@ -45,6 +45,19 @@ public class MetaTorrentData {
             int end = Math.min(i + HASH_LENGTH, hashesLength);
             infoHashes.add(hashes.substring(i, end));
         }
-        
+
+    }
+
+
+    public int getPiecesNumber() {
+        return piecesNumber;
+    }
+
+    public int getPiecesLength() {
+        return piecesLength;
+    }
+
+    public int getSourceFileLength() {
+        return sourceFileLength;
     }
 }

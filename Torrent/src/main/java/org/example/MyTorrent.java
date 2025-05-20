@@ -1,24 +1,9 @@
 package org.example;
 
-import com.dampcake.bencode.Bencode;
-import com.dampcake.bencode.Type;
-
-import javax.sound.sampled.Port;
-import java.io.File;
 import java.io.IOException;
-import java.net.InetSocketAddress;
-import java.nio.ByteBuffer;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
+
 import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
+
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -36,6 +21,7 @@ public class MyTorrent {
         myPort = Integer.parseInt(args[1]);
 
         MetaTorrentData metaTorrentData = new MetaTorrentData(args[0]);
+        BitField bitField = new BitField(metaTorrentData);
 
     }
 }
