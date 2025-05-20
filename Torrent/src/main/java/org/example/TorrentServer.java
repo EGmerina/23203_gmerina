@@ -17,11 +17,14 @@ public class TorrentServer {
         try {
             Selector selector = Selector.open();
             try {
-                ServerSocketChannel socketChannel = ServerSocketChannel.open(); //тут сервер, так как мы к нему подключаемся а не наоборот
+                ServerSocketChannel socketChannel = ServerSocketChannel.open();
                 socketChannel.bind(new InetSocketAddress(myPort));
-                //socketChannel.configureBlocking(false);
+                socketChannel.configureBlocking(false);
                 socketChannel.register(selector, SelectionKey.OP_ACCEPT);
                 selector.select();
+
+
+
                 //тут должен быть handshake
                 //и вообще нужно обрабатывать только одно соединение с известным портом и ip
 

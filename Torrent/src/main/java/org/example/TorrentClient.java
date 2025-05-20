@@ -2,6 +2,7 @@ package org.example;
 
 import java.io.IOException;
 import java.net.InetSocketAddress;
+import java.net.SocketAddress;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.ServerSocketChannel;
@@ -10,19 +11,26 @@ import java.util.ArrayList;
 
 public class TorrentClient {
 
-    ArrayList<Peer> otherPeers;
+    ArrayList<SocketChannel> peersSockets;
 
-    public TorrentClient(String[] peers) {
-        otherPeers = new ArrayList<>();
+    public TorrentClient(String[] peers) throws IOException {
+        peersSockets = new ArrayList<>();
         for (String peer : peers) {
             String[] ipAndPort = peer.split(":");
-            Peer newPeer = new Peer(ipAndPort[0], Integer.parseInt(ipAndPort[1]));
-            otherPeers.add(newPeer);
+            SocketAddress addr = new InetSocketAddress(ipAndPort[0], Integer.parseInt(ipAndPort[1]));
+            SocketChannel newSocketChannel = SocketChannel.open(addr);
+            peersSockets.add(newSocketChannel);
         }
 
     }
 
     public void start() {
+        for (SocketChannel socketChannel : peersSockets) {
+            if(socketChannel.isConnected()){
+
+            }
+        }
     }
+
 
 }
