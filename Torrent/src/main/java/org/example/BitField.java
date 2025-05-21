@@ -10,7 +10,6 @@ import java.util.BitSet;
 public class BitField {
     private BitSet bits;
     private int pieceCount;
-    private final int BITS_IN_BYTE = 8;
 
     public BitField(MetaTorrentData metaTorrentData) throws NoSuchAlgorithmException, IOException {
         this.pieceCount = metaTorrentData.getPiecesNumber();
@@ -26,14 +25,13 @@ public class BitField {
             String originPieceHash = metaTorrentData.getPieceHash(i);
             int pieceLength = Math.min(metaTorrentData.getPiecesLength(), metaTorrentData.getSourceFileLength());
             piece = sourseFile.readNBytes(pieceLength);
+            byte [] buf = sha1.digest(piece); //он все рпекрасно считает , BENCODE.........:(
             String myPieceHash = sha1.digest(piece).toString();
             if (originPieceHash.equals(myPieceHash)) {
                 setPiece(i);
             }
         }
-//        for (int i = 0; i < pieceCount; ++i) {
-//            System.out.print(bits.get(i));
-//        }
+
     }
 
     public void setPiece(int pieceIndex) {

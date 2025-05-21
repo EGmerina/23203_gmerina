@@ -2,12 +2,16 @@ package org.example;
 
 import com.dampcake.bencode.Bencode;
 import com.dampcake.bencode.Type;
+import com.turn.ttorrent.common.Torrent;
 
 import java.io.File;
 import java.io.IOException;
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Map;
 
@@ -19,7 +23,7 @@ public class MetaTorrentData {
     private int sourceFileLength;
     private String sourceFileName;
 
-    public MetaTorrentData(String sourceFile, String torrentFile) throws IOException {
+    public MetaTorrentData(String sourceFile, String torrentFile) throws IOException, NoSuchAlgorithmException {
 
         sourceFileName = sourceFile;
 
@@ -33,6 +37,8 @@ public class MetaTorrentData {
         Path pathToTorrentFile = Paths.get(torrentFile);
         data = Files.readAllBytes(pathToTorrentFile);
 
+        //Torrent torrent = Torrent.load(new File(torrentFile));
+
         Map<String, Object> torrentData = bencode.decode(data, Type.DICTIONARY);
 
         Map<String, Object> info = (Map<String, Object>) torrentData.get("info");
@@ -41,12 +47,15 @@ public class MetaTorrentData {
         piecesNumber = sourceFileLength / piecesLength; //TODO тут не округляется в большую сторону ,  тут вообще не понятно как считается, количество хэшей меньше.
         piecesNumber = (sourceFileLength % piecesLength == 0) ? piecesNumber : piecesNumber + 1;
 
+
         String hashes = (String) info.get("pieces");
-        // byte[] byteHashes = hashes.getBytes();
-        //String hexHashes = bytesToHex(byteHashes);
         int hashesLength = hashes.length();
+        //String byteHashes = torrent.getHexInfoHash();
+        // ByteBuffer hash1 = (ByteBuffer) info.get("pieces");
+        //String hexHashes = bytesToHex(byteHashes);
+
 //        int hashesLengt = hashes.length();
-//        int hashesLeng = hexHashes.length();
+
 
         for (int i = 0; i < hashesLength; i += HASH_LENGTH) {
             int end = Math.min(i + HASH_LENGTH, hashesLength);
