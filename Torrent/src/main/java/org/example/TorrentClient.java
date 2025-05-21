@@ -27,7 +27,7 @@ public class TorrentClient {
             SocketAddress addr = new InetSocketAddress(ipAndPort[0], Integer.parseInt(ipAndPort[1]));
             SocketChannel newSocketChannel = SocketChannel.open();
             newSocketChannel.configureBlocking(false);
-            boolean connected = newSocketChannel.connect(addr);
+            newSocketChannel.connect(addr);
             newSocketChannel.register(selector, SelectionKey.OP_CONNECT, addr);
             peersSockets.add(newSocketChannel);
         }
@@ -61,16 +61,15 @@ public class TorrentClient {
                         //System.err.println("server doesnt exist...." + key.attachment());
                         SocketChannel newSocketChannel = SocketChannel.open();
                         newSocketChannel.configureBlocking(false);
-                        boolean connected = newSocketChannel.connect((SocketAddress)key.attachment());
-                        newSocketChannel.register(selector, SelectionKey.OP_CONNECT, (SocketAddress)key.attachment());
+                        newSocketChannel.connect((SocketAddress) key.attachment());
+                        newSocketChannel.register(selector, SelectionKey.OP_CONNECT, (SocketAddress) key.attachment());
 
                     }
 
                 } else if (key.isReadable()) {
                     SocketChannel client = (SocketChannel) key.channel();
                     buffer.clear();
-                    // ЗАПУСТИТЬ ОБРАБОТЧИК СООБЩЕНИЯ!
-                    // НА ТРЕДПУЛЕ
+                    // TODO ЗАПУСТИТЬ ОБРАБОТЧИК СООБЩЕНИЯ! threadpool
                     int read = client.read(buffer);
                     if (read == -1) {
                         System.out.println("client was closed (torrect client) " + client.getRemoteAddress());

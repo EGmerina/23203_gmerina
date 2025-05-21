@@ -28,7 +28,7 @@ public class MetaTorrentData {
         Bencode bencode = new Bencode();
 
         File file = new File(torrentFile);
-        byte[] data = new byte[(int) file.length()];
+        byte[] data;
 
         Path pathToTorrentFile = Paths.get(torrentFile);
         data = Files.readAllBytes(pathToTorrentFile);
@@ -39,10 +39,14 @@ public class MetaTorrentData {
         piecesLength = ((Long) info.get("piece length")).intValue();
         sourceFileLength = ((Long) info.get("length")).intValue();
         piecesNumber = sourceFileLength / piecesLength; //TODO тут не округляется в большую сторону ,  тут вообще не понятно как считается, количество хэшей меньше.
-       // piecesNumber = (piecesNumber % HASH_LENGTH == 0) ? piecesNumber : piecesNumber + 1;
+        piecesNumber = (sourceFileLength % piecesLength == 0) ? piecesNumber : piecesNumber + 1;
 
-        String hashes = info.get("pieces").toString();
+        String hashes = (String) info.get("pieces");
+        // byte[] byteHashes = hashes.getBytes();
+        //String hexHashes = bytesToHex(byteHashes);
         int hashesLength = hashes.length();
+//        int hashesLengt = hashes.length();
+//        int hashesLeng = hexHashes.length();
 
         for (int i = 0; i < hashesLength; i += HASH_LENGTH) {
             int end = Math.min(i + HASH_LENGTH, hashesLength);
@@ -50,6 +54,14 @@ public class MetaTorrentData {
         }
 
     }
+
+//    public static String bytesToHex(byte[] bytes) {
+//        StringBuilder sb = new StringBuilder();
+//        for (byte b : bytes) {
+//            sb.append(String.format("%02x", b & 0xFF));
+//        }
+//        return sb.toString();
+//    }
 
     public String getSourceFileName() {
         return sourceFileName;

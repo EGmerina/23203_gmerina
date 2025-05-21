@@ -22,9 +22,10 @@ public class BitField {
         MessageDigest sha1 = MessageDigest.getInstance("SHA-1");
         byte[] piece;
         FileInputStream sourseFile = new FileInputStream(metaTorrentData.getSourceFileName());
-        for (int i = 0; i < pieceCount-5; ++i) {
+        for (int i = 0; i < pieceCount; ++i) {
             String originPieceHash = metaTorrentData.getPieceHash(i);
-            piece = sourseFile.readNBytes(metaTorrentData.getPiecesLength());
+            int pieceLength = Math.min(metaTorrentData.getPiecesLength(), metaTorrentData.getSourceFileLength());
+            piece = sourseFile.readNBytes(pieceLength);
             String myPieceHash = sha1.digest(piece).toString();
             if (originPieceHash.equals(myPieceHash)) {
                 setPiece(i);

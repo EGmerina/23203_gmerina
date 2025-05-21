@@ -22,7 +22,7 @@ public class MyTorrent {
         String[] peers = Arrays.copyOfRange(args, 3, args.length);
 
         MetaTorrentData metaTorrentData = new MetaTorrentData(args[0], args[1]);
-        // BitField bitField = new BitField(metaTorrentData); //TODO не заполняется
+        BitField bitField = new BitField(metaTorrentData); //TODO не заполняется
         TorrentClient torrentClient = new TorrentClient(peers);
         TorrentServer torrentServer = new TorrentServer(args[2]);
 
