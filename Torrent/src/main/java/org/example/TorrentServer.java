@@ -18,6 +18,8 @@ public class TorrentServer {
         myPort = Integer.parseInt(port);
     }
 
+    //сделать класс хэндлеров отвечающий за каждый key
+
     public void start() {
         try {
             Selector selector = Selector.open();

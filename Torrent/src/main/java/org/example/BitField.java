@@ -5,6 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.util.Arrays;
 import java.util.BitSet;
 
 public class BitField {
@@ -22,12 +23,10 @@ public class BitField {
         byte[] piece;
         FileInputStream sourseFile = new FileInputStream(metaTorrentData.getSourceFileName());
         for (int i = 0; i < pieceCount; ++i) {
-            String originPieceHash = metaTorrentData.getPieceHash(i);
-            int pieceLength = Math.min(metaTorrentData.getPiecesLength(), metaTorrentData.getSourceFileLength());
-            piece = sourseFile.readNBytes(pieceLength);
-            byte [] buf = sha1.digest(piece); //он все рпекрасно считает , BENCODE.........:(
-            String myPieceHash = sha1.digest(piece).toString();
-            if (originPieceHash.equals(myPieceHash)) {
+            byte[] originPieceHash = metaTorrentData.getPieceHash(i);
+            piece = sourseFile.readNBytes(metaTorrentData.getPiecesLength());
+            byte[] myPieceHash = sha1.digest(piece);
+            if (Arrays.equals(myPieceHash, originPieceHash)) {
                 setPiece(i);
             }
         }
