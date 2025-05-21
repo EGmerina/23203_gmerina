@@ -38,6 +38,7 @@ public class TorrentServer {
                         if (key.isAcceptable()) {
                             ServerSocketChannel server = (ServerSocketChannel) key.channel();
                             SocketChannel client = server.accept();
+                            System.out.println("accept of " + client.getRemoteAddress());
                             client.configureBlocking(false);
                             client.register(selector, SelectionKey.OP_READ);
 
@@ -48,11 +49,11 @@ public class TorrentServer {
                             // НА ТРЕДПУЛЕ
                             int read = client.read(buffer);
                             if (read == -1) {
-                                System.out.println("client was closed " + client.getRemoteAddress());
+                                System.out.println("client was closed (torrect server) " + client.getRemoteAddress());
                                 client.close();
                             }else{
                                 String message = new String(buffer.array(), 0, read).trim();
-                                System.out.println("Received: " + message);
+                                System.out.println("Received: (torrect server) " + message);
                             }
                         }
                         iterator.remove();
