@@ -2,6 +2,7 @@ package org.example;
 
 import java.io.IOException;
 
+import java.nio.channels.Selector;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 
@@ -24,9 +25,12 @@ public class MyTorrent {
         String[] peers = Arrays.copyOfRange(args, 3, args.length);
 
         MetaTorrentData metaTorrentData = new MetaTorrentData(args[0], args[1]);
-        BitField bitField = new BitField(metaTorrentData); //TODO не заполняется
-        TorrentClient torrentClient = new TorrentClient(peers);
-        TorrentServer torrentServer = new TorrentServer(args[2]);
+        BitField bitField = new BitField(metaTorrentData);
+
+        TorrentClient torrentClient = new TorrentClient(peers, metaTorrentData);
+        TorrentServer torrentServer = new TorrentServer(args[2], metaTorrentData);
+
+
 
         Thread serverThread = new Thread(() -> {
             torrentServer.start();
