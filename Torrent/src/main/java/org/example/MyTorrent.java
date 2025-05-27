@@ -9,6 +9,8 @@ import java.util.Arrays;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
+//TODO сделать один селектор
+
 public class MyTorrent {
     private static ArrayList<TorrentClient> clients;
     private static final ExecutorService threadPool = Executors.newFixedThreadPool(10);

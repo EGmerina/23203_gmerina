@@ -24,7 +24,7 @@ public class BitField {
         FileInputStream sourseFile = new FileInputStream(metaTorrentData.getSourceFileName());
         for (int i = 0; i < pieceCount; ++i) {
             byte[] originPieceHash = metaTorrentData.getPieceHash(i);
-            piece = sourseFile.readNBytes(metaTorrentData.getPiecesLength());
+            piece = sourseFile.readNBytes((int)metaTorrentData.getPiecesLength());
             byte[] myPieceHash = sha1.digest(piece);
             if (Arrays.equals(myPieceHash, originPieceHash)) {
                 setPiece(i);

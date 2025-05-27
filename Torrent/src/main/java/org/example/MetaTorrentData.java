@@ -23,7 +23,7 @@ public class MetaTorrentData {
     private static final int HASH_LENGTH = 20;
     private ArrayList<byte[]> infoHashes;
     private int piecesNumber;
-    private int piecesLength;
+    private long piecesLength;
     private long sourceFileLength;
     private String sourceFileName;
 
@@ -33,26 +33,28 @@ public class MetaTorrentData {
 
         infoHashes = new ArrayList<>();
 
-        Bencode bencode = new Bencode();
+        // Bencode bencode = new Bencode();
 
         byte[] data;
-
         Path pathToTorrentFile = Paths.get(torrentFile);
         data = Files.readAllBytes(pathToTorrentFile);
 
-        Map<String, Object> torrentData = bencode.decode(data, Type.DICTIONARY);
-
-        Map<String, Object> info = (Map<String, Object>) torrentData.get("info");
-        piecesLength = ((Long) info.get("piece length")).intValue();
-        sourceFileLength = ((Long) info.get("length")).intValue();
-        piecesNumber = (int) (sourceFileLength / piecesLength); //TODO тут не округляется в большую сторону ,  тут вообще не понятно как считается, количество хэшей меньше.
-        piecesNumber = (sourceFileLength % piecesLength == 0) ? piecesNumber : piecesNumber + 1;
+//        Map<String, Object> torrentData = bencode.decode(data, Type.DICTIONARY);
+//
+//        Map<String, Object> info = (Map<String, Object>) torrentData.get("info");
+//        piecesLength = ((Long) info.get("piece length")).intValue();
+//        sourceFileLength = ((Long) info.get("length")).intValue();
+//        piecesNumber = (int) (sourceFileLength / piecesLength); //TODO тут не округляется в большую сторону ,  тут вообще не понятно как считается, количество хэшей меньше.
+//        piecesNumber = (sourceFileLength % piecesLength == 0) ? piecesNumber : piecesNumber + 1;
 
         BDecoder decoder = new BDecoder(new FileInputStream(torrentFile));
         BEValue decoded = decoder.bdecode();
         Map<String, BEValue> root = decoded.getMap();
         BEValue infoValue = root.get("info");
         Map<String, BEValue> infoMap = infoValue.getMap();
+        piecesLength = infoMap.get("piece length").getInt();
+        sourceFileLength = infoMap.get("length").getInt();
+        piecesNumber = (int) (sourceFileLength / piecesLength);
         BEValue hashes = infoMap.get("pieces");
         byte[] byteHashes = hashes.getBytes();
 
@@ -78,7 +80,7 @@ public class MetaTorrentData {
         return piecesNumber;
     }
 
-    public int getPiecesLength() {
+    public long getPiecesLength() {
         return piecesLength;
     }
 
