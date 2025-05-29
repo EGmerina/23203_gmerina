@@ -11,7 +11,7 @@ public class TorrentClient {
 
     private final int BUFFER_SIZE = 1024;
     private ByteBuffer buffer;
-    private ArrayList<SocketChannel> peersSockets;
+    // private ArrayList<SocketChannel> peersSockets;
     private Selector selector;
     private MetaTorrentData metaTorrentData;
     private Message message;
@@ -19,7 +19,8 @@ public class TorrentClient {
     public TorrentClient(String[] peers, MetaTorrentData metaTorrentData) throws IOException {
         this.metaTorrentData = metaTorrentData;
         buffer = ByteBuffer.allocate(BUFFER_SIZE);
-        peersSockets = new ArrayList<>();
+        // peersSockets = new ArrayList<>();
+
         selector = Selector.open();
         message = new Message(selector, metaTorrentData);
         for (String peer : peers) {
@@ -29,7 +30,7 @@ public class TorrentClient {
             newSocketChannel.configureBlocking(false);
             newSocketChannel.connect(addr);
             newSocketChannel.register(selector, SelectionKey.OP_CONNECT, addr);
-            peersSockets.add(newSocketChannel);
+            // peersSockets.add(newSocketChannel);
         }
     }
 
@@ -79,11 +80,8 @@ public class TorrentClient {
         System.out.println(messageType);
         switch (messageType) {
             case BITFIELD -> {
-                int bitFieldLength = buffer.getInt();
-                byte[] byteBitField = Arrays.copyOfRange(buffer.array(), 5, 5 + bitFieldLength);
-                BitSet bitField = BitSet.valueOf(byteBitField); 
-                System.out.println("recieve bitField");
-                System.out.println(bitField);
+                message.recieveBitField(client, buffer); //interested????????????
+                message.sendRequest(client);//???????????????????????keepalive
             }
             case null, default -> {
                 System.out.println("default client message");

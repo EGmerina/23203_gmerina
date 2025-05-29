@@ -83,6 +83,7 @@ public class TorrentServer {
                 if (Arrays.equals(hash, metaTorrentData.getInfoHash())) {
                     System.out.println("hashes match ");
                     message.sendBitField(client);
+                    //может здесь только читать 1 байт????????????????????????????????????
                 } else {
                     System.out.println("hashes don't match => close connection");
                     key.cancel();
