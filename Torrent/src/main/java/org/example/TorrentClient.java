@@ -16,12 +16,13 @@ public class TorrentClient {
     private MetaTorrentData metaTorrentData;
     private Message message;
 
-    public TorrentClient(String[] peers, MetaTorrentData metaTorrentData) throws IOException {
+    public TorrentClient(String[] peers, MetaTorrentData metaTorrentData, Selector selector) throws IOException {
         this.metaTorrentData = metaTorrentData;
         buffer = ByteBuffer.allocate(BUFFER_SIZE);
         // peersSockets = new ArrayList<>();
 
-        selector = Selector.open();
+      //  selector = Selector.open();
+        this.selector = selector;
         message = new Message(selector, metaTorrentData);
         for (String peer : peers) {
             String[] ipAndPort = peer.split(":");
@@ -77,7 +78,6 @@ public class TorrentClient {
         ByteBuffer newRequest = queue.peek();
         if (newRequest != null) {
             try {
-                newRequest.flip();
                 client.write(newRequest);
 
                 if (!newRequest.hasRemaining()) {

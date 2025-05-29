@@ -85,6 +85,7 @@ public class Message {
             request.putInt(index);
             request.putInt(begin);
             request.putInt(length);
+            request.flip();
             requestQueue.add(request);
         }
         key.attach(requestQueue);

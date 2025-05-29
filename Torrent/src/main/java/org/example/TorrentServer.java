@@ -15,15 +15,14 @@ public class TorrentServer {
     private int myPort;
     private final int BUFFER_SIZE = 1024;
     private MetaTorrentData metaTorrentData;
-    private ByteBuffer buffer;
     private Selector selector;
     private Message message;
 
-    public TorrentServer(String port, MetaTorrentData metaTorrentData) throws IOException {
+    public TorrentServer(String port, MetaTorrentData metaTorrentData, Selector selector) throws IOException {
         myPort = Integer.parseInt(port);
         this.metaTorrentData = metaTorrentData;
-        buffer = ByteBuffer.allocate(BUFFER_SIZE);
-        selector = Selector.open();
+        //selector = Selector.open();
+        this.selector = selector;
         message = new Message(selector, metaTorrentData);
     }
 
@@ -65,6 +64,8 @@ public class TorrentServer {
 
     private void handleRead(SelectionKey key) throws IOException {
         SocketChannel client = (SocketChannel) key.channel();
+        ByteBuffer buffer = (ByteBuffer) key.attachment();
+
         buffer.clear();
         int read = client.read(buffer);
         if (read == -1) {
@@ -73,17 +74,17 @@ public class TorrentServer {
             return;
         }
 
+
         buffer.rewind();
         byte byteMessageType = buffer.get();
         MessageTypes messageType = MessageTypes.values()[byteMessageType % MessageTypes.values().length]; //TODO try catch invalid message
         System.out.println(messageType);
         switch (messageType) {
             case HANDSHAKE -> {
-                byte[] hash = Arrays.copyOfRange(buffer.array(), 1, 21);
+                byte[] hash = Arrays.copyOfRange(buffer.array(), buffer.position(), buffer.position() + 20);
                 if (Arrays.equals(hash, metaTorrentData.getInfoHash())) {
                     System.out.println("hashes match ");
                     message.sendBitField(client);
-                    //может здесь только читать 1 байт????????????????????????????????????
                 } else {
                     System.out.println("hashes don't match => close connection");
                     key.cancel();
@@ -96,6 +97,7 @@ public class TorrentServer {
             }
             case REQUEST -> {
                 System.out.println("recive request");
+                System.out.println(buffer.array());
             }
             case null, default -> {
                 System.out.println("default server message");
@@ -109,6 +111,7 @@ public class TorrentServer {
         SocketChannel client = server.accept();
         System.out.println("accept of " + client.getRemoteAddress());
         client.configureBlocking(false);
-        client.register(selector, SelectionKey.OP_READ);
+        ByteBuffer clientBuffer = ByteBuffer.allocate(BUFFER_SIZE);
+        client.register(selector, SelectionKey.OP_READ, clientBuffer);
     }
 }
