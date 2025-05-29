@@ -35,9 +35,11 @@ public class Message {
         System.out.println("send bitfield");
         buffer.put((byte) MessageTypes.BITFIELD.ordinal());
 
-       // byte[] infoHash = metaTorrentData.getInfoHash();
-        //buffer.put(infoHash);
-        //положить bitfield в метадату????????????????
+        byte[] bitField = metaTorrentData.getBitField().toByteArray();
+        int bitFieldLength = bitField.length;
+        buffer.putInt(bitFieldLength);
+       // System.out.println(bitField);
+        buffer.put(bitField);
         buffer.flip();
         client.write(buffer);
     }

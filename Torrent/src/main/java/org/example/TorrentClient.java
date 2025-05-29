@@ -5,10 +5,7 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Iterator;
-import java.util.Set;
+import java.util.*;
 
 public class TorrentClient {
 
@@ -76,10 +73,21 @@ public class TorrentClient {
             client.close();
             return;
         }
-        MessageTypes message = MessageTypes.values()[buffer.get(0) % MessageTypes.values().length];
-        switch (message) {
-            case BITFIELD -> {}
-
+        buffer.rewind();
+        byte byteMessageType = buffer.get();
+        MessageTypes messageType = MessageTypes.values()[byteMessageType % MessageTypes.values().length]; //TODO try catch invalid message
+        System.out.println(messageType);
+        switch (messageType) {
+            case BITFIELD -> {
+                int bitFieldLength = buffer.getInt();
+                byte[] byteBitField = Arrays.copyOfRange(buffer.array(), 1, 1 + bitFieldLength);
+                BitSet bitField = BitSet.valueOf(byteBitField);
+                System.out.println("recieve bitField");
+                System.out.println(bitField);
+            }
+            case null, default -> {
+                System.out.println("default client message");
+            }
         }
 
     }

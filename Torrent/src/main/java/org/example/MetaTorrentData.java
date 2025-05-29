@@ -18,6 +18,7 @@ import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.BitSet;
 import java.util.Map;
 
 public class MetaTorrentData {
@@ -27,7 +28,8 @@ public class MetaTorrentData {
     private long piecesLength;
     private long sourceFileLength;
     private String sourceFileName;
-    private ByteBuffer infoHash;;
+    private ByteBuffer infoHash;
+    private BitSet bitField;
 
     public MetaTorrentData(String sourceFile, String torrentFile) throws IOException, NoSuchAlgorithmException {
 
@@ -58,6 +60,23 @@ public class MetaTorrentData {
             hashes.add(newHash);
         }
 
+        bitField = new BitSet(piecesNumber);
+        fillBitField();
+    }
+
+    private void fillBitField() throws NoSuchAlgorithmException, IOException {
+        MessageDigest sha1 = MessageDigest.getInstance("SHA-1");
+        byte[] piece;
+        FileInputStream sourseFile = new FileInputStream(sourceFileName);
+        for (int i = 0; i < piecesNumber; ++i) {
+            byte[] originPieceHash = hashes.get(i);
+            piece = sourseFile.readNBytes((int) piecesLength);
+            byte[] myPieceHash = sha1.digest(piece);
+            if (Arrays.equals(myPieceHash, originPieceHash)) {
+                bitField.set(i);
+            }
+        }
+       // System.out.println(bitField);
 
     }
 
@@ -83,5 +102,9 @@ public class MetaTorrentData {
 
     public long getSourceFileLength() {
         return sourceFileLength;
+    }
+
+    public BitSet getBitField() {
+        return bitField;
     }
 }

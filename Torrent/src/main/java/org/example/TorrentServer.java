@@ -72,7 +72,11 @@ public class TorrentServer {
             client.close();
             return;
         }
-        MessageTypes messageType = MessageTypes.values()[buffer.get(0) % MessageTypes.values().length]; //TODO try catch invalid message
+
+        buffer.rewind();
+        byte byteMessageType = buffer.get();
+        MessageTypes messageType = MessageTypes.values()[byteMessageType % MessageTypes.values().length]; //TODO try catch invalid message
+        System.out.println(messageType);
         switch (messageType) {
             case HANDSHAKE -> {
                 byte[] hash = Arrays.copyOfRange(buffer.array(), 1, 21);
@@ -87,7 +91,7 @@ public class TorrentServer {
                 }
             }
             case null, default -> {
-                System.out.println("default");
+                System.out.println("default server message");
             }
         }
 

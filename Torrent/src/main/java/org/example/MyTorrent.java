@@ -25,7 +25,7 @@ public class MyTorrent {
         String[] peers = Arrays.copyOfRange(args, 3, args.length);
 
         MetaTorrentData metaTorrentData = new MetaTorrentData(args[0], args[1]);
-        BitField bitField = new BitField(metaTorrentData);
+       // BitField bitField = new BitField(metaTorrentData);
 
         TorrentClient torrentClient = new TorrentClient(peers, metaTorrentData);
         TorrentServer torrentServer = new TorrentServer(args[2], metaTorrentData);
