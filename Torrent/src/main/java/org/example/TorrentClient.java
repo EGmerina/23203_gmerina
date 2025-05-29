@@ -107,8 +107,7 @@ public class TorrentClient {
             System.out.println("send message");
             client.register(selector, SelectionKey.OP_READ);
             byte[] infoHash = metaTorrentData.getInfoHash();
-            // buffer.put((byte) Messages.HANDSHAKE.ordinal());
-
+            buffer.put((byte) Messages.HANDSHAKE.ordinal());
             buffer.put(infoHash);
             buffer.flip();
             client.write(buffer);

@@ -27,12 +27,11 @@ public class MetaTorrentData {
     private long piecesLength;
     private long sourceFileLength;
     private String sourceFileName;
-    private ByteBuffer infoHash;
-    private final int BUFFER_SIZE = 21;
+    private ByteBuffer infoHash;;
 
     public MetaTorrentData(String sourceFile, String torrentFile) throws IOException, NoSuchAlgorithmException {
 
-        infoHash = ByteBuffer.allocate(BUFFER_SIZE);
+        infoHash = ByteBuffer.allocate(20);
         sourceFileName = sourceFile;
 
         hashes = new ArrayList<>();

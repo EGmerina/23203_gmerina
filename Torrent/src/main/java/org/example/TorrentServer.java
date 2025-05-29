@@ -73,26 +73,18 @@ public class TorrentServer {
             client.close();
             return;
         }
-        //Messages message = Messages.values()[buffer.get(0) % Messages.values().length];
-        Messages message = null;
+        Messages message = Messages.values()[buffer.get(0) % Messages.values().length];
         switch (message) {
             case HANDSHAKE -> {
-                byte[] hash = Arrays.copyOfRange((byte[]) buffer.array(), 1, buffer.array().length);
-//                System.out.println(buffer.array());
-//                System.out.println(hash);
-//                System.out.println(metaTorrentData.getInfoHash());
+                byte[] hash = Arrays.copyOfRange(buffer.array(), 1, 21);
                 if (Arrays.equals(hash, metaTorrentData.getInfoHash())) {
                     System.out.println("hashes match ");
                 } else {
-                    System.out.println(metaTorrentData.getInfoHash());
+                    System.out.println(metaTorrentData.getInfoHash() + " " + metaTorrentData.getInfoHash().length);
                 }
             }
             case null, default -> {
-                if (Arrays.equals(buffer.array(), metaTorrentData.getInfoHash())) {
-                    System.out.println("hashes match ");
-                } else {
-                    System.out.println(metaTorrentData.getInfoHash());
-                }
+                System.out.println("default");
             }
         }
 
