@@ -7,10 +7,7 @@ import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
-import java.util.Arrays;
-import java.util.BitSet;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 public class Message {
     private MetaTorrentData metaTorrentData;
@@ -18,6 +15,8 @@ public class Message {
     private ByteBuffer buffer;
     private Map<SocketAddress, BitSet> socketBitFields;
     private final int BUFFER_SIZE = 1024;
+    private final int BLOCK_SIZE = 1024 * 16;
+
 
     public Message(Selector selector, MetaTorrentData metaTorrentData) {
         buffer = ByteBuffer.allocate(BUFFER_SIZE);
@@ -59,21 +58,33 @@ public class Message {
         System.out.println("recieve bitField");
     }
 
-    public void sendRequest(SocketChannel client) throws IOException {
+    public void sendRequest(SocketChannel client, SelectionKey key) throws IOException {
+
         BitSet bitField = socketBitFields.get(client.getLocalAddress());
         int index = findMissingPiece(bitField);
         if (index < 0) {
+            System.out.println("not interested");
             return;
         }
-        buffer.clear();
+
         System.out.println("send request");
-        buffer.put((byte) MessageTypes.REQUEST.ordinal());
-        buffer.putInt(index);
-        buffer.putInt(begin);
-        buffer.putInt(length);
-        buffer.flip();
-        client.write(buffer);
-        //очередь запросов
+
+        Queue<ByteBuffer> requestQueue = new LinkedList<>();
+        int blocksInPiece = (int) Math.ceil((double) metaTorrentData.getPiecesLength() / BLOCK_SIZE);
+
+        for (int i = 0; i < blocksInPiece; i++) {
+            int begin = i * BLOCK_SIZE;
+            int length = Math.min(BLOCK_SIZE, (int) metaTorrentData.getPiecesLength() - begin);
+
+            ByteBuffer request = ByteBuffer.allocate(13);
+            request.put((byte) MessageTypes.REQUEST.ordinal());
+            request.putInt(index);
+            request.putInt(begin);
+            request.putInt(length);
+            requestQueue.add(request);
+        }
+        key.cancel();
+        client.register(selector, SelectionKey.OP_WRITE, requestQueue);
     }
 
     private int findMissingPiece(BitSet clientBitFiled) {

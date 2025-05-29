@@ -54,7 +54,8 @@ public class TorrentClient {
 
                 } else if (key.isReadable()) {
                     handleRead(key);
-
+                } else if (key.isWritable()) {
+                    handleWrite(key);
                 }
                 iterator.remove();
 
@@ -62,6 +63,31 @@ public class TorrentClient {
 
         }
 
+    }
+
+    private void handleWrite(SelectionKey key) {
+        SocketChannel client = (SocketChannel) key.channel();
+        Queue<ByteBuffer> queue = (Queue<ByteBuffer>) key.attachment();
+
+        ByteBuffer newRequest = queue.peek();
+        if (newRequest != null) {
+            try {
+                client.write(newRequest);
+
+                if (!newRequest.hasRemaining()) {
+                    newRequest = null;
+                    queue.poll();
+                    System.out.println("Запрос отправлен");
+                }
+            } catch (IOException e) {
+                System.err.println("Ошибка записи: " + e.getMessage());
+                key.cancel();
+            }
+        }
+
+        if (queue.isEmpty()) {
+            key.interestOps(SelectionKey.OP_READ);
+        }
     }
 
     private void handleRead(SelectionKey key) throws IOException {
@@ -80,8 +106,8 @@ public class TorrentClient {
         System.out.println(messageType);
         switch (messageType) {
             case BITFIELD -> {
-                message.recieveBitField(client, buffer); //interested????????????
-                message.sendRequest(client);//???????????????????????keepalive
+                message.recieveBitField(client, buffer);
+                message.sendRequest(client, key);
             }
             case null, default -> {
                 System.out.println("default client message");

@@ -91,6 +91,9 @@ public class TorrentServer {
 
                 }
             }
+            case REQUEST -> {
+                System.out.println("recive request");
+            }
             case null, default -> {
                 System.out.println("default server message");
             }
