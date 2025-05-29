@@ -4,10 +4,7 @@ import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
-import java.nio.channels.ServerSocketChannel;
-import java.nio.channels.SocketChannel;
+import java.nio.channels.*;
 import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.Iterator;
@@ -110,6 +107,8 @@ public class TorrentClient {
             System.out.println("send message");
             client.register(selector, SelectionKey.OP_READ);
             byte[] infoHash = metaTorrentData.getInfoHash();
+            // buffer.put((byte) Messages.HANDSHAKE.ordinal());
+
             buffer.put(infoHash);
             buffer.flip();
             client.write(buffer);

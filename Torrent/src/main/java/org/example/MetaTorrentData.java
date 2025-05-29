@@ -28,7 +28,7 @@ public class MetaTorrentData {
     private long sourceFileLength;
     private String sourceFileName;
     private ByteBuffer infoHash;
-    private final int BUFFER_SIZE = 1024;
+    private final int BUFFER_SIZE = 21;
 
     public MetaTorrentData(String sourceFile, String torrentFile) throws IOException, NoSuchAlgorithmException {
 

@@ -67,16 +67,35 @@ public class TorrentServer {
     private void handleRead(SelectionKey key) throws IOException {
         SocketChannel client = (SocketChannel) key.channel();
         buffer.clear();
-        // ЗАПУСТИТЬ ОБРАБОТЧИК СООБЩЕНИЯ! НА ТРЕДПУЛЕ
         int read = client.read(buffer);
         if (read == -1) {
             System.out.println("client was closed (torrect server) " + client.getRemoteAddress());
             client.close();
-        } else if (Arrays.equals(buffer.array(), metaTorrentData.getInfoHash())) {
-            System.out.println("hashes match ");
-        } else {
-            System.out.println(metaTorrentData.getInfoHash());
+            return;
         }
+        //Messages message = Messages.values()[buffer.get(0) % Messages.values().length];
+        Messages message = null;
+        switch (message) {
+            case HANDSHAKE -> {
+                byte[] hash = Arrays.copyOfRange((byte[]) buffer.array(), 1, buffer.array().length);
+//                System.out.println(buffer.array());
+//                System.out.println(hash);
+//                System.out.println(metaTorrentData.getInfoHash());
+                if (Arrays.equals(hash, metaTorrentData.getInfoHash())) {
+                    System.out.println("hashes match ");
+                } else {
+                    System.out.println(metaTorrentData.getInfoHash());
+                }
+            }
+            case null, default -> {
+                if (Arrays.equals(buffer.array(), metaTorrentData.getInfoHash())) {
+                    System.out.println("hashes match ");
+                } else {
+                    System.out.println(metaTorrentData.getInfoHash());
+                }
+            }
+        }
+
     }
 
     private void handleAccept(SelectionKey key) throws IOException {
