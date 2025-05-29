@@ -44,6 +44,11 @@ public class TorrentClient {
             while (iterator.hasNext()) {
                 SelectionKey key = iterator.next();
 
+                if (!key.isValid()) {
+                    iterator.remove();
+                    continue; // пропускаем невалидные ключи
+                }
+
                 if (key.isConnectable()) {
                     try {
                         handleConnect(key);
@@ -72,12 +77,13 @@ public class TorrentClient {
         ByteBuffer newRequest = queue.peek();
         if (newRequest != null) {
             try {
+                newRequest.flip();
                 client.write(newRequest);
 
                 if (!newRequest.hasRemaining()) {
                     newRequest = null;
                     queue.poll();
-                    System.out.println("Запрос отправлен");
+
                 }
             } catch (IOException e) {
                 System.err.println("Ошибка записи: " + e.getMessage());
@@ -86,6 +92,7 @@ public class TorrentClient {
         }
 
         if (queue.isEmpty()) {
+            System.out.println("request was sent");
             key.interestOps(SelectionKey.OP_READ);
         }
     }

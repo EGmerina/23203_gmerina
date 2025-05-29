@@ -91,6 +91,9 @@ public class TorrentServer {
 
                 }
             }
+            case KEEPALIVE -> {
+                System.out.println("keepalive");
+            }
             case REQUEST -> {
                 System.out.println("recive request");
             }

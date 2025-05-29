@@ -64,10 +64,14 @@ public class Message {
         int index = findMissingPiece(bitField);
         if (index < 0) {
             System.out.println("not interested");
+//            buffer.clear();
+//            buffer.put((byte) MessageTypes.KEEPALIVE.ordinal());
+//            buffer.flip();
+//            client.write(buffer);
             return;
         }
 
-        System.out.println("send request");
+        System.out.println("sending request...");
 
         Queue<ByteBuffer> requestQueue = new LinkedList<>();
         int blocksInPiece = (int) Math.ceil((double) metaTorrentData.getPiecesLength() / BLOCK_SIZE);
@@ -83,8 +87,8 @@ public class Message {
             request.putInt(length);
             requestQueue.add(request);
         }
-        key.cancel();
-        client.register(selector, SelectionKey.OP_WRITE, requestQueue);
+        key.attach(requestQueue);
+        key.interestOps(SelectionKey.OP_WRITE);
     }
 
     private int findMissingPiece(BitSet clientBitFiled) {
