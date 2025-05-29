@@ -80,8 +80,8 @@ public class TorrentClient {
         switch (messageType) {
             case BITFIELD -> {
                 int bitFieldLength = buffer.getInt();
-                byte[] byteBitField = Arrays.copyOfRange(buffer.array(), 1, 1 + bitFieldLength);
-                BitSet bitField = BitSet.valueOf(byteBitField);
+                byte[] byteBitField = Arrays.copyOfRange(buffer.array(), 5, 5 + bitFieldLength);
+                BitSet bitField = BitSet.valueOf(byteBitField); 
                 System.out.println("recieve bitField");
                 System.out.println(bitField);
             }
