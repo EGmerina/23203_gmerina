@@ -5,24 +5,26 @@ import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.*;
-import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 import java.util.Set;
 
 public class TorrentClient {
 
-    private ArrayList<SocketChannel> peersSockets;
     private final int BUFFER_SIZE = 1024;
-    private Selector selector;
     private ByteBuffer buffer;
+    private ArrayList<SocketChannel> peersSockets;
+    private Selector selector;
     private MetaTorrentData metaTorrentData;
+    private Message message;
 
     public TorrentClient(String[] peers, MetaTorrentData metaTorrentData) throws IOException {
         this.metaTorrentData = metaTorrentData;
         buffer = ByteBuffer.allocate(BUFFER_SIZE);
         peersSockets = new ArrayList<>();
         selector = Selector.open();
+        message = new Message(selector, metaTorrentData);
         for (String peer : peers) {
             String[] ipAndPort = peer.split(":");
             SocketAddress addr = new InetSocketAddress(ipAndPort[0], Integer.parseInt(ipAndPort[1]));
@@ -55,9 +57,6 @@ public class TorrentClient {
                 } else if (key.isReadable()) {
                     handleRead(key);
 
-                } else if (key.isWritable()) {
-                    handleWrite(key);
-
                 }
                 iterator.remove();
 
@@ -67,29 +66,22 @@ public class TorrentClient {
 
     }
 
-    private void handleWrite(SelectionKey key) {
-        //                    SocketChannel client = (SocketChannel) key.channel();
-//                    buffer.clear();
-//                    String message = "hello from " + client.getRemoteAddress();
-//                    byte[] messageBytes = message.getBytes(StandardCharsets.UTF_8);
-//                    buffer.put(messageBytes);
-//                    buffer.flip();
-//                    client.write(buffer);
-    }
-
     private void handleRead(SelectionKey key) throws IOException {
+
         SocketChannel client = (SocketChannel) key.channel();
         buffer.clear();
-        // TODO ЗАПУСТИТЬ ОБРАБОТЧИК СООБЩЕНИЯ! threadpool
         int read = client.read(buffer);
         if (read == -1) {
-            System.out.println("client was closed (torrect client) " + client.getRemoteAddress());
-            key.cancel();
+            System.out.println("client was closed (torrect server) " + client.getRemoteAddress());
             client.close();
-        } else {
-            String message = new String(buffer.array(), 0, read).trim();
-            System.out.println("Received: (torrect client) " + message);
+            return;
         }
+        MessageTypes message = MessageTypes.values()[buffer.get(0) % MessageTypes.values().length];
+        switch (message) {
+            case BITFIELD -> {}
+
+        }
+
     }
 
     private void tryToConnectAgain(SelectionKey key) throws IOException {
@@ -100,17 +92,10 @@ public class TorrentClient {
     }
 
     private void handleConnect(SelectionKey key) throws IOException {
-        //handshake
-        buffer.clear();
+
         SocketChannel client = (SocketChannel) key.channel();
         if (client.finishConnect()) {
-            System.out.println("send message");
-            client.register(selector, SelectionKey.OP_READ);
-            byte[] infoHash = metaTorrentData.getInfoHash();
-            buffer.put((byte) Messages.HANDSHAKE.ordinal());
-            buffer.put(infoHash);
-            buffer.flip();
-            client.write(buffer);
+            message.sendHandshake(client);
         } else {
             System.out.println("wait connection....");
         }

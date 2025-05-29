@@ -1,5 +1,0 @@
-package org.example;
-
-public enum Messages {
-    KEEPALIVE, HANDSHAKE, INTERESTED, NOT_INTERESTED, HAVE, BITFIELD, REQUEST, PIECE, CANCEL
-}

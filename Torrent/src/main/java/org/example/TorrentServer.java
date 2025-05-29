@@ -17,50 +17,49 @@ public class TorrentServer {
     private MetaTorrentData metaTorrentData;
     private ByteBuffer buffer;
     private Selector selector;
+    private Message message;
 
-    public TorrentServer(String port, MetaTorrentData metaTorrentData) {
+    public TorrentServer(String port, MetaTorrentData metaTorrentData) throws IOException {
         myPort = Integer.parseInt(port);
         this.metaTorrentData = metaTorrentData;
         buffer = ByteBuffer.allocate(BUFFER_SIZE);
+        selector = Selector.open();
+        message = new Message(selector, metaTorrentData);
     }
 
     //сделать класс хэндлеров отвечающий за каждый key
 
     public void start() {
+
         try {
-            selector = Selector.open();
-            try {
-                ServerSocketChannel socketChannel = ServerSocketChannel.open();
-                socketChannel.bind(new InetSocketAddress(myPort));
-                socketChannel.configureBlocking(false);
-                socketChannel.register(selector, SelectionKey.OP_ACCEPT);
+            ServerSocketChannel socketChannel = ServerSocketChannel.open();
+            socketChannel.bind(new InetSocketAddress(myPort));
+            socketChannel.configureBlocking(false);
+            socketChannel.register(selector, SelectionKey.OP_ACCEPT);
 
-                while (true) {
-                    selector.select();
-                    Set<SelectionKey> selectedKeys = selector.selectedKeys();
-                    Iterator<SelectionKey> iterator = selectedKeys.iterator();
+            while (true) {
+                selector.select();
+                Set<SelectionKey> selectedKeys = selector.selectedKeys();
+                Iterator<SelectionKey> iterator = selectedKeys.iterator();
 
-                    while (iterator.hasNext()) {
-                        SelectionKey key = iterator.next();
-                        if (key.isAcceptable()) {
-                            handleAccept(key);
+                while (iterator.hasNext()) {
+                    SelectionKey key = iterator.next();
+                    if (key.isAcceptable()) {
+                        handleAccept(key);
 
-                        } else if (key.isReadable()) {
-                            handleRead(key);
-                        }
-                        iterator.remove();
+                    } else if (key.isReadable()) {
+                        handleRead(key);
                     }
-
+                    iterator.remove();
                 }
 
-            } catch (IOException e) {
-                System.out.println("can't open SocketChannel in TorrentServer");
-                throw new RuntimeException(e);
             }
+
         } catch (IOException e) {
-            System.out.println("can't open selector in TorrentServer");
+            System.out.println("can't open SocketChannel in TorrentServer");
             throw new RuntimeException(e);
         }
+
 
     }
 
@@ -73,14 +72,18 @@ public class TorrentServer {
             client.close();
             return;
         }
-        Messages message = Messages.values()[buffer.get(0) % Messages.values().length];
-        switch (message) {
+        MessageTypes messageType = MessageTypes.values()[buffer.get(0) % MessageTypes.values().length]; //TODO try catch invalid message
+        switch (messageType) {
             case HANDSHAKE -> {
                 byte[] hash = Arrays.copyOfRange(buffer.array(), 1, 21);
                 if (Arrays.equals(hash, metaTorrentData.getInfoHash())) {
                     System.out.println("hashes match ");
+                    message.sendBitField(client);
                 } else {
-                    System.out.println(metaTorrentData.getInfoHash() + " " + metaTorrentData.getInfoHash().length);
+                    System.out.println("hashes don't match => close connection");
+                    key.cancel();
+                    client.close();
+
                 }
             }
             case null, default -> {
