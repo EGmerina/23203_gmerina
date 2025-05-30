@@ -74,7 +74,6 @@ public class TorrentServer {
             return;
         }
 
-
         buffer.rewind();
         byte byteMessageType = buffer.get();
         MessageTypes messageType = MessageTypes.values()[byteMessageType % MessageTypes.values().length]; //TODO try catch invalid message
@@ -85,6 +84,8 @@ public class TorrentServer {
                 if (Arrays.equals(hash, metaTorrentData.getInfoHash())) {
                     System.out.println("hashes match ");
                     message.sendBitField(client);
+
+
                 } else {
                     System.out.println("hashes don't match => close connection");
                     key.cancel();
@@ -96,16 +97,29 @@ public class TorrentServer {
                 System.out.println("keepalive");
             }
             case REQUEST -> {
-                while (messageType == MessageTypes.REQUEST && buffer.hasRemaining()) {
+                while (buffer.remaining() >= 8 && messageType == MessageTypes.REQUEST) {
+
                     System.out.println("recive request");
                     int index = buffer.getInt();
                     int begin = buffer.getInt();
                     int lenght = buffer.getInt();
                     System.out.println(index + " " + begin + " " + lenght);
                     message.sendPiece(index, begin, lenght, client);
-                    messageType = MessageTypes.values()[buffer.get()]; //остаток буфера должен переноситься в начало TODO
+
+                    if (!buffer.hasRemaining()) {
+                        break;
+                    }
+
+                    int initialPosition = buffer.position();
+                    byteMessageType = buffer.get();
+                    messageType = MessageTypes.values()[byteMessageType % MessageTypes.values().length];
+
+                    if (buffer.remaining() < 8 && messageType == MessageTypes.REQUEST) {
+                        buffer.position(initialPosition);
+                        buffer.compact(); // ожидаем больше данных
+                        return;
+                    }
                 }
-                //тут реально много запросов в одном буфере!!!!!!!!!!!!!!!!!!!!!
 
             }
             case null, default -> {
