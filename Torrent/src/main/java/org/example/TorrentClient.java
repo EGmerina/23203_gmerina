@@ -116,6 +116,9 @@ public class TorrentClient {
                 message.recieveBitField(client, buffer);
                 message.sendRequest(client, key);
             }
+            case PIECE -> {
+                System.out.println("recieve piece");
+            }
             case null, default -> {
                 System.out.println("default client message");
             }

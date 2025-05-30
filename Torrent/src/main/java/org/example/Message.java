@@ -14,7 +14,7 @@ public class Message {
     private Selector selector;
     private ByteBuffer buffer;
     private Map<SocketAddress, BitSet> socketBitFields;
-    private final int BUFFER_SIZE = 1024;
+    private final int BUFFER_SIZE = 1024 * 17;
     private final int BLOCK_SIZE = 1024 * 16;
 
 
@@ -98,5 +98,14 @@ public class Message {
         difference.andNot(myBitFiled);
         int index = difference.nextSetBit(0);
         return index; // -1 если не нашел
+    }
+
+    public void sendPiece(int index, int begin, int lenght, SocketChannel client) throws IOException { //TODO у каждого клиента должен быть буфер длиной piece чтобы можно было собрать кусочки и сравнить хэш
+        buffer.clear();
+        System.out.println("send piece");
+        buffer.put((byte) MessageTypes.PIECE.ordinal());
+
+        buffer.flip();
+        client.write(buffer);
     }
 }

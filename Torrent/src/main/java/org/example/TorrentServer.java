@@ -96,12 +96,15 @@ public class TorrentServer {
                 System.out.println("keepalive");
             }
             case REQUEST -> {
-                System.out.println("recive request");
-                // System.out.println(buffer.array().length);
-                int index = buffer.getInt();
-                int begin = buffer.getInt();
-                int lenght = buffer.getInt();
-                System.out.println(index + " " + begin + " " + lenght);
+                while (messageType == MessageTypes.REQUEST && buffer.hasRemaining()) {
+                    System.out.println("recive request");
+                    int index = buffer.getInt();
+                    int begin = buffer.getInt();
+                    int lenght = buffer.getInt();
+                    System.out.println(index + " " + begin + " " + lenght);
+                    message.sendPiece(index, begin, lenght, client);
+                    messageType = MessageTypes.values()[buffer.get()]; //остаток буфера должен переноситься в начало TODO
+                }
                 //тут реально много запросов в одном буфере!!!!!!!!!!!!!!!!!!!!!
 
             }
