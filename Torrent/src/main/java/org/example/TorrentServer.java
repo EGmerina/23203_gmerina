@@ -18,7 +18,7 @@ public class TorrentServer {
     private Selector selector;
     private Message message;
 
-    public TorrentServer(String port, MetaTorrentData metaTorrentData) throws IOException {
+    public TorrentServer(String port, MetaTorrentData metaTorrentData) throws Exception {
         myPort = Integer.parseInt(port);
         this.metaTorrentData = metaTorrentData;
         selector = Selector.open();
@@ -57,12 +57,14 @@ public class TorrentServer {
         } catch (IOException e) {
             System.out.println("can't open SocketChannel in TorrentServer");
             throw new RuntimeException(e);
+        } catch (Exception e) {
+            throw new RuntimeException(e);
         }
 
 
     }
 
-    private void handleRead(SelectionKey key) throws IOException {
+    private void handleRead(SelectionKey key) throws Exception {
         SocketChannel client = (SocketChannel) key.channel();
         ByteBuffer buffer = (ByteBuffer) key.attachment();
 
@@ -76,7 +78,13 @@ public class TorrentServer {
 
         buffer.rewind();
         byte byteMessageType = buffer.get();
-        MessageTypes messageType = MessageTypes.values()[byteMessageType % MessageTypes.values().length]; //TODO try catch invalid message
+        MessageTypes messageType;
+        try {
+            messageType = MessageTypes.values()[byteMessageType];
+        } catch (Exception e) {
+            System.out.println("server: invalid message type");
+            return;
+        }
         System.out.println(messageType);
         switch (messageType) {
             case HANDSHAKE -> {
@@ -97,13 +105,13 @@ public class TorrentServer {
                 System.out.println("keepalive");
             }
             case REQUEST -> {
-                while (buffer.remaining() >= 8 && messageType == MessageTypes.REQUEST) {
+                while (buffer.remaining() >= 12 && messageType == MessageTypes.REQUEST) {
 
                     System.out.println("recive request");
                     int index = buffer.getInt();
                     int begin = buffer.getInt();
                     int lenght = buffer.getInt();
-                    System.out.println(index + " " + begin + " " + lenght);
+                    // System.out.println(index + " " + begin + " " + lenght);
                     message.sendPiece(index, begin, lenght, client);
 
                     if (!buffer.hasRemaining()) {
@@ -114,13 +122,16 @@ public class TorrentServer {
                     byteMessageType = buffer.get();
                     messageType = MessageTypes.values()[byteMessageType % MessageTypes.values().length];
 
-                    if (buffer.remaining() < 8 && messageType == MessageTypes.REQUEST) {
+                    if (buffer.remaining() < 12 && messageType == MessageTypes.REQUEST) {
                         buffer.position(initialPosition);
                         buffer.compact(); // ожидаем больше данных
                         return;
                     }
                 }
 
+            }
+            case HAVE -> {
+                System.out.println("have");
             }
             case null, default -> {
                 System.out.println("default server message");

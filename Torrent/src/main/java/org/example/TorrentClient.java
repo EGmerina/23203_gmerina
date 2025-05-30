@@ -11,18 +11,20 @@ public class TorrentClient {
 
     private final int BUFFER_SIZE = 1024;
     private ByteBuffer buffer;
-    // private ArrayList<SocketChannel> peersSockets;
+    private FileWriter fileWriter;
     private Selector selector;
     private MetaTorrentData metaTorrentData;
     private Message message;
+    private PieceAssembler pieceAssembler;
 
-    public TorrentClient(String[] peers, MetaTorrentData metaTorrentData) throws IOException {
+    public TorrentClient(String[] peers, MetaTorrentData metaTorrentData) throws Exception {
         this.metaTorrentData = metaTorrentData;
+        fileWriter = new FileWriter(metaTorrentData.getSourceFileName(), metaTorrentData.getSourceFileLength());
         buffer = ByteBuffer.allocate(BUFFER_SIZE);
-        // peersSockets = new ArrayList<>();
+        pieceAssembler = new PieceAssembler((int)metaTorrentData.getPiecesLength());
 
-       selector = Selector.open();
-       // this.selector = selector;
+        selector = Selector.open();
+        // this.selector = selector;
         message = new Message(selector, metaTorrentData);
         for (String peer : peers) {
             String[] ipAndPort = peer.split(":");
@@ -109,7 +111,13 @@ public class TorrentClient {
         }
         buffer.rewind();
         byte byteMessageType = buffer.get();
-        MessageTypes messageType = MessageTypes.values()[byteMessageType % MessageTypes.values().length]; //TODO try catch invalid message
+        MessageTypes messageType;
+        try {
+            messageType = MessageTypes.values()[byteMessageType];
+        } catch (Exception e) {
+            System.out.println("client: invalid message type");
+            return;
+        }
         System.out.println(messageType);
         switch (messageType) {
             case BITFIELD -> {
@@ -117,7 +125,44 @@ public class TorrentClient {
                 message.sendRequest(client, key);
             }
             case PIECE -> {
-                System.out.println("recieve piece");
+                while (buffer.remaining() >= 12 && messageType == MessageTypes.PIECE) {
+                    System.out.println("recieve piece");
+                    int index = buffer.getInt();
+                    int begin = buffer.getInt();
+                    int length = buffer.getInt();
+
+                    if (buffer.remaining()< length) {
+                        buffer.compact();
+                        break;
+                    }
+
+                    byte[] data = new byte[length];
+                    buffer.get(data);
+
+                    pieceAssembler.addBlock(index, begin, data);
+
+                    if (pieceAssembler.isPieceComplete(index)) {
+                        byte[] fullPiece = pieceAssembler.getAssembledPiece(index);
+                        if (fullPiece != null && pieceAssembler.validatePieceHash(index, fullPiece, metaTorrentData.getPieceHash(index))) {
+                            fileWriter.writePiece(index, fullPiece);
+                            message.sendHave(client, index);
+                        } else {
+                            message.sendRequest(client, key);
+                        }
+
+                        pieceAssembler.removePiece(index); // очищаем память
+                    }
+
+                    int initialPosition = buffer.position();
+                    byteMessageType = buffer.get();
+                    messageType = MessageTypes.values()[byteMessageType % MessageTypes.values().length];//!!!!!!!!!!!!!!!!!!!!!!!!!
+
+                    if (buffer.remaining() < 12 && messageType == MessageTypes.PIECE) {
+                        buffer.position(initialPosition);
+                        buffer.compact();
+                        return;
+                    }
+                }
             }
             case null, default -> {
                 System.out.println("default client message");

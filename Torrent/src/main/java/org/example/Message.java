@@ -16,9 +16,11 @@ public class Message {
     private Map<SocketAddress, BitSet> socketBitFields;
     private final int BUFFER_SIZE = 1024 * 17;
     private final int BLOCK_SIZE = 1024 * 16;
+    private PieceManager pieceManager;
 
 
-    public Message(Selector selector, MetaTorrentData metaTorrentData) {
+    public Message(Selector selector, MetaTorrentData metaTorrentData) throws Exception {
+        pieceManager = new PieceManager(metaTorrentData.getSourceFileName(), metaTorrentData.getPiecesLength());
         buffer = ByteBuffer.allocate(BUFFER_SIZE);
         this.selector = selector;
         this.metaTorrentData = metaTorrentData;
@@ -100,11 +102,24 @@ public class Message {
         return index; // -1 если не нашел
     }
 
-    public void sendPiece(int index, int begin, int lenght, SocketChannel client) throws IOException { //TODO у каждого клиента должен быть буфер длиной piece чтобы можно было собрать кусочки и сравнить хэш
-        buffer.clear();
+    public void sendPiece(int index, int begin, int length, SocketChannel client) throws Exception { //TODO у каждого клиента должен быть буфер длиной piece чтобы можно было собрать кусочки и сравнить хэш
+        buffer.clear(); //это буфер message!!!
         System.out.println("send piece");
+        ByteBuffer pieceData = pieceManager.readBlock(index, begin, length);
         buffer.put((byte) MessageTypes.PIECE.ordinal());
+        buffer.putInt(index);
+        buffer.putInt(begin);
+        buffer.putInt(length);
+        buffer.put(pieceData);
+        buffer.flip();
+        client.write(buffer);
+    }
 
+    public void sendHave(SocketChannel client, int index) throws IOException {
+        buffer.clear();
+        System.out.println("send have");
+        buffer.put((byte) MessageTypes.HAVE.ordinal());
+        buffer.putInt(index);
         buffer.flip();
         client.write(buffer);
     }
