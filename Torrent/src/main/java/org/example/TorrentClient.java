@@ -145,6 +145,7 @@ public class TorrentClient {
                         byte[] fullPiece = pieceAssembler.getAssembledPiece(index);
                         if (fullPiece != null && pieceAssembler.validatePieceHash(index, fullPiece, metaTorrentData.getPieceHash(index))) {
                             fileWriter.writePiece(index, fullPiece);
+                            metaTorrentData.setBitToBitField(index);
                             message.sendHave(client, index);
                         } else {
                             message.sendRequest(client, key);

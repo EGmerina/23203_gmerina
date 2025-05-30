@@ -107,4 +107,8 @@ public class MetaTorrentData {
     public BitSet getBitField() {
         return bitField;
     }
+
+    public void setBitToBitField(int index) {
+        bitField.set(index);
+    }
 }
