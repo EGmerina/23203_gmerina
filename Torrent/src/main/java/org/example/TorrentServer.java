@@ -18,11 +18,11 @@ public class TorrentServer {
     private Selector selector;
     private Message message;
 
-    public TorrentServer(String port, MetaTorrentData metaTorrentData, Selector selector) throws IOException {
+    public TorrentServer(String port, MetaTorrentData metaTorrentData) throws IOException {
         myPort = Integer.parseInt(port);
         this.metaTorrentData = metaTorrentData;
-        //selector = Selector.open();
-        this.selector = selector;
+        selector = Selector.open();
+        //  this.selector = selector;
         message = new Message(selector, metaTorrentData);
     }
 
@@ -97,7 +97,13 @@ public class TorrentServer {
             }
             case REQUEST -> {
                 System.out.println("recive request");
-                System.out.println(buffer.array());
+                // System.out.println(buffer.array().length);
+                int index = buffer.getInt();
+                int begin = buffer.getInt();
+                int lenght = buffer.getInt();
+                System.out.println(index + " " + begin + " " + lenght);
+                //тут реально много запросов в одном буфере!!!!!!!!!!!!!!!!!!!!!
+
             }
             case null, default -> {
                 System.out.println("default server message");
