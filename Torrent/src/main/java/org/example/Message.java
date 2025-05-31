@@ -112,11 +112,16 @@ public class Message {
         buffer.clear(); //это буфер message!!!
         System.out.println("send piece");
         ByteBuffer pieceData = pieceManager.readBlock(index, begin, length);
+
+        int realPieceLength = pieceData.array().length;
+
+        System.out.println(realPieceLength);
+
         buffer.putInt(1 + 4 * 3 + pieceData.array().length);
         buffer.put((byte) MessageTypes.PIECE.ordinal());
         buffer.putInt(index);
         buffer.putInt(begin);
-        buffer.putInt(length);
+        buffer.putInt(realPieceLength);
         buffer.put(pieceData);
         buffer.flip();
         client.write(buffer);

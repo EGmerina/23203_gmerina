@@ -2,6 +2,7 @@ package org.example;
 
 import com.turn.ttorrent.bcodec.BDecoder;
 import com.turn.ttorrent.bcodec.BEValue;
+
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.nio.ByteBuffer;
@@ -37,7 +38,7 @@ public class MetaTorrentData {
         Map<String, BEValue> infoMap = infoValue.getMap();
         piecesLength = infoMap.get("piece length").getInt();
         sourceFileLength = infoMap.get("length").getInt();
-        piecesNumber = (int) (sourceFileLength / piecesLength);
+        piecesNumber = (int) Math.ceil(sourceFileLength / (double) piecesLength);
         BEValue pieces = infoMap.get("pieces");
         byte[] byteHashes = pieces.getBytes();
 
@@ -67,7 +68,6 @@ public class MetaTorrentData {
                 bitField.set(i);
             }
         }
-       // System.out.println(bitField);
 
     }
 

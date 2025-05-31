@@ -45,3 +45,4 @@ public class MyTorrent {
 //java -jar <имя_файла.jar> <аргументы>
 //mvn clean package
 // java -jar target/Torrent-1.0-SNAPSHOT-jar-with-dependencies.jar src/main/resources/peer1/EnglishBook.pdf src/main/resources/peer1/EnglishBook.pdf.torrent  9991 127.0.0.1:9992
+//java -jar target/Torrent-1.0-SNAPSHOT-jar-with-dependencies.jar src/main/resources/peer1/test.txt src/main/resources/peer1/test.txt.torrent  9991 127.0.0.1:9992
