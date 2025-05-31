@@ -58,23 +58,24 @@ public class TorrentServer {
 
     private void handleRead(SelectionKey key) throws Exception {
         SocketChannel client = (SocketChannel) key.channel();
-        ByteBuffer bufferForMessageLenght = ByteBuffer.allocate(4);
 
+        ByteBuffer bufferForMessageLenght = ByteBuffer.allocate(4);
         int read = client.read(bufferForMessageLenght);
         if (read == -1) {
             System.out.println("client was closed (torrect server) " + client.getRemoteAddress());
             client.close();
             return;
         }
+        bufferForMessageLenght.flip();
         int messageLength = bufferForMessageLenght.getInt();
         ByteBuffer messageBuffer = ByteBuffer.allocate(messageLength);
-
         read = client.read(messageBuffer);
         if (read == -1) {
             System.out.println("client was closed (torrect server) " + client.getRemoteAddress());
             client.close();
             return;
         }
+        messageBuffer.flip();
 
         byte byteMessageType = messageBuffer.get();
         MessageTypes messageType;
@@ -106,28 +107,14 @@ public class TorrentServer {
                 System.out.println("keepalive");
             }
             case REQUEST -> {
-                while (buffer.remaining() >= 12 && messageType == MessageTypes.REQUEST) {
-                    System.out.println("recive request");
-                    int index = buffer.getInt();
-                    int begin = buffer.getInt();
-                    int lenght = buffer.getInt();
-                    // System.out.println(index + " " + begin + " " + lenght);
-                    message.sendPiece(index, begin, lenght, client);
 
-                    if (!buffer.hasRemaining()) {
-                        break;
-                    }
+                System.out.println("recive request");
+                int index = messageBuffer.getInt();
+                int begin = messageBuffer.getInt();
+                int lenght = messageBuffer.getInt();
+                // System.out.println(index + " " + begin + " " + lenght);
+                message.sendPiece(index, begin, lenght, client);
 
-                    int initialPosition = buffer.position();
-                    byteMessageType = buffer.get();
-                    messageType = MessageTypes.values()[byteMessageType % MessageTypes.values().length];
-
-                    if (buffer.remaining() < 12 && messageType == MessageTypes.REQUEST) {
-                        buffer.position(initialPosition);
-                        buffer.compact(); // ожидаем больше данных
-                        return;
-                    }
-                }
             }
             case HAVE -> {
                 System.out.println("have");
@@ -144,7 +131,6 @@ public class TorrentServer {
         SocketChannel client = server.accept();
         System.out.println("accept of " + client.getRemoteAddress());
         client.configureBlocking(false);
-        ByteBuffer clientBuffer = ByteBuffer.allocate(BUFFER_SIZE);
-        client.register(selector, SelectionKey.OP_READ, clientBuffer);
+        client.register(selector, SelectionKey.OP_READ);
     }
 }

@@ -32,6 +32,7 @@ public class Message {
         System.out.println("send handshake");
         client.register(selector, SelectionKey.OP_READ);
         byte[] infoHash = metaTorrentData.getInfoHash();
+        buffer.putInt(1 + 20);
         buffer.put((byte) MessageTypes.HANDSHAKE.ordinal());
         buffer.put(infoHash);
         buffer.flip();
@@ -41,12 +42,13 @@ public class Message {
     public void sendBitField(SocketChannel client) throws IOException {
         buffer.clear();
         System.out.println("send bitfield");
-        buffer.put((byte) MessageTypes.BITFIELD.ordinal());
-
         byte[] bitField = metaTorrentData.getBitField().toByteArray();
         int bitFieldLength = bitField.length;
+
+        buffer.putInt(1 + 4 + bitFieldLength);
+
+        buffer.put((byte) MessageTypes.BITFIELD.ordinal());
         buffer.putInt(bitFieldLength);
-        // System.out.println(bitField);
         buffer.put(bitField);
         buffer.flip();
         client.write(buffer);
@@ -82,7 +84,8 @@ public class Message {
             int begin = i * BLOCK_SIZE;
             int length = Math.min(BLOCK_SIZE, (int) metaTorrentData.getPiecesLength() - begin);
 
-            ByteBuffer request = ByteBuffer.allocate(13);
+            ByteBuffer request = ByteBuffer.allocate(17);
+            request.putInt(1 + 4 * 3);
             request.put((byte) MessageTypes.REQUEST.ordinal());
             request.putInt(index);
             request.putInt(begin);
@@ -109,6 +112,7 @@ public class Message {
         buffer.clear(); //это буфер message!!!
         System.out.println("send piece");
         ByteBuffer pieceData = pieceManager.readBlock(index, begin, length);
+        buffer.putInt(1 + 4 * 3 + pieceData.array().length);
         buffer.put((byte) MessageTypes.PIECE.ordinal());
         buffer.putInt(index);
         buffer.putInt(begin);
@@ -121,6 +125,7 @@ public class Message {
     public void sendHave(SocketChannel client, int index) throws IOException {
         buffer.clear();
         System.out.println("send have");
+        buffer.putInt(1 + 4);
         buffer.put((byte) MessageTypes.HAVE.ordinal());
         buffer.putInt(index);
         buffer.flip();

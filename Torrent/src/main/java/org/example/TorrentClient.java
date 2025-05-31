@@ -9,8 +9,6 @@ import java.util.*;
 
 //TODO буферы!!!!!!!! длина сообщений!!!!!!!!!!!!!!
 public class TorrentClient {
-    private final int BUFFER_SIZE = 1024 * 16 + 13;
-    private ByteBuffer buffer;
     private FileWriter fileWriter;
     private Selector selector;
     private MetaTorrentData metaTorrentData;
@@ -20,7 +18,6 @@ public class TorrentClient {
     public TorrentClient(String[] peers, MetaTorrentData metaTorrentData) throws Exception {
         this.metaTorrentData = metaTorrentData;
         fileWriter = new FileWriter(metaTorrentData.getSourceFileName(), metaTorrentData.getSourceFileLength());
-        buffer = ByteBuffer.allocate(BUFFER_SIZE);
         pieceAssembler = new PieceAssembler((int) metaTorrentData.getPiecesLength());
 
         selector = Selector.open();
@@ -101,16 +98,27 @@ public class TorrentClient {
 
     private void handleRead(SelectionKey key) throws IOException {
         SocketChannel client = (SocketChannel) key.channel();
-        buffer.clear();
-        int read = client.read(buffer);
+
+        ByteBuffer bufferForMessageLenght = ByteBuffer.allocate(4);
+        int read = client.read(bufferForMessageLenght);
         if (read == -1) {
             System.out.println("client was closed (torrect server) " + client.getRemoteAddress());
             client.close();
             return;
         }
-        buffer.rewind();
-        int initialPosition = buffer.position();
-        byte byteMessageType = buffer.get();
+        bufferForMessageLenght.flip();
+        int messageLength = bufferForMessageLenght.getInt();
+        ByteBuffer messageBuffer = ByteBuffer.allocate(messageLength);
+        read = client.read(messageBuffer);
+        if (read == -1) {
+            System.out.println("client was closed (torrect server) " + client.getRemoteAddress());
+            client.close();
+            return;
+        }
+        messageBuffer.flip();
+
+        // int initialPosition = buffer.position();
+        byte byteMessageType = messageBuffer.get();
         MessageTypes messageType;
         try {
             messageType = MessageTypes.values()[byteMessageType];
@@ -121,70 +129,41 @@ public class TorrentClient {
         System.out.println(messageType);
         switch (messageType) {
             case BITFIELD -> {
-                message.recieveBitField(client, buffer);
+                message.recieveBitField(client, messageBuffer);
                 message.sendRequest(client, key);
             }
             case PIECE -> {
-                while (buffer.remaining() >= 12 && messageType == MessageTypes.PIECE) {
-                    System.out.println("recieve piece");
+                System.out.println("recieve piece");
 
-                    int index = buffer.getInt();
-                    int begin = buffer.getInt();
-                    int length = buffer.getInt();
+                int index = messageBuffer.getInt();
+                int begin = messageBuffer.getInt();
+                int length = messageBuffer.getInt();
 
-                    System.out.println(index + " " + begin + " " + length);
-                    if (buffer.remaining() < length) {
-                        buffer.position(initialPosition);
-                        buffer.compact();
-//                        read = client.read(buffer);
-//                        if (read == -1 || buffer.remaining() < length) {
-//                            break;
-//                        }
+                System.out.println(index + " " + begin + " " + length);
+
+                byte[] data = new byte[length];
+                messageBuffer.get(data);
+
+                System.out.println(data);
+
+                pieceAssembler.addBlock(index, begin, data);
+
+                if (pieceAssembler.isPieceComplete(index)) {
+                    byte[] fullPiece = pieceAssembler.getAssembledPiece(index);
+                    if (fullPiece != null && pieceAssembler.validatePieceHash(index, fullPiece, metaTorrentData.getPieceHash(index))) {
+                        fileWriter.writePiece(index, fullPiece);
+                        metaTorrentData.setBitToBitField(index);
+                        message.sendHave(client, index);
+                        message.sendRequest(client, key);
+                    } else {
+                        message.sendRequest(client, key);
                     }
 
-                    byte[] data = new byte[length];
-                    buffer.get(data);
-
-                    System.out.println(data);
-
-                    pieceAssembler.addBlock(index, begin, data);
-
-                    if (pieceAssembler.isPieceComplete(index)) {
-                        byte[] fullPiece = pieceAssembler.getAssembledPiece(index);
-                        if (fullPiece != null && pieceAssembler.validatePieceHash(index, fullPiece, metaTorrentData.getPieceHash(index))) {
-                            fileWriter.writePiece(index, fullPiece);
-                            metaTorrentData.setBitToBitField(index);
-                            message.sendHave(client, index);
-                            //  message.sendRequest(client, key);
-                        } else {
-                            message.sendRequest(client, key);
-                        }
-
-                        pieceAssembler.removePiece(index); // очищаем память
-                    }
-
-                    if (!buffer.hasRemaining()) {
-                        break;
-                    }
-
-                    initialPosition = buffer.position();
-                    byteMessageType = buffer.get();
-
-                    try {
-                        messageType = MessageTypes.values()[byteMessageType];
-                    } catch (Exception e) {
-                        System.out.println("client:piece: invalid message type");
-                        buffer.clear();
-                        buffer.rewind();
-                        return;
-                    }
-                    if (buffer.remaining() < 12 && messageType == MessageTypes.PIECE) {
-                        buffer.position(initialPosition);
-                        buffer.compact();
-                        return;
-                    }
+                    pieceAssembler.removePiece(index); // очищаем память
                 }
+
             }
+
             case null, default -> {
                 System.out.println("default client message");
             }
