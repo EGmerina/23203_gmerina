@@ -7,6 +7,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.*;
 import java.util.*;
 
+//TODO буферы!!!!!!!! длина сообщений!!!!!!!!!!!!!!
 public class TorrentClient {
     private final int BUFFER_SIZE = 1024 * 16 + 13;
     private ByteBuffer buffer;

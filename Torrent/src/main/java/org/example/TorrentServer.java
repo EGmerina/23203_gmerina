@@ -13,7 +13,6 @@ import java.util.Set;
 
 public class TorrentServer {
     private int myPort;
-    private final int BUFFER_SIZE = 1024;
     private MetaTorrentData metaTorrentData;
     private Selector selector;
     private Message message;
@@ -25,8 +24,6 @@ public class TorrentServer {
         //  this.selector = selector;
         message = new Message(selector, metaTorrentData);
     }
-
-    //сделать класс хэндлеров отвечающий за каждый key
 
     public void start() {
         try {
@@ -61,18 +58,25 @@ public class TorrentServer {
 
     private void handleRead(SelectionKey key) throws Exception {
         SocketChannel client = (SocketChannel) key.channel();
-        ByteBuffer buffer = (ByteBuffer) key.attachment();
+        ByteBuffer bufferForMessageLenght = ByteBuffer.allocate(4);
 
-        buffer.clear();
-        int read = client.read(buffer);
+        int read = client.read(bufferForMessageLenght);
+        if (read == -1) {
+            System.out.println("client was closed (torrect server) " + client.getRemoteAddress());
+            client.close();
+            return;
+        }
+        int messageLength = bufferForMessageLenght.getInt();
+        ByteBuffer messageBuffer = ByteBuffer.allocate(messageLength);
+
+        read = client.read(messageBuffer);
         if (read == -1) {
             System.out.println("client was closed (torrect server) " + client.getRemoteAddress());
             client.close();
             return;
         }
 
-        buffer.rewind();
-        byte byteMessageType = buffer.get();
+        byte byteMessageType = messageBuffer.get();
         MessageTypes messageType;
         try {
             messageType = MessageTypes.values()[byteMessageType];
@@ -83,7 +87,10 @@ public class TorrentServer {
         System.out.println(messageType);
         switch (messageType) {
             case HANDSHAKE -> {
-                byte[] hash = Arrays.copyOfRange(buffer.array(), buffer.position(), buffer.position() + 20);
+                // byte[] hash = Arrays.copyOfRange(buffer.array(), buffer.position(), buffer.position() + 20);
+                byte[] hash = new byte[20];
+                messageBuffer.get(hash);
+
                 if (Arrays.equals(hash, metaTorrentData.getInfoHash())) {
                     System.out.println("hashes match ");
                     message.sendBitField(client);

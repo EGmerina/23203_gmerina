@@ -13,8 +13,6 @@ public class MyTorrent {
 
         MetaTorrentData metaTorrentData = new MetaTorrentData(args[0], args[1]);
 
-       // Selector selector = Selector.open();
-
         TorrentClient torrentClient = new TorrentClient(peers, metaTorrentData);
         TorrentServer torrentServer = new TorrentServer(args[2], metaTorrentData);
 
