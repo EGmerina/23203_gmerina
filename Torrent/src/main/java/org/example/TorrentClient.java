@@ -8,8 +8,7 @@ import java.nio.channels.*;
 import java.util.*;
 
 public class TorrentClient {
-
-    private final int BUFFER_SIZE = 1024;
+    private final int BUFFER_SIZE = 1024 * 16 + 13;
     private ByteBuffer buffer;
     private FileWriter fileWriter;
     private Selector selector;
@@ -21,7 +20,7 @@ public class TorrentClient {
         this.metaTorrentData = metaTorrentData;
         fileWriter = new FileWriter(metaTorrentData.getSourceFileName(), metaTorrentData.getSourceFileLength());
         buffer = ByteBuffer.allocate(BUFFER_SIZE);
-        pieceAssembler = new PieceAssembler((int)metaTorrentData.getPiecesLength());
+        pieceAssembler = new PieceAssembler((int) metaTorrentData.getPiecesLength());
 
         selector = Selector.open();
         // this.selector = selector;
@@ -100,7 +99,6 @@ public class TorrentClient {
     }
 
     private void handleRead(SelectionKey key) throws IOException {
-
         SocketChannel client = (SocketChannel) key.channel();
         buffer.clear();
         int read = client.read(buffer);
@@ -110,6 +108,7 @@ public class TorrentClient {
             return;
         }
         buffer.rewind();
+        int initialPosition = buffer.position();
         byte byteMessageType = buffer.get();
         MessageTypes messageType;
         try {
@@ -127,17 +126,25 @@ public class TorrentClient {
             case PIECE -> {
                 while (buffer.remaining() >= 12 && messageType == MessageTypes.PIECE) {
                     System.out.println("recieve piece");
+
                     int index = buffer.getInt();
                     int begin = buffer.getInt();
                     int length = buffer.getInt();
 
-                    if (buffer.remaining()< length) {
+                    System.out.println(index + " " + begin + " " + length);
+                    if (buffer.remaining() < length) {
+                        buffer.position(initialPosition);
                         buffer.compact();
-                        break;
+//                        read = client.read(buffer);
+//                        if (read == -1 || buffer.remaining() < length) {
+//                            break;
+//                        }
                     }
 
                     byte[] data = new byte[length];
                     buffer.get(data);
+
+                    System.out.println(data);
 
                     pieceAssembler.addBlock(index, begin, data);
 
@@ -147,6 +154,7 @@ public class TorrentClient {
                             fileWriter.writePiece(index, fullPiece);
                             metaTorrentData.setBitToBitField(index);
                             message.sendHave(client, index);
+                            //  message.sendRequest(client, key);
                         } else {
                             message.sendRequest(client, key);
                         }
@@ -154,10 +162,21 @@ public class TorrentClient {
                         pieceAssembler.removePiece(index); // очищаем память
                     }
 
-                    int initialPosition = buffer.position();
-                    byteMessageType = buffer.get();
-                    messageType = MessageTypes.values()[byteMessageType % MessageTypes.values().length];//!!!!!!!!!!!!!!!!!!!!!!!!!
+                    if (!buffer.hasRemaining()) {
+                        break;
+                    }
 
+                    initialPosition = buffer.position();
+                    byteMessageType = buffer.get();
+
+                    try {
+                        messageType = MessageTypes.values()[byteMessageType];
+                    } catch (Exception e) {
+                        System.out.println("client:piece: invalid message type");
+                        buffer.clear();
+                        buffer.rewind();
+                        return;
+                    }
                     if (buffer.remaining() < 12 && messageType == MessageTypes.PIECE) {
                         buffer.position(initialPosition);
                         buffer.compact();
@@ -180,7 +199,6 @@ public class TorrentClient {
     }
 
     private void handleConnect(SelectionKey key) throws IOException {
-
         SocketChannel client = (SocketChannel) key.channel();
         if (client.finishConnect()) {
             message.sendHandshake(client);

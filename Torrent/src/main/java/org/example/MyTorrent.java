@@ -1,21 +1,8 @@
 package org.example;
 
-import java.io.IOException;
-
-import java.nio.channels.Selector;
-import java.security.NoSuchAlgorithmException;
-import java.util.ArrayList;
-
 import java.util.Arrays;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-
-//TODO сделать один селектор
 
 public class MyTorrent {
-    private static ArrayList<TorrentClient> clients;
-    private static final ExecutorService threadPool = Executors.newFixedThreadPool(10);
-
     public static void main(String[] args) throws Exception {
         if (args.length < 4) {
             System.out.println("Usage: java TorrentClient <source_file> <torrent-file> <my_port> <peer1-ip:port> [peer2-ip:port ...]");

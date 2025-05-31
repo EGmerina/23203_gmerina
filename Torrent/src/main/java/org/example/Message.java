@@ -99,10 +99,13 @@ public class Message {
         BitSet myBitFiled = metaTorrentData.getBitField();
         difference.andNot(myBitFiled);
         int index = difference.nextSetBit(0);
+        if (index < 0) {
+            System.out.println("downloading is finished!");
+        }
         return index; // -1 если не нашел
     }
 
-    public void sendPiece(int index, int begin, int length, SocketChannel client) throws Exception { //TODO у каждого клиента должен быть буфер длиной piece чтобы можно было собрать кусочки и сравнить хэш
+    public void sendPiece(int index, int begin, int length, SocketChannel client) throws Exception {
         buffer.clear(); //это буфер message!!!
         System.out.println("send piece");
         ByteBuffer pieceData = pieceManager.readBlock(index, begin, length);

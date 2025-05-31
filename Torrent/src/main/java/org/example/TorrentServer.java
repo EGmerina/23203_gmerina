@@ -29,7 +29,6 @@ public class TorrentServer {
     //сделать класс хэндлеров отвечающий за каждый key
 
     public void start() {
-
         try {
             ServerSocketChannel socketChannel = ServerSocketChannel.open();
             socketChannel.bind(new InetSocketAddress(myPort));
@@ -51,17 +50,13 @@ public class TorrentServer {
                     }
                     iterator.remove();
                 }
-
             }
-
         } catch (IOException e) {
             System.out.println("can't open SocketChannel in TorrentServer");
             throw new RuntimeException(e);
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
-
-
     }
 
     private void handleRead(SelectionKey key) throws Exception {
@@ -98,7 +93,6 @@ public class TorrentServer {
                     System.out.println("hashes don't match => close connection");
                     key.cancel();
                     client.close();
-
                 }
             }
             case KEEPALIVE -> {
@@ -106,7 +100,6 @@ public class TorrentServer {
             }
             case REQUEST -> {
                 while (buffer.remaining() >= 12 && messageType == MessageTypes.REQUEST) {
-
                     System.out.println("recive request");
                     int index = buffer.getInt();
                     int begin = buffer.getInt();
@@ -128,7 +121,6 @@ public class TorrentServer {
                         return;
                     }
                 }
-
             }
             case HAVE -> {
                 System.out.println("have");
