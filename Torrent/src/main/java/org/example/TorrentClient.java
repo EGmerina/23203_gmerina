@@ -150,14 +150,14 @@ public class TorrentClient {
 
                 if (pieceAssembler.isPieceComplete(index)) {
                     byte[] fullPiece = pieceAssembler.getAssembledPiece(index);
-                    fileWriter.writePiece(index, fullPiece);//!!!!!!!!!!!!!!!!
+                    //fileWriter.writePiece(index, fullPiece);//!!!!!!!!!!!!!!!!
                     if (fullPiece != null && pieceAssembler.validatePieceHash(index, fullPiece, metaTorrentData.getPieceHash(index))) {
                         fileWriter.writePiece(index, fullPiece);
                         metaTorrentData.setBitToBitField(index);
                         message.sendHave(client, index);
 
                     }
-                    // message.sendRequest(client, key);
+                    message.sendRequest(client, key);
 
                     pieceAssembler.removePiece(index); // очищаем память
                 }

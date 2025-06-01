@@ -38,7 +38,17 @@ public class PieceAssembler {
 
     public byte[] getAssembledPiece(int index) {
         if (isPieceComplete(index)) {
-            return receivedPieces.get(index);
+            // return receivedPieces.get(index);
+            byte[] data = receivedPieces.get(index);
+            int endIndex = 0;
+
+            // Ищем первый нулевой байт
+            while (endIndex < data.length && data[endIndex] != 0) {
+                endIndex++;
+            }
+
+            // Копируем только до первого нуля
+            return Arrays.copyOf(data, endIndex);
         }
         return null;
     }
