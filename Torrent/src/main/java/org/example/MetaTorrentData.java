@@ -3,7 +3,9 @@ package org.example;
 import com.turn.ttorrent.bcodec.BDecoder;
 import com.turn.ttorrent.bcodec.BEValue;
 
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
@@ -54,12 +56,23 @@ public class MetaTorrentData {
 
         bitField = new BitSet(piecesNumber);
         fillBitField();
+        System.out.println(bitField);
     }
 
     private void fillBitField() throws NoSuchAlgorithmException, IOException {
         MessageDigest sha1 = MessageDigest.getInstance("SHA-1");
         byte[] piece;
-        FileInputStream sourseFile = new FileInputStream(sourceFileName);
+        FileInputStream sourseFile;
+        try {
+            sourseFile = new FileInputStream(sourceFileName);
+        } catch (FileNotFoundException e) {
+            File file = new File(sourceFileName);
+            if (!file.exists()) {
+                file.createNewFile();
+                System.out.println("file was created " + sourceFileName);
+            }
+            sourseFile = new FileInputStream(sourceFileName);
+        }
         for (int i = 0; i < piecesNumber; ++i) {
             byte[] originPieceHash = hashes.get(i);
             piece = sourseFile.readNBytes((int) piecesLength);
