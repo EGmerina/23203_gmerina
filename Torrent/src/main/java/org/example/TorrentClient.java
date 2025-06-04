@@ -61,8 +61,6 @@ public class TorrentClient {
 
                     } else if (key.isReadable()) {
                         handleRead(key);
-                    } else if (key.isWritable()) {
-                        handleWrite(key);
                     }
                     iterator.remove();
 
@@ -76,31 +74,6 @@ public class TorrentClient {
 
     }
 
-    private void handleWrite(SelectionKey key) {
-        SocketChannel client = (SocketChannel) key.channel();
-        Queue<ByteBuffer> queue = (Queue<ByteBuffer>) key.attachment();
-
-        ByteBuffer newRequest = queue.peek();
-        if (newRequest != null) {
-            try {
-                client.write(newRequest);
-
-                if (!newRequest.hasRemaining()) {
-                    newRequest = null;
-                    queue.poll();
-
-                }
-            } catch (IOException e) {
-                System.err.println("Ошибка записи: " + e.getMessage());
-                key.cancel();
-            }
-        }
-
-        if (queue.isEmpty()) {
-            System.out.println("request was sent");
-            key.interestOps(SelectionKey.OP_READ);
-        }
-    }
 
     private void handleRead(SelectionKey key) throws IOException {
         SocketChannel client = (SocketChannel) key.channel();
@@ -132,7 +105,7 @@ public class TorrentClient {
             logger.error("client: invalid message type ");
             return;
         }
-        logger.info("get message: " + messageType);
+        logger.info("get {} message", messageType);
         switch (messageType) {
             case BITFIELD -> {
                 message.recieveBitField(client, messageBuffer);
@@ -156,7 +129,7 @@ public class TorrentClient {
 
                 if (pieceAssembler.isPieceComplete(index)) {
                     byte[] fullPiece = pieceAssembler.getAssembledPiece(index);
-                    //fileWriter.writePiece(index, fullPiece);//!!!!!!!!!!!!!!!!
+                    fileWriter.writePiece(index, fullPiece);//!!!!!!!!!!!!!!!! TODO
                     if (fullPiece != null && pieceAssembler.validatePieceHash(index, fullPiece, metaTorrentData.getPieceHash(index))) {
                         fileWriter.writePiece(index, fullPiece);
                         metaTorrentData.setBitToBitField(index);

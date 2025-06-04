@@ -1,5 +1,8 @@
 package org.example;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
@@ -9,6 +12,8 @@ import java.nio.channels.SocketChannel;
 import java.util.*;
 
 public class MessageHandler {
+    private static final Logger logger = LogManager.getLogger(MessageHandler.class);
+
     private MetaTorrentData metaTorrentData;
     private Selector selector;
     private ByteBuffer buffer;
@@ -67,33 +72,25 @@ public class MessageHandler {
         int index = findMissingPiece(bitField);
         if (index < 0) {
             System.out.println("not interested");
-//            buffer.clear();
-//            buffer.put((byte) MessageTypes.KEEPALIVE.ordinal());
-//            buffer.flip();
-//            client.write(buffer);
             return;
         }
-
         System.out.println("sending request...");
-
-        Queue<ByteBuffer> requestQueue = new LinkedList<>();
         int blocksInPiece = (int) Math.ceil((double) metaTorrentData.getPiecesLength() / BLOCK_SIZE);
-
         for (int i = 0; i < blocksInPiece; i++) {
+
             int begin = i * BLOCK_SIZE;
             int length = Math.min(BLOCK_SIZE, (int) metaTorrentData.getPiecesLength() - begin);
 
-            ByteBuffer request = ByteBuffer.allocate(17);
+            ByteBuffer request = ByteBuffer.allocate(4 + 1 + 4 * 3);
             request.putInt(1 + 4 * 3);
             request.put((byte) MessageTypes.REQUEST.ordinal());
             request.putInt(index);
             request.putInt(begin);
             request.putInt(length);
             request.flip();
-            requestQueue.add(request);
+            client.write(request);
         }
-        key.attach(requestQueue);
-        key.interestOps(SelectionKey.OP_WRITE);
+
     }
 
     private int findMissingPiece(BitSet clientBitFiled) {
