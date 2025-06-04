@@ -17,7 +17,7 @@ public class TorrentClient {
     private FileWriter fileWriter;
     private Selector selector;
     private MetaTorrentData metaTorrentData;
-    private Message message;
+    private MessageHandler message;
     private PieceAssembler pieceAssembler;
 
     public TorrentClient(String[] peers, MetaTorrentData metaTorrentData) throws Exception {
@@ -26,7 +26,7 @@ public class TorrentClient {
         pieceAssembler = new PieceAssembler((int) metaTorrentData.getPiecesLength());
 
         selector = Selector.open();
-        message = new Message(selector, metaTorrentData);
+        message = new MessageHandler(selector, metaTorrentData);
         for (String peer : peers) {
             String[] ipAndPort = peer.split(":");
             SocketAddress addr = new InetSocketAddress(ipAndPort[0], Integer.parseInt(ipAndPort[1]));

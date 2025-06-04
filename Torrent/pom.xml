@@ -58,20 +58,10 @@
 
     <dependencies>
         <dependency>
-            <groupId>com.dampcake</groupId>
-            <artifactId>bencode</artifactId>
-            <version>1.4.2</version>
-        </dependency>
-        <dependency>
             <groupId>com.turn</groupId>
             <artifactId>ttorrent-core</artifactId>
             <version>1.5</version>
         </dependency>
-        <!--        <dependency>-->
-        <!--            <groupId>com.turn</groupId>-->
-        <!--            <artifactId>ttorrent-core</artifactId>-->
-        <!--            <version>1.5</version>-->
-        <!--        </dependency>-->
         <dependency>
             <groupId>org.apache.logging.log4j</groupId>
             <artifactId>log4j-core</artifactId>

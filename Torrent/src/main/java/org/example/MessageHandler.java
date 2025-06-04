@@ -3,13 +3,12 @@ package org.example;
 import java.io.IOException;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
-import java.nio.channels.ClosedChannelException;
 import java.nio.channels.SelectionKey;
 import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.*;
 
-public class Message {
+public class MessageHandler {
     private MetaTorrentData metaTorrentData;
     private Selector selector;
     private ByteBuffer buffer;
@@ -19,7 +18,7 @@ public class Message {
     private PieceManager pieceManager;
 
 
-    public Message(Selector selector, MetaTorrentData metaTorrentData) throws Exception {
+    public MessageHandler(Selector selector, MetaTorrentData metaTorrentData) throws Exception {
         pieceManager = new PieceManager(metaTorrentData.getSourceFileName(), metaTorrentData.getPiecesLength());
         buffer = ByteBuffer.allocate(BUFFER_SIZE);
         this.selector = selector;
