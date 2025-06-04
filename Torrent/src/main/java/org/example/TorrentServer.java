@@ -43,6 +43,12 @@ public class TorrentServer {
 
                 while (iterator.hasNext()) {
                     SelectionKey key = iterator.next();
+
+                    if (!key.isValid()) {
+                        iterator.remove();
+                        continue;
+                    }
+
                     if (key.isAcceptable()) {
                         handleAccept(key);
 
@@ -53,11 +59,12 @@ public class TorrentServer {
                 }
             }
         } catch (Exception e) {
-            logger.error("something wrong with handleRead");
+            logger.error("problem in handleRead or with select");
             throw new RuntimeException(e);
         }
     }
 
+    //TODO  возможно сдедует поручить обработку messageHandler
     private void handleRead(SelectionKey key) throws Exception {
         SocketChannel client = (SocketChannel) key.channel();
 

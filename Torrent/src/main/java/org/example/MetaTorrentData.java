@@ -46,7 +46,6 @@ public class MetaTorrentData {
 
         MessageDigest sha1 = MessageDigest.getInstance("SHA-1"); //TODO тут хэш от хэшей а не от info
         infoHash.put(sha1.digest(byteHashes));
-        //infoHash = sha1.digest(byteHashes);
 
         for (int i = 0; i < byteHashes.length; i += HASH_LENGTH) {
             int end = Math.min(i + HASH_LENGTH, byteHashes.length);
