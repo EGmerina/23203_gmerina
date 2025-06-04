@@ -129,7 +129,7 @@ public class TorrentClient {
 
                 if (pieceAssembler.isPieceComplete(index)) {
                     byte[] fullPiece = pieceAssembler.getAssembledPiece(index);
-                    fileWriter.writePiece(index, fullPiece);//!!!!!!!!!!!!!!!! TODO
+                    //fileWriter.writePiece(index, fullPiece);//!!!!!!!!!!!!!!!! TODO
                     if (fullPiece != null && pieceAssembler.validatePieceHash(index, fullPiece, metaTorrentData.getPieceHash(index))) {
                         fileWriter.writePiece(index, fullPiece);
                         metaTorrentData.setBitToBitField(index);
