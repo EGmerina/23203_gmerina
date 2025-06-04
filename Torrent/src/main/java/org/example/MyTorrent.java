@@ -1,8 +1,13 @@
 package org.example;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.util.Arrays;
 
 public class MyTorrent {
+    private static final Logger logger = LogManager.getLogger(MyTorrent.class);
+
     public static void main(String[] args) throws Exception {
         if (args.length < 4) {
             System.out.println("Usage: java TorrentClient <source_file> <torrent-file> <my_port> <peer1-ip:port> [peer2-ip:port ...]");
@@ -19,8 +24,10 @@ public class MyTorrent {
         Thread serverThread = new Thread(() -> {
             torrentServer.start();
         });
+        logger.info("Torrent server started");
         serverThread.start();
 
+        logger.info("Torrent client started");
         torrentClient.start();
 
     }

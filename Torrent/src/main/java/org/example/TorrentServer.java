@@ -1,5 +1,8 @@
 package org.example;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.nio.ByteBuffer;
@@ -12,6 +15,8 @@ import java.util.Iterator;
 import java.util.Set;
 
 public class TorrentServer {
+    private static final Logger logger = LogManager.getLogger(TorrentServer.class);
+
     private int myPort;
     private MetaTorrentData metaTorrentData;
     private Selector selector;
@@ -62,7 +67,7 @@ public class TorrentServer {
         ByteBuffer bufferForMessageLenght = ByteBuffer.allocate(4);
         int read = client.read(bufferForMessageLenght);
         if (read == -1) {
-            System.out.println("client was closed (torrect server) " + client.getRemoteAddress());
+            System.out.println("client was closed (torrent server) " + client.getRemoteAddress());
             client.close();
             return;
         }
@@ -71,7 +76,7 @@ public class TorrentServer {
         ByteBuffer messageBuffer = ByteBuffer.allocate(messageLength);
         read = client.read(messageBuffer);
         if (read == -1) {
-            System.out.println("client was closed (torrect server) " + client.getRemoteAddress());
+            System.out.println("client was closed (torrent server) " + client.getRemoteAddress());
             client.close();
             return;
         }
@@ -82,10 +87,10 @@ public class TorrentServer {
         try {
             messageType = MessageTypes.values()[byteMessageType];
         } catch (Exception e) {
-            System.out.println("server: invalid message type");
+            logger.error("server: invalid message type");
             return;
         }
-        System.out.println(messageType);
+        logger.info("get message: " + messageType);
         switch (messageType) {
             case HANDSHAKE -> {
                 // byte[] hash = Arrays.copyOfRange(buffer.array(), buffer.position(), buffer.position() + 20);

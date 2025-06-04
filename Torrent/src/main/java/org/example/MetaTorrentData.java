@@ -56,7 +56,6 @@ public class MetaTorrentData {
 
         bitField = new BitSet(piecesNumber);
         fillBitField();
-        System.out.println(bitField);
     }
 
     private void fillBitField() throws NoSuchAlgorithmException, IOException {

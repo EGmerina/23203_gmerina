@@ -1,5 +1,8 @@
 package org.example;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
@@ -9,6 +12,8 @@ import java.util.*;
 
 //TODO буферы!!!!!!!! длина сообщений!!!!!!!!!!!!!!
 public class TorrentClient {
+    private static final Logger logger = LogManager.getLogger(TorrentClient.class);
+
     private FileWriter fileWriter;
     private Selector selector;
     private MetaTorrentData metaTorrentData;
@@ -21,7 +26,6 @@ public class TorrentClient {
         pieceAssembler = new PieceAssembler((int) metaTorrentData.getPiecesLength());
 
         selector = Selector.open();
-        // this.selector = selector;
         message = new Message(selector, metaTorrentData);
         for (String peer : peers) {
             String[] ipAndPort = peer.split(":");
@@ -123,10 +127,10 @@ public class TorrentClient {
         try {
             messageType = MessageTypes.values()[byteMessageType];
         } catch (Exception e) {
-            System.out.println("client: invalid message type");
+            logger.error("client: invalid message type ");
             return;
         }
-        System.out.println(messageType);
+        logger.info("get message: " + messageType);
         switch (messageType) {
             case BITFIELD -> {
                 message.recieveBitField(client, messageBuffer);
@@ -183,7 +187,7 @@ public class TorrentClient {
         if (client.finishConnect()) {
             message.sendHandshake(client);
         } else {
-            System.out.println("wait connection....");
+            logger.info("wait connection....");
         }
 
     }
