@@ -105,11 +105,6 @@ public class MessageHandler {
         int length = messageBuffer.getInt();
 
         byte[] data = new byte[length];
-        if (messageBuffer.remaining() < length) { //здесь падает, возможно проблема в том что не до конца записана data TODO
-            logger.error("not enough data to read, waiting for data...");
-            messageBuffer.rewind();
-            return;
-        }
         messageBuffer.get(data);
 
         logger.info("receive piece {} {} {}", index, begin, length);
@@ -143,8 +138,8 @@ public class MessageHandler {
         buffer.putInt(realPieceLength);
         buffer.put(pieceData);
         buffer.flip();
-        client.write(buffer);
-        logger.info("send piece with {} length", realPieceLength);
+        int cnt = client.write(buffer);
+        logger.info("send piece with {} length, was written {} bytes, limit {}", realPieceLength, cnt, buffer.limit());
     }
 
     public void sendHave(SocketChannel client, int index) throws IOException {
@@ -176,6 +171,11 @@ public class MessageHandler {
             client.close();
             return;
         }
+        while (read != messageLength) {
+            logger.error("can be read only {} / {} bytes. waiting...", read, messageLength);
+            Thread.sleep(100);
+            read += client.read(messageBuffer);
+        }
         messageBuffer.flip();
 
         byte byteMessageType = messageBuffer.get();
@@ -183,7 +183,7 @@ public class MessageHandler {
         try {
             messageType = MessageTypes.values()[byteMessageType];
         } catch (Exception e) {
-            logger.error("client: invalid message type ");
+            logger.error("invalid message type ");
             return;
         }
         logger.info("get {} message", messageType);
