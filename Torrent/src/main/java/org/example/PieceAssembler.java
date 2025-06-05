@@ -1,5 +1,8 @@
 package org.example;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.nio.ByteBuffer;
 import java.security.MessageDigest;
 import java.util.Arrays;
@@ -8,6 +11,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class PieceAssembler {
+    private static final Logger logger = LogManager.getLogger(PieceAssembler.class);
+
     private final int pieceLength;
     private final int blockSize = 1024 * 16;
     private final Map<Integer, byte[]> receivedPieces = new HashMap<>();
@@ -75,9 +80,9 @@ public class PieceAssembler {
 
         boolean isValid = Arrays.equals(hash, pieceHash);
         if (isValid) {
-            System.out.println("hash is correct: " + index);
+            logger.info("hash is correct: " + index);
         } else {
-            System.out.println("hash is not correct: " + index);
+            logger.error("hash is not correct: " + index);
         }
         return isValid;
     }

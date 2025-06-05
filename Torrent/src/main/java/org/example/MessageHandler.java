@@ -18,7 +18,7 @@ public class MessageHandler {
     private FileWriter fileWriter;
     private PieceAssembler pieceAssembler;
     private MetaTorrentData metaTorrentData;
-    private Map<SocketAddress, BitSet> socketBitFields;
+    private final Map<SocketAddress, BitSet> socketBitFields = new HashMap<>();
     private final int BLOCK_SIZE = 1024 * 16;
     private PieceReader pieceReader;
 
@@ -28,7 +28,7 @@ public class MessageHandler {
         pieceAssembler = new PieceAssembler((int) metaTorrentData.getPiecesLength());
         pieceReader = new PieceReader(metaTorrentData.getSourceFileName(), metaTorrentData.getPiecesLength());
         this.metaTorrentData = metaTorrentData;
-        socketBitFields = new HashMap<>();
+
     }
 
     public void sendHandshake(SocketChannel client) throws IOException {
@@ -98,6 +98,32 @@ public class MessageHandler {
         return index; // -1 если не нашел
     }
 
+    private void receivePiece(SocketChannel client, ByteBuffer messageBuffer) throws IOException {
+        int index = messageBuffer.getInt();
+        int begin = messageBuffer.getInt();
+        int length = messageBuffer.getInt();
+
+        logger.info("receive piece {} {} {}", index, begin, length);
+
+        byte[] data = new byte[length];
+        messageBuffer.get(data);
+
+        pieceAssembler.addBlock(index, begin, data);
+
+        if (pieceAssembler.isPieceComplete(index)) {
+            byte[] fullPiece = pieceAssembler.getAssembledPiece(index);
+            //fileWriter.writePiece(index, fullPiece);//!!!!!!!!!!!!!!!! TODO
+            if (fullPiece != null && pieceAssembler.validatePieceHash(index, fullPiece, metaTorrentData.getPieceHash(index))) {
+                fileWriter.writePiece(index, fullPiece);
+                metaTorrentData.setBitToBitField(index);
+                sendHave(client, index);
+
+            }
+            sendRequest(client);
+            pieceAssembler.removePiece(index); // очищаем память
+        }
+    }
+
     public void sendPiece(int index, int begin, int length, SocketChannel client) throws Exception {
         ByteBuffer pieceData = pieceReader.readBlock(index, begin, length);
 
@@ -155,38 +181,14 @@ public class MessageHandler {
             return;
         }
         logger.info("get {} message", messageType);
+
         switch (messageType) {
             case BITFIELD -> {
                 receiveBitField(client, messageBuffer);
                 sendRequest(client);
             }
             case PIECE -> {
-
-                int index = messageBuffer.getInt();
-                int begin = messageBuffer.getInt();
-                int length = messageBuffer.getInt();
-
-                logger.info("receive piece {} {} {}", index, begin, length);
-
-                byte[] data = new byte[length];
-                messageBuffer.get(data);
-
-                pieceAssembler.addBlock(index, begin, data);
-
-                if (pieceAssembler.isPieceComplete(index)) {
-                    byte[] fullPiece = pieceAssembler.getAssembledPiece(index);
-                    //fileWriter.writePiece(index, fullPiece);//!!!!!!!!!!!!!!!! TODO
-                    if (fullPiece != null && pieceAssembler.validatePieceHash(index, fullPiece, metaTorrentData.getPieceHash(index))) {
-                        fileWriter.writePiece(index, fullPiece);
-                        metaTorrentData.setBitToBitField(index);
-                        sendHave(client, index);
-
-                    }
-                    sendRequest(client);
-
-                    pieceAssembler.removePiece(index); // очищаем память
-                }
-
+                receivePiece(client, messageBuffer);
             }
             case HANDSHAKE -> {
                 byte[] hash = new byte[20];
@@ -202,9 +204,6 @@ public class MessageHandler {
                     client.close();
                 }
             }
-            case KEEPALIVE -> {
-                System.out.println("keepalive");
-            }
             case REQUEST -> {
 
                 logger.info("receive request");
@@ -217,6 +216,14 @@ public class MessageHandler {
             case HAVE -> {
                 logger.info("receive have");
             }
+            case CANCEL -> {
+                logger.info("receive cancel");
+            }
+            case KEEPALIVE -> {
+                logger.info("receive keepalive");
+            }
         }
     }
+
+
 }
