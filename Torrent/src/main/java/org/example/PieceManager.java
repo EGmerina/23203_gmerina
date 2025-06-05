@@ -28,7 +28,6 @@ public class PieceManager {
         long position = (long) index * pieceLength + begin;
 
         if (fileChannel.size() - position > 0 && position + length > fileChannel.size()) {
-            //???????????????????????????????????????TODO
             ByteBuffer buffer = ByteBuffer.allocate((int) (fileChannel.size() - position));
             fileChannel.read(buffer, position);
             buffer.flip();

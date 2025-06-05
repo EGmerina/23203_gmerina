@@ -1,5 +1,8 @@
 package org.example;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.RandomAccessFile;
@@ -7,6 +10,7 @@ import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
 public class FileWriter {
+    private static final Logger logger = LogManager.getLogger(FileWriter.class);
     private final RandomAccessFile fileWriter;
     private final FileChannel fileChannel;
 
@@ -25,6 +29,6 @@ public class FileWriter {
         ByteBuffer buffer = ByteBuffer.wrap(pieceData);
         fileChannel.write(buffer, position);
 
-        System.out.printf("piece %d write on disk %n", index);
+        logger.info("piece {} write on disk ({} bytes)", index, pieceData.length);
     }
 }
