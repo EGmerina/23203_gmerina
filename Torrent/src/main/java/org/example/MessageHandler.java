@@ -14,8 +14,9 @@ import java.util.*;
 public class MessageHandler {
     private static final Logger logger = LogManager.getLogger(MessageHandler.class);
 
+    private FileWriter fileWriter;
+    private PieceAssembler pieceAssembler;
     private MetaTorrentData metaTorrentData;
-    private Selector selector;
     private ByteBuffer buffer;
     private Map<SocketAddress, BitSet> socketBitFields;
     private final int BUFFER_SIZE = 1024 * 17;
@@ -23,10 +24,11 @@ public class MessageHandler {
     private PieceManager pieceManager;
 
 
-    public MessageHandler(Selector selector, MetaTorrentData metaTorrentData) throws Exception {
+    public MessageHandler(MetaTorrentData metaTorrentData) throws Exception {
+        fileWriter = new FileWriter(metaTorrentData.getSourceFileName(), metaTorrentData.getSourceFileLength());
+        pieceAssembler = new PieceAssembler((int) metaTorrentData.getPiecesLength());
         pieceManager = new PieceManager(metaTorrentData.getSourceFileName(), metaTorrentData.getPiecesLength());
         buffer = ByteBuffer.allocate(BUFFER_SIZE);
-        this.selector = selector;
         this.metaTorrentData = metaTorrentData;
         socketBitFields = new HashMap<>();
     }
@@ -34,7 +36,6 @@ public class MessageHandler {
     public void sendHandshake(SocketChannel client) throws IOException {
         buffer.clear();
         System.out.println("send handshake");
-        client.register(selector, SelectionKey.OP_READ);
         byte[] infoHash = metaTorrentData.getInfoHash();
         buffer.putInt(1 + 20);
         buffer.put((byte) MessageTypes.HANDSHAKE.ordinal());
@@ -66,7 +67,7 @@ public class MessageHandler {
         System.out.println("recieve bitField");
     }
 
-    public void sendRequest(SocketChannel client, SelectionKey key) throws IOException {
+    public void sendRequest(SocketChannel client) throws IOException {
 
         BitSet bitField = socketBitFields.get(client.getLocalAddress());
         int index = findMissingPiece(bitField);
@@ -131,5 +132,105 @@ public class MessageHandler {
         buffer.putInt(index);
         buffer.flip();
         client.write(buffer);
+    }
+
+    public void processMessage(SelectionKey key) throws Exception {
+        SocketChannel client = (SocketChannel) key.channel();
+
+        ByteBuffer bufferForMessageLength = ByteBuffer.allocate(4);
+        int read = client.read(bufferForMessageLength);
+        if (read == -1) {
+            logger.error("client {} was closed ", client.getRemoteAddress());
+            client.close();
+            return;
+        }
+        bufferForMessageLength.flip();
+        int messageLength = bufferForMessageLength.getInt();
+        ByteBuffer messageBuffer = ByteBuffer.allocate(messageLength);
+        read = client.read(messageBuffer);
+        if (read == -1) {
+            logger.error("client {} was closed ", client.getRemoteAddress());
+            client.close();
+            return;
+        }
+        messageBuffer.flip();
+
+        byte byteMessageType = messageBuffer.get();
+        MessageTypes messageType;
+        try {
+            messageType = MessageTypes.values()[byteMessageType];
+        } catch (Exception e) {
+            logger.error("client: invalid message type ");
+            return;
+        }
+        logger.info("get {} message", messageType);
+        switch (messageType) {
+            case BITFIELD -> {
+                recieveBitField(client, messageBuffer);
+                sendRequest(client);
+            }
+            case PIECE -> {
+                System.out.println("recieve piece");
+
+                int index = messageBuffer.getInt();
+                int begin = messageBuffer.getInt();
+                int length = messageBuffer.getInt();
+
+                System.out.println(index + " " + begin + " " + length);
+
+                byte[] data = new byte[length];
+                messageBuffer.get(data);
+
+                System.out.println(data);
+
+                pieceAssembler.addBlock(index, begin, data);
+
+                if (pieceAssembler.isPieceComplete(index)) {
+                    byte[] fullPiece = pieceAssembler.getAssembledPiece(index);
+                    //fileWriter.writePiece(index, fullPiece);//!!!!!!!!!!!!!!!! TODO
+                    if (fullPiece != null && pieceAssembler.validatePieceHash(index, fullPiece, metaTorrentData.getPieceHash(index))) {
+                        fileWriter.writePiece(index, fullPiece);
+                        metaTorrentData.setBitToBitField(index);
+                        sendHave(client, index);
+
+                    }
+                    sendRequest(client);
+
+                    pieceAssembler.removePiece(index); // очищаем память
+                }
+
+            }
+            case HANDSHAKE -> {
+                byte[] hash = new byte[20];
+                messageBuffer.get(hash);
+
+                if (Arrays.equals(hash, metaTorrentData.getInfoHash())) {
+                    System.out.println("hashes match ");
+                    sendBitField(client);
+
+
+                } else {
+                    System.out.println("hashes don't match => close connection");
+                    key.cancel();
+                    client.close();
+                }
+            }
+            case KEEPALIVE -> {
+                System.out.println("keepalive");
+            }
+            case REQUEST -> {
+
+                System.out.println("recive request");
+                int index = messageBuffer.getInt();
+                int begin = messageBuffer.getInt();
+                int lenght = messageBuffer.getInt();
+                // System.out.println(index + " " + begin + " " + lenght);
+                sendPiece(index, begin, lenght, client);
+
+            }
+            case HAVE -> {
+                System.out.println("have");
+            }
+        }
     }
 }
