@@ -103,10 +103,15 @@ public class MessageHandler {
         int begin = messageBuffer.getInt();
         int length = messageBuffer.getInt();
 
-        logger.info("receive piece {} {} {}", index, begin, length);
-
         byte[] data = new byte[length];
+        if (messageBuffer.remaining() < length) { //здесь падает, возможно проблема в том что не до конца записана data TODO
+            logger.error("not enough data to read, waiting for data...");
+            messageBuffer.rewind();
+            return;
+        }
         messageBuffer.get(data);
+
+        logger.info("receive piece {} {} {}", index, begin, length);
 
         pieceAssembler.addBlock(index, begin, data);
 
