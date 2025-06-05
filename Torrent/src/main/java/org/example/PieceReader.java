@@ -6,7 +6,6 @@ import java.io.RandomAccessFile;
 import java.nio.ByteBuffer;
 import java.nio.channels.FileChannel;
 
-//короче надо сделать так чтобы requests не отправлялись лишние TODO
 
 public class PieceReader {
     private final long pieceLength;

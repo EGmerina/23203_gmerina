@@ -69,12 +69,6 @@ public class PieceAssembler {
         return null;
     }
 
-    // Удаляем собранную часть после записи
-    public void removePiece(int index) {
-        receivedPieces.remove(index);
-        receivedBlocks.remove(index);
-    }
-
     public boolean validatePieceHash(int index, byte[] pieceData, byte[] pieceHash) {
         byte[] hash = messageDigest.digest(pieceData);
 
@@ -85,5 +79,10 @@ public class PieceAssembler {
             logger.error("hash is not correct: " + index);
         }
         return isValid;
+    }
+
+    public void removePiece(int index) {
+        receivedPieces.remove(index);
+        receivedBlocks.remove(index);
     }
 }

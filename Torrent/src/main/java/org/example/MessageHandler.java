@@ -23,7 +23,7 @@ public class MessageHandler {
 
 
     public MessageHandler(MetaTorrentData metaTorrentData) throws Exception {
-        fileWriter = new FileWriter(metaTorrentData.getSourceFileName(), metaTorrentData.getSourceFileLength());
+        fileWriter = new FileWriter(metaTorrentData.getSourceFileName(), metaTorrentData.getSourceFileLength(), metaTorrentData.getPiecesLength());
         pieceAssembler = new PieceAssembler((int) metaTorrentData.getPiecesLength());
         pieceReader = new PieceReader(metaTorrentData.getSourceFileName(), metaTorrentData.getPiecesLength());
         this.metaTorrentData = metaTorrentData;
@@ -63,6 +63,7 @@ public class MessageHandler {
         logger.info("receive bitField");
     }
 
+    //TODO сделать одиночные requests
     public void sendRequest(SocketChannel client) throws IOException {
 
         BitSet bitField = socketBitFields.get(client.getLocalAddress());
