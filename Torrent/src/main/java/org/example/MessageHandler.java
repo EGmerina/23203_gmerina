@@ -4,14 +4,15 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.IOException;
+import java.net.InetSocketAddress;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
+import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.*;
 
-
-//TODO хочется сделать один класс который бы следил за всеми кусочками и их битовыми полями
+//TODO сделать обработку прерываний, have сообщения
 public class MessageHandler {
     private static final Logger logger = LogManager.getLogger(MessageHandler.class);
 
@@ -20,13 +21,15 @@ public class MessageHandler {
     private final MetaTorrentData metaTorrentData;
     private final Map<SocketAddress, BitSet> socketBitFields = new HashMap<>();
     private final PieceReader pieceReader;
+    private Selector selector;
 
 
-    public MessageHandler(MetaTorrentData metaTorrentData) throws Exception {
+    public MessageHandler(MetaTorrentData metaTorrentData, Selector selector) throws Exception {
         fileWriter = new FileWriter(metaTorrentData.getSourceFileName(), metaTorrentData.getSourceFileLength(), metaTorrentData.getPiecesLength());
         pieceAssembler = new PieceAssembler((int) metaTorrentData.getPiecesLength());
         pieceReader = new PieceReader(metaTorrentData.getSourceFileName(), metaTorrentData.getPiecesLength());
         this.metaTorrentData = metaTorrentData;
+        this.selector = selector;
 
     }
 
@@ -38,7 +41,7 @@ public class MessageHandler {
         buffer.put(infoHash);
         buffer.flip();
         client.write(buffer);
-        logger.info("send handshake");
+        logger.info("send handshake to {}", client.getRemoteAddress());
     }
 
     public void sendBitField(SocketChannel client) throws IOException {
@@ -138,8 +141,8 @@ public class MessageHandler {
         buffer.putInt(realPieceLength);
         buffer.put(pieceData);
         buffer.flip();
-        int cnt = client.write(buffer);
-        logger.info("send piece with {} length, was written {} bytes, limit {}", realPieceLength, cnt, buffer.limit());
+        client.write(buffer);
+        logger.info("send piece with {} length", realPieceLength);
     }
 
     public void sendHave(SocketChannel client, int index) throws IOException {
@@ -156,10 +159,15 @@ public class MessageHandler {
         SocketChannel client = (SocketChannel) key.channel();
 
         ByteBuffer bufferForMessageLength = ByteBuffer.allocate(Integer.BYTES);
-        int read = client.read(bufferForMessageLength);
+        int read;
+        try {
+            read = client.read(bufferForMessageLength);
+        } catch (IOException e) {
+            closeClient(key, client);
+            return;
+        }
         if (read == -1) {
-            logger.error("client {} was closed ", client.getRemoteAddress());
-            client.close();
+            closeClient(key, client);
             return;
         }
         bufferForMessageLength.flip();
@@ -167,8 +175,7 @@ public class MessageHandler {
         ByteBuffer messageBuffer = ByteBuffer.allocate(messageLength);
         read = client.read(messageBuffer);
         if (read == -1) {
-            logger.error("client {} was closed ", client.getRemoteAddress());
-            client.close();
+            closeClient(key, client);
             return;
         }
         while (read != messageLength) {
@@ -229,6 +236,21 @@ public class MessageHandler {
                 logger.info("receive keepalive");
             }
         }
+    }
+
+    private void closeClient(SelectionKey key, SocketChannel client) throws IOException {
+        logger.error("client {} was closed ", client.getRemoteAddress());
+        SocketAddress addr = (SocketAddress) key.attachment();
+        key.cancel();
+        client.close();
+        SocketChannel newSocketChannel = SocketChannel.open();
+        newSocketChannel.configureBlocking(false);
+        try {
+            newSocketChannel.connect(addr);
+        } catch (Exception e) {
+            logger.error("waiting for connection");
+        }
+        newSocketChannel.register(selector, SelectionKey.OP_CONNECT, addr);
     }
 
 

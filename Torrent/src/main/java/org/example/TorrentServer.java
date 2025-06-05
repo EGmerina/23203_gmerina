@@ -23,7 +23,7 @@ public class TorrentServer {
     public TorrentServer(String port, MetaTorrentData metaTorrentData) throws Exception {
         int myPort = Integer.parseInt(port);
         selector = Selector.open();
-        messageHandler = new MessageHandler(metaTorrentData);
+        messageHandler = new MessageHandler(metaTorrentData, selector);
 
         ServerSocketChannel socketChannel = ServerSocketChannel.open();
         socketChannel.bind(new InetSocketAddress(myPort));

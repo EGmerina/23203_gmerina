@@ -6,10 +6,10 @@ import org.apache.logging.log4j.Logger;
 import java.io.IOException;
 import java.net.InetSocketAddress;
 import java.net.SocketAddress;
-import java.nio.ByteBuffer;
 import java.nio.channels.*;
 import java.util.*;
 
+//TODO надо сделать "клиента на страже"
 public class TorrentClient {
     private static final Logger logger = LogManager.getLogger(TorrentClient.class);
 
@@ -18,7 +18,7 @@ public class TorrentClient {
 
     public TorrentClient(String[] peers, MetaTorrentData metaTorrentData) throws Exception {
         selector = Selector.open();
-        messageHandler = new MessageHandler(metaTorrentData);
+        messageHandler = new MessageHandler(metaTorrentData, selector);
 
         for (String peer : peers) {
             String[] ipAndPort = peer.split(":");
@@ -84,7 +84,8 @@ public class TorrentClient {
     private void handleConnect(SelectionKey key) throws IOException {
         SocketChannel client = (SocketChannel) key.channel();
         if (client.finishConnect()) {
-            client.register(selector, SelectionKey.OP_READ);
+            logger.info("connect to {}", client.getRemoteAddress());
+            client.register(selector, SelectionKey.OP_READ, (SocketAddress) key.attachment());
             messageHandler.sendHandshake(client);
         } else {
             logger.info("wait connection....");
