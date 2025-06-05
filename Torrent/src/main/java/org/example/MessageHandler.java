@@ -12,7 +12,7 @@ import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.*;
 
-//TODO сделать обработку прерываний, have сообщения
+//TODO have сообщения
 public class MessageHandler {
     private static final Logger logger = LogManager.getLogger(MessageHandler.class);
 
@@ -116,7 +116,6 @@ public class MessageHandler {
 
         if (pieceAssembler.isPieceComplete(index)) {
             byte[] fullPiece = pieceAssembler.getAssembledPiece(index);
-            //fileWriter.writePiece(index, fullPiece);//!!!!!!!!!!!!!!!! TODO
             if (fullPiece != null && pieceAssembler.validatePieceHash(index, fullPiece, metaTorrentData.getPieceHash(index))) {
                 fileWriter.writePiece(index, fullPiece);
                 metaTorrentData.setBitToBitField(index);
@@ -228,6 +227,7 @@ public class MessageHandler {
             }
             case HAVE -> {
                 logger.info("receive have");
+
             }
             case CANCEL -> {
                 logger.info("receive cancel");
@@ -237,6 +237,7 @@ public class MessageHandler {
             }
         }
     }
+
 
     private void closeClient(SelectionKey key, SocketChannel client) throws IOException {
         logger.error("client {} was closed ", client.getRemoteAddress());
@@ -248,7 +249,7 @@ public class MessageHandler {
         try {
             newSocketChannel.connect(addr);
         } catch (Exception e) {
-            logger.error("waiting for connection");
+            logger.error("wait for connection...");
         }
         newSocketChannel.register(selector, SelectionKey.OP_CONNECT, addr);
     }
