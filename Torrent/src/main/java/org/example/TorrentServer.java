@@ -17,8 +17,8 @@ import java.util.Set;
 public class TorrentServer {
     private static final Logger logger = LogManager.getLogger(TorrentServer.class);
 
-    private Selector selector;
-    private MessageHandler messageHandler;
+    private final Selector selector;
+    private final MessageHandler messageHandler;
 
     public TorrentServer(String port, MetaTorrentData metaTorrentData) throws Exception {
         int myPort = Integer.parseInt(port);

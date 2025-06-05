@@ -15,12 +15,11 @@ import java.util.*;
 public class MessageHandler {
     private static final Logger logger = LogManager.getLogger(MessageHandler.class);
 
-    private FileWriter fileWriter;
-    private PieceAssembler pieceAssembler;
-    private MetaTorrentData metaTorrentData;
+    private final FileWriter fileWriter;
+    private final PieceAssembler pieceAssembler;
+    private final MetaTorrentData metaTorrentData;
     private final Map<SocketAddress, BitSet> socketBitFields = new HashMap<>();
-    private final int BLOCK_SIZE = 1024 * 16;
-    private PieceReader pieceReader;
+    private final PieceReader pieceReader;
 
 
     public MessageHandler(MetaTorrentData metaTorrentData) throws Exception {
@@ -72,6 +71,7 @@ public class MessageHandler {
             logger.info("downloading is finished! => not interested");
             return;
         }
+        int BLOCK_SIZE = 1024 * 16;
         int blocksInPiece = (int) Math.ceil((double) metaTorrentData.getPiecesLength() / BLOCK_SIZE);
         for (int i = 0; i < blocksInPiece; i++) {
 
@@ -154,7 +154,7 @@ public class MessageHandler {
     public void processMessage(SelectionKey key) throws Exception {
         SocketChannel client = (SocketChannel) key.channel();
 
-        ByteBuffer bufferForMessageLength = ByteBuffer.allocate(4);
+        ByteBuffer bufferForMessageLength = ByteBuffer.allocate(Integer.BYTES);
         int read = client.read(bufferForMessageLength);
         if (read == -1) {
             logger.error("client {} was closed ", client.getRemoteAddress());

@@ -17,7 +17,7 @@ import java.util.Map;
 
 public class MetaTorrentData {
     private static final int HASH_LENGTH = 20;
-    private ArrayList<byte[]> hashes;
+    private final ArrayList<byte[]> hashes = new ArrayList<>();
     private int piecesNumber;
     private long piecesLength;
     private long sourceFileLength;
@@ -29,8 +29,6 @@ public class MetaTorrentData {
 
         infoHash = ByteBuffer.allocate(20);
         sourceFileName = sourceFile;
-
-        hashes = new ArrayList<>();
 
         BDecoder decoder = new BDecoder(new FileInputStream(torrentFile));
         BEValue decoded = decoder.bdecode();

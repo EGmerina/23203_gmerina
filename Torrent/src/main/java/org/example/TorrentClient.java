@@ -13,8 +13,8 @@ import java.util.*;
 public class TorrentClient {
     private static final Logger logger = LogManager.getLogger(TorrentClient.class);
 
-    private Selector selector;
-    private MessageHandler messageHandler;
+    private final Selector selector;
+    private final MessageHandler messageHandler;
 
     public TorrentClient(String[] peers, MetaTorrentData metaTorrentData) throws Exception {
         selector = Selector.open();

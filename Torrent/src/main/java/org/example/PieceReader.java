@@ -9,14 +9,12 @@ import java.nio.channels.FileChannel;
 //короче надо сделать так чтобы requests не отправлялись лишние TODO
 
 public class PieceReader {
-    private final File file;
     private final long pieceLength;
-    private final int blockSize = 1024 * 16; // стандартный размер блока
     private final RandomAccessFile randomAccessFile;
     private final FileChannel fileChannel;
 
     public PieceReader(String filePath, long pieceLength) throws Exception {
-        this.file = new File(filePath);
+        File file = new File(filePath);
         this.pieceLength = pieceLength;
 
         this.randomAccessFile = new RandomAccessFile(file, "r");
