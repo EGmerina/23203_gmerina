@@ -7,64 +7,61 @@ import java.io.IOException;
 import java.net.SocketAddress;
 import java.nio.ByteBuffer;
 import java.nio.channels.SelectionKey;
-import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.*;
 
+
+//TODO хочется сделать один класс который бы следил за всеми кусочками и их битовыми полями
 public class MessageHandler {
     private static final Logger logger = LogManager.getLogger(MessageHandler.class);
 
     private FileWriter fileWriter;
     private PieceAssembler pieceAssembler;
     private MetaTorrentData metaTorrentData;
-    private ByteBuffer buffer;
     private Map<SocketAddress, BitSet> socketBitFields;
-    private final int BUFFER_SIZE = 1024 * 17;
     private final int BLOCK_SIZE = 1024 * 16;
-    private PieceManager pieceManager;
+    private PieceReader pieceReader;
 
 
     public MessageHandler(MetaTorrentData metaTorrentData) throws Exception {
         fileWriter = new FileWriter(metaTorrentData.getSourceFileName(), metaTorrentData.getSourceFileLength());
         pieceAssembler = new PieceAssembler((int) metaTorrentData.getPiecesLength());
-        pieceManager = new PieceManager(metaTorrentData.getSourceFileName(), metaTorrentData.getPiecesLength());
-        buffer = ByteBuffer.allocate(BUFFER_SIZE);
+        pieceReader = new PieceReader(metaTorrentData.getSourceFileName(), metaTorrentData.getPiecesLength());
         this.metaTorrentData = metaTorrentData;
         socketBitFields = new HashMap<>();
     }
 
     public void sendHandshake(SocketChannel client) throws IOException {
-        buffer.clear();
-        System.out.println("send handshake");
         byte[] infoHash = metaTorrentData.getInfoHash();
+        ByteBuffer buffer = ByteBuffer.allocate(4 + 1 + 20);
         buffer.putInt(1 + 20);
         buffer.put((byte) MessageTypes.HANDSHAKE.ordinal());
         buffer.put(infoHash);
         buffer.flip();
         client.write(buffer);
+        logger.info("send handshake");
     }
 
     public void sendBitField(SocketChannel client) throws IOException {
-        buffer.clear();
-        System.out.println("send bitfield");
         byte[] bitField = metaTorrentData.getBitField().toByteArray();
         int bitFieldLength = bitField.length;
 
+        ByteBuffer buffer = ByteBuffer.allocate(4 + 1 + 4 + bitFieldLength); //lengthMessage + messageType +  bitFieldLength + bitFiled
         buffer.putInt(1 + 4 + bitFieldLength);
-
         buffer.put((byte) MessageTypes.BITFIELD.ordinal());
         buffer.putInt(bitFieldLength);
         buffer.put(bitField);
         buffer.flip();
         client.write(buffer);
+        logger.info("send bitfield");
     }
 
-    public void recieveBitField(SocketChannel client, ByteBuffer buffer) throws IOException {
+    public void receiveBitField(SocketChannel client, ByteBuffer buffer) throws IOException {
         int bitFieldLength = buffer.getInt();
         byte[] byteBitField = Arrays.copyOfRange(buffer.array(), buffer.position(), buffer.position() + bitFieldLength);
         BitSet bitField = BitSet.valueOf(byteBitField);
         socketBitFields.put(client.getLocalAddress(), bitField);
-        System.out.println("recieve bitField");
+        logger.info("receive bitField");
     }
 
     public void sendRequest(SocketChannel client) throws IOException {
@@ -72,10 +69,9 @@ public class MessageHandler {
         BitSet bitField = socketBitFields.get(client.getLocalAddress());
         int index = findMissingPiece(bitField);
         if (index < 0) {
-            System.out.println("not interested");
+            logger.info("downloading is finished! => not interested");
             return;
         }
-        System.out.println("sending request...");
         int blocksInPiece = (int) Math.ceil((double) metaTorrentData.getPiecesLength() / BLOCK_SIZE);
         for (int i = 0; i < blocksInPiece; i++) {
 
@@ -91,7 +87,7 @@ public class MessageHandler {
             request.flip();
             client.write(request);
         }
-
+        logger.info("send request");
     }
 
     private int findMissingPiece(BitSet clientBitFiled) {
@@ -99,21 +95,15 @@ public class MessageHandler {
         BitSet myBitFiled = metaTorrentData.getBitField();
         difference.andNot(myBitFiled);
         int index = difference.nextSetBit(0);
-        if (index < 0) {
-            System.out.println("downloading is finished!");
-        }
         return index; // -1 если не нашел
     }
 
     public void sendPiece(int index, int begin, int length, SocketChannel client) throws Exception {
-        buffer.clear(); //это буфер message!!!
-        System.out.println("send piece");
-        ByteBuffer pieceData = pieceManager.readBlock(index, begin, length);
+        ByteBuffer pieceData = pieceReader.readBlock(index, begin, length);
 
-        int realPieceLength = pieceData.array().length;
+        int realPieceLength = pieceData.array().length; //вот это очень старнно! TODO нафиг тогда в сигнатуре length
 
-        System.out.println(realPieceLength);
-
+        ByteBuffer buffer = ByteBuffer.allocate(4 + 1 + 4 * 3 + pieceData.array().length);
         buffer.putInt(1 + 4 * 3 + pieceData.array().length);
         buffer.put((byte) MessageTypes.PIECE.ordinal());
         buffer.putInt(index);
@@ -122,16 +112,17 @@ public class MessageHandler {
         buffer.put(pieceData);
         buffer.flip();
         client.write(buffer);
+        logger.info("send piece with {} length", realPieceLength);
     }
 
     public void sendHave(SocketChannel client, int index) throws IOException {
-        buffer.clear();
-        System.out.println("send have");
+        ByteBuffer buffer = ByteBuffer.allocate(4 + 1 + 4);
         buffer.putInt(1 + 4);
         buffer.put((byte) MessageTypes.HAVE.ordinal());
         buffer.putInt(index);
         buffer.flip();
         client.write(buffer);
+        logger.info("send have {}th piece", index);
     }
 
     public void processMessage(SelectionKey key) throws Exception {
@@ -166,22 +157,19 @@ public class MessageHandler {
         logger.info("get {} message", messageType);
         switch (messageType) {
             case BITFIELD -> {
-                recieveBitField(client, messageBuffer);
+                receiveBitField(client, messageBuffer);
                 sendRequest(client);
             }
             case PIECE -> {
-                System.out.println("recieve piece");
 
                 int index = messageBuffer.getInt();
                 int begin = messageBuffer.getInt();
                 int length = messageBuffer.getInt();
 
-                System.out.println(index + " " + begin + " " + length);
+                logger.info("receive piece {} {} {}", index, begin, length);
 
                 byte[] data = new byte[length];
                 messageBuffer.get(data);
-
-                System.out.println(data);
 
                 pieceAssembler.addBlock(index, begin, data);
 
@@ -205,12 +193,11 @@ public class MessageHandler {
                 messageBuffer.get(hash);
 
                 if (Arrays.equals(hash, metaTorrentData.getInfoHash())) {
-                    System.out.println("hashes match ");
+                    logger.info("hashes in handshake match");
                     sendBitField(client);
 
-
                 } else {
-                    System.out.println("hashes don't match => close connection");
+                    logger.info("hashes in handshake don't match => close connection");
                     key.cancel();
                     client.close();
                 }
@@ -220,16 +207,15 @@ public class MessageHandler {
             }
             case REQUEST -> {
 
-                System.out.println("recive request");
+                logger.info("receive request");
                 int index = messageBuffer.getInt();
                 int begin = messageBuffer.getInt();
-                int lenght = messageBuffer.getInt();
-                // System.out.println(index + " " + begin + " " + lenght);
-                sendPiece(index, begin, lenght, client);
+                int length = messageBuffer.getInt();
+                sendPiece(index, begin, length, client);
 
             }
             case HAVE -> {
-                System.out.println("have");
+                logger.info("receive have");
             }
         }
     }
