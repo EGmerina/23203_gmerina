@@ -36,8 +36,8 @@ public class MetaTorrentData {
         BEValue infoValue = root.get("info");
 
         Map<String, BEValue> infoMap = infoValue.getMap();
-        piecesLength = infoMap.get("piece length").getInt();
-        sourceFileLength = infoMap.get("length").getInt();
+        piecesLength = infoMap.get("piece length").getLong();
+        sourceFileLength = infoMap.get("length").getLong();
         piecesNumber = (int) Math.ceil(sourceFileLength / (double) piecesLength);
         BEValue pieces = infoMap.get("pieces");
         byte[] byteHashes = pieces.getBytes();
