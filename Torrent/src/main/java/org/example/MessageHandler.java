@@ -20,7 +20,7 @@ public class MessageHandler {
     private final MetaTorrentData metaTorrentData;
     private final Map<SocketAddress, BitSet> socketBitFields = new HashMap<>();
     private final PieceReader pieceReader;
-    private Selector selector;
+    private final Selector selector;
 
 
     public MessageHandler(MetaTorrentData metaTorrentData, Selector selector) throws Exception {
@@ -66,7 +66,6 @@ public class MessageHandler {
     }
 
     public void sendRequest(SocketChannel client) throws IOException {
-
         BitSet bitField = socketBitFields.get(client.getLocalAddress());
         int index = findMissingPiece(bitField);
         if (index < 0) {
@@ -184,7 +183,7 @@ public class MessageHandler {
         }
         while (read != messageLength) {
             logger.error("can be read only {} / {} bytes. waiting...", read, messageLength);
-            Thread.sleep(100);
+            Thread.sleep(100);  ///???????????????????????????????????????????????????????????????????????
             read += client.read(messageBuffer);
         }
         messageBuffer.flip();
@@ -222,13 +221,11 @@ public class MessageHandler {
                 }
             }
             case REQUEST -> {
-
                 logger.info("receive request");
                 int index = messageBuffer.getInt();
                 int begin = messageBuffer.getInt();
                 int length = messageBuffer.getInt();
                 sendPiece(index, begin, length, client);
-
             }
             case HAVE -> {
                 receiveHave(client, messageBuffer);
@@ -257,6 +254,4 @@ public class MessageHandler {
         }
         newSocketChannel.register(selector, SelectionKey.OP_CONNECT, addr);
     }
-
-
 }

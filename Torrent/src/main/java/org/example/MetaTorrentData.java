@@ -18,12 +18,12 @@ import java.util.Map;
 public class MetaTorrentData {
     private static final int HASH_LENGTH = 20;
     private final ArrayList<byte[]> hashes = new ArrayList<>();
-    private int piecesNumber;
-    private long piecesLength;
-    private long sourceFileLength;
-    private String sourceFileName;
-    private ByteBuffer infoHash;
-    private BitSet bitField;
+    private final int piecesNumber;
+    private final long piecesLength;
+    private final long sourceFileLength;
+    private final String sourceFileName;
+    private final ByteBuffer infoHash;
+    private final BitSet bitField;
 
     public MetaTorrentData(String sourceFile, String torrentFile) throws IOException, NoSuchAlgorithmException {
 

@@ -47,7 +47,6 @@ public class TorrentClient {
                     if (key.isConnectable()) {
                         try {
                             handleConnect(key);
-
                         } catch (Exception e) {
                             tryToConnectAgain(key);
                         }
@@ -56,21 +55,18 @@ public class TorrentClient {
                         messageHandler.processMessage(key);
                     }
                     iterator.remove();
-
                 }
-
             }
         } catch (Exception e) {
             logger.error("problem in handleRead or with select");
             throw new RuntimeException(e);
         }
-
     }
 
 
     private void tryToConnectAgain(SelectionKey key) {
         try {
-            SocketChannel newSocketChannel = SocketChannel.open();
+            SocketChannel newSocketChannel = SocketChannel.open(); //TODO create timer for clients
             newSocketChannel.configureBlocking(false);
             newSocketChannel.connect((SocketAddress) key.attachment());
             newSocketChannel.register(selector, SelectionKey.OP_CONNECT, (SocketAddress) key.attachment());
@@ -93,6 +89,3 @@ public class TorrentClient {
     }
 
 }
-
-
-
