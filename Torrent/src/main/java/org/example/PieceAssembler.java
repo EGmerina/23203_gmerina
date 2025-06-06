@@ -46,24 +46,8 @@ public class PieceAssembler {
 
     public byte[] getAssembledPiece(int index) {
         if (isPieceComplete(index)) {
-            // return receivedPieces.get(index); //TODO вот это работает
-//            byte[] data = receivedPieces.get(index); //TODO!!!!!!!!!! короче по хорошему в моменте выделять буфферы под каждый кусочек!
-//            int endIndex = 0;
-
-            // Ищем первый нулевой байт
-//            while (endIndex < data.length - 1 && (data[endIndex] != 0 || data[endIndex + 1] != 0)) {
-//                endIndex++;
-//            }
-
-//            while (endIndex < data.length && data[endIndex] != 0) {
-//                endIndex++;
-//            }
-//
-//            // Копируем только до первого нуля
-//            return Arrays.copyOf(data, endIndex);
-
             byte[] data = receivedPieces.get(index);
-            return Arrays.copyOf(data, realSizesOfPieces.get(index)); // TODO это тоже не работает хотя хэши совпадают
+            return Arrays.copyOf(data, realSizesOfPieces.get(index));
 
         }
         return null;

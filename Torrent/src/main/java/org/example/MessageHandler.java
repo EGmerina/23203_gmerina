@@ -12,7 +12,6 @@ import java.nio.channels.Selector;
 import java.nio.channels.SocketChannel;
 import java.util.*;
 
-//TODO have сообщения
 public class MessageHandler {
     private static final Logger logger = LogManager.getLogger(MessageHandler.class);
 
@@ -66,7 +65,6 @@ public class MessageHandler {
         logger.info("receive bitField");
     }
 
-    //TODO сделать одиночные requests
     public void sendRequest(SocketChannel client) throws IOException {
 
         BitSet bitField = socketBitFields.get(client.getLocalAddress());
@@ -130,7 +128,7 @@ public class MessageHandler {
     public void sendPiece(int index, int begin, int length, SocketChannel client) throws Exception {
         ByteBuffer pieceData = pieceReader.readBlock(index, begin, length);
 
-        int realPieceLength = pieceData.array().length; //вот это очень старнно! TODO нафиг тогда в сигнатуре length
+        int realPieceLength = pieceData.array().length;
 
         ByteBuffer buffer = ByteBuffer.allocate(4 + 1 + 4 * 3 + pieceData.array().length);
         buffer.putInt(1 + 4 * 3 + pieceData.array().length);
@@ -142,6 +140,13 @@ public class MessageHandler {
         buffer.flip();
         client.write(buffer);
         logger.info("send piece with {} length", realPieceLength);
+    }
+
+    private void receiveHave(SocketChannel client, ByteBuffer messageBuffer) throws IOException {
+//        int index = messageBuffer.getInt();
+//        logger.info("receive have from {}", client.getRemoteAddress());
+//        BitSet myBitField = socketBitFields.get(client.getRemoteAddress());
+//        myBitField.set(index);
     }
 
     public void sendHave(SocketChannel client, int index) throws IOException {
@@ -226,8 +231,7 @@ public class MessageHandler {
 
             }
             case HAVE -> {
-                logger.info("receive have");
-
+                receiveHave(client, messageBuffer);
             }
             case CANCEL -> {
                 logger.info("receive cancel");

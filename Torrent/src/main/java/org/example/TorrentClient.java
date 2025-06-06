@@ -9,7 +9,6 @@ import java.net.SocketAddress;
 import java.nio.channels.*;
 import java.util.*;
 
-//TODO надо сделать "клиента на страже"
 public class TorrentClient {
     private static final Logger logger = LogManager.getLogger(TorrentClient.class);
 
