@@ -1,0 +1,20 @@
+#!/bin/bash
+#PBS -q defaultq
+#PBS -l walltime=00:12:00
+#PBS -l select=2:ncpus=12:mpiprocs=12:mem=3000m
+#PBS -m n
+
+mpicxx yakobi.cpp -o ykb
+echo 
+for proc in 1 2 4 8 16
+do
+echo "AMOUNT OF PROCESSES IS $proc"
+for (( i=0; i < 3; i++ ))
+do
+mpirun -n $proc ./ykb 280
+echo "##########################"
+done
+done
+
+mpecxx -mpilog -o ex yakobi.cpp
+mpirun -n 16 ./ex 280

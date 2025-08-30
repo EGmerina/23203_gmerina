@@ -1,0 +1,17 @@
+#!/bin/bash
+#PBS -q defaultq
+#PBS -l walltime=00:12:00
+#PBS -l select=1:ncpus=12:ompthreads=16
+#PBS -m n
+
+g++ -fopenmp omp_static.cpp -o somp
+g++ -fopenmp omp_dyn.cpp -o domp
+g++ -fopenmp omp_guided.cpp -o gom
+echo "static"
+OMP_NUM_THREADS=8  ./somp
+echo "dynamic"
+OMP_NUM_THREADS=8  ./domp
+echo "guided"
+OMP_NUM_THREADS=8  ./gomp
+       
+       

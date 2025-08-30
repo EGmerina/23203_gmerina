@@ -1,0 +1,16 @@
+#!/bin/bash
+#PBS -q defaultq
+#PBS -l walltime=00:12:00
+#PBS -l select=1:ncpus=12:ompthreads=16
+#PBS -m n
+
+echo
+
+for threads in 1 2 4 8 12 16
+do
+echo $threads
+OMP_NUM_THREADS=$threads  ./somp
+echo
+done
+       
+       

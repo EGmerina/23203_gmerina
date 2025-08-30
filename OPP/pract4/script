@@ -1,0 +1,29 @@
+#!/bin/bash
+#PBS -q defaultq
+#PBS -l walltime=00:12:00
+#PBS -l select=2:ncpus=12:mpiprocs=12:mem=3000m
+#PBS -m n
+
+mpicxx mult_matr.cpp -o mult
+
+echo "lattice 2 12"
+mpirun -n 24 ./mult 2 12
+
+echo "lattice 3 8"
+mpirun -n 24 ./mult 3 8
+       
+echo "lattice 4 6"
+mpirun -n 24 ./mult 4 6
+
+echo "lattice 6 4"
+mpirun -n 24 ./mult 6 4
+
+echo "lattice 8 3"
+mpirun -n 24 ./mult 8 3
+
+echo "lattice 12 2"
+mpirun -n 24 ./mult 12 2
+
+mpecxx -mpilog -o ex mult_matr.cpp
+mpirun -n 8 ./ex 2 4
+       

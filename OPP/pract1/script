@@ -1,0 +1,18 @@
+#!/bin/bash
+mpirun -n 1 ./seq
+echo 
+for proc in 2 3 4
+do
+echo "AMOUNT OF PROCESSES IS $proc"
+for (( i=0; i < 3; i++ ))
+do
+mpirun -n $proc ./dot
+done
+echo "########################"
+for (( j=0; j < 3; j++ ))
+do
+mpirun -n $proc ./col
+done
+echo "########################"
+echo
+done
